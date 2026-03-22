@@ -45,10 +45,10 @@ A full-featured collaborative canvas web application built with Next.js 15, Bett
 
 ### Canvas Editor
 - Excalidraw integration (dynamic import, SSR disabled)
-- Auto-saves every 2 seconds after changes
-- Manual save button
+- Auto-saves every 10 seconds after changes (content-diffed to avoid redundant saves)
+- Manual save button (only manual saves create version snapshots)
 - Version history panel (last 50 versions)
-- Version restore functionality
+- Version restore with confirmation warning dialog
 
 ### Admin Dashboard
 - Toggle user registration on/off
@@ -92,12 +92,21 @@ All API routes are in `artifacts/canvas-app/src/app/api/`:
 
 ## UI Design
 
-- Inter font, neutral black/white/gray palette, no gradients
-- Consistent `rounded-lg`/`rounded-xl` borders with subtle shadows
+- Inter font, neutral black/white/gray palette, no gradients, no shadows
+- Consistent `rounded-lg`/`rounded-xl` borders
 - Custom Combobox component replaces all native select dropdowns
 - Subtle CSS animations (`fade-in`, `slide-up`, `scale-in`)
 - Split-panel auth pages with branded illustration panel
 - Landing page at `/` with feature grid and CTAs
+- Collapsible sidebar with localStorage persistence (`sidebar-collapsed` key)
+- Profile section at top of sidebar with avatar/initials, name, and email
+- Sidebar profile height matches canvas page header height (49px)
+- Per-page metadata/titles for browser tab (e.g., "Dashboard — Canvas")
+
+## Excalidraw CSS
+
+- Global `* { border-color }` rule is reverted inside `.excalidraw` via `.excalidraw, .excalidraw *, .excalidraw *::before, .excalidraw *::after { border-color: revert; box-sizing: revert; line-height: revert; }`
+- This prevents Tailwind's base styles from breaking Excalidraw's internal UI
 
 ## First Admin
 

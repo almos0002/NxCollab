@@ -55,6 +55,15 @@
   border-color: hsl(var(--border));
 }
 
+.excalidraw,
+.excalidraw *,
+.excalidraw *::before,
+.excalidraw *::after {
+  border-color: revert;
+  box-sizing: revert;
+  line-height: revert;
+}
+
 body {
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
@@ -82,49 +91,6 @@ body {
 
 .excalidraw-wrapper .excalidraw .layer-ui__wrapper {
   pointer-events: auto;
-}
-
-.excalidraw .App-menu_top .buttonList {
-  display: flex;
-}
-
-.excalidraw .layer-ui__wrapper__top-right {
-  z-index: 2 !important;
-}
-
-.excalidraw .layer-ui__wrapper {
-  z-index: 1;
-}
-
-.excalidraw .App-toolbar-container {
-  z-index: 2;
-}
-
-.excalidraw .App-menu {
-  z-index: 2;
-}
-
-.excalidraw {
-  --color-primary: hsl(var(--foreground)) !important;
-  --color-surface-high: hsl(var(--card)) !important;
-  --island-bg-color: hsl(var(--card)) !important;
-  --default-border-color: hsl(var(--border)) !important;
-  --color-on-primary-container: hsl(var(--foreground)) !important;
-}
-
-.excalidraw .Island {
-  border: 1px solid hsl(var(--border)) !important;
-  box-shadow: none !important;
-}
-
-.excalidraw button,
-.excalidraw .ToolIcon__icon {
-  box-shadow: none !important;
-}
-
-.excalidraw .App-toolbar {
-  box-shadow: none !important;
-  border: 1px solid hsl(var(--border)) !important;
 }
 
 @keyframes fade-in {

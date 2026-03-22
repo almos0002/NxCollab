@@ -26,6 +26,7 @@ interface CollaboratorInfo {
 }
 
 const COLORS = ["#f97316", "#8b5cf6", "#06b6d4", "#10b981", "#f59e0b", "#ef4444", "#3b82f6"];
+const AUTO_SAVE_DELAY = 10000;
 
 export function CollaborativeCanvas({ canvasId, initialContent, isEditable, userId, userName }: CollaborativeCanvasProps) {
   const [excalidrawAPI, setExcalidrawAPI] = useState<ExcalidrawImperativeAPI | null>(null);
@@ -35,6 +36,7 @@ export function CollaborativeCanvas({ canvasId, initialContent, isEditable, user
   const [showVersions, setShowVersions] = useState(false);
   const wsRef = useRef<WebSocket | null>(null);
   const saveTimeoutRef = useRef<ReturnType<typeof setTimeout>>(null);
+  const lastSavedContentRef = useRef<string>(initialContent);
   const myColor = COLORS[userId.charCodeAt(0) % COLORS.length];
 
   const getInitialElements = useCallback(() => {
@@ -51,12 +53,21 @@ export function CollaborativeCanvas({ canvasId, initialContent, isEditable, user
     } catch { return {}; }
   }, [initialContent]);
 
-  const saveCanvas = useCallback(async (elements: readonly ExcalidrawElement[], appState: AppState) => {
+  const saveCanvas = useCallback(async (elements: readonly ExcalidrawElement[], appState: AppState, createVersion = false) => {
     if (!isEditable) return;
+    const content = JSON.stringify({
+      elements,
+      appState: { viewBackgroundColor: appState.viewBackgroundColor, gridSize: appState.gridSize }
+    });
+    if (content === lastSavedContentRef.current && !createVersion) return;
     setSaving(true);
     try {
-      const content = JSON.stringify({ elements, appState: { viewBackgroundColor: appState.viewBackgroundColor, gridSize: appState.gridSize } });
-      await fetch(`/api/canvases/${canvasId}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ content }) });
+      await fetch(`/api/canvases/${canvasId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content, createVersion })
+      });
+      lastSavedContentRef.current = content;
       setLastSaved(new Date());
     } catch (err) { console.error("Save failed:", err); }
     finally { setSaving(false); }
@@ -65,7 +76,7 @@ export function CollaborativeCanvas({ canvasId, initialContent, isEditable, user
   const handleChange = useCallback((elements: readonly ExcalidrawElement[], appState: AppState) => {
     if (!isEditable) return;
     if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
-    saveTimeoutRef.current = setTimeout(() => saveCanvas(elements, appState), 2000);
+    saveTimeoutRef.current = setTimeout(() => saveCanvas(elements, appState, false), AUTO_SAVE_DELAY);
     if (wsRef.current?.readyState === WebSocket.OPEN) {
       wsRef.current.send(JSON.stringify({ type: "update", elements, userId, userName }));
     }
@@ -77,9 +88,10 @@ export function CollaborativeCanvas({ canvasId, initialContent, isEditable, user
 
   async function handleManualSave() {
     if (!excalidrawAPI) return;
+    if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
     const elements = excalidrawAPI.getSceneElements();
     const appState = excalidrawAPI.getAppState();
-    await saveCanvas(elements, appState);
+    await saveCanvas(elements, appState, true);
   }
 
   async function handleRestoreVersion(content: string) {
@@ -87,6 +99,7 @@ export function CollaborativeCanvas({ canvasId, initialContent, isEditable, user
     try {
       const parsed = JSON.parse(content);
       excalidrawAPI.updateScene({ elements: parsed.elements ?? [], appState: parsed.appState ?? {} });
+      lastSavedContentRef.current = content;
       setShowVersions(false);
     } catch {}
   }

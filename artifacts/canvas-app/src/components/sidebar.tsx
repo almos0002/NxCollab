@@ -66,22 +66,20 @@ export function Sidebar({ user }: SidebarProps) {
       )}
       style={!mounted ? { visibility: "hidden" } : undefined}
     >
-      <div className={cn("border-b border-[hsl(var(--border))]", collapsed ? "px-2 py-4" : "px-4 py-4")}>
-        <div className={cn("flex items-center", collapsed ? "justify-center" : "gap-3")}>
-          {user.image ? (
-            <img src={user.image} alt={user.name} className="w-9 h-9 rounded-full object-cover shrink-0" />
-          ) : (
-            <div className="w-9 h-9 rounded-full bg-[hsl(var(--foreground))] flex items-center justify-center shrink-0">
-              <span className="text-xs font-semibold text-[hsl(var(--background))]">{initials}</span>
-            </div>
-          )}
-          {!collapsed && (
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-[hsl(var(--foreground))] truncate">{user.name}</p>
-              <p className="text-xs text-[hsl(var(--muted-foreground))] truncate">{user.email}</p>
-            </div>
-          )}
-        </div>
+      <div className={cn("flex items-center border-b border-[hsl(var(--border))] h-[49px]", collapsed ? "px-2 justify-center" : "px-5 gap-3")}>
+        {user.image ? (
+          <img src={user.image} alt={user.name} className="w-8 h-8 rounded-full object-cover shrink-0" />
+        ) : (
+          <div className="w-8 h-8 rounded-full bg-[hsl(var(--foreground))] flex items-center justify-center shrink-0">
+            <span className="text-[10px] font-semibold text-[hsl(var(--background))]">{initials}</span>
+          </div>
+        )}
+        {!collapsed && (
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-semibold text-[hsl(var(--foreground))] truncate leading-tight">{user.name}</p>
+            <p className="text-[11px] text-[hsl(var(--muted-foreground))] truncate leading-tight">{user.email}</p>
+          </div>
+        )}
       </div>
 
       <nav className={cn("flex-1 py-3 space-y-0.5 overflow-y-auto", collapsed ? "px-2" : "px-3")}>

@@ -19,15 +19,15 @@ export async function PATCH(req: NextRequest, { params }: Params) {
   const role = await getUserWorkspaceRole(session.user.id, canvas[0].workspaceId);
   if (!role || !canEdit(role)) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
-  const { content, name } = await req.json();
+  const { content, name, createVersion } = await req.json();
   const now = new Date();
 
   if (content !== undefined) {
-    const versions = await db.select().from(canvasVersionsTable).where(eq(canvasVersionsTable.canvasId, id)).orderBy(canvasVersionsTable.version);
-    const lastVersion = versions[versions.length - 1];
-    const nextVersion = (lastVersion?.version ?? 0) + 1;
+    if (createVersion && canvas[0].content && canvas[0].content !== "{}") {
+      const versions = await db.select().from(canvasVersionsTable).where(eq(canvasVersionsTable.canvasId, id)).orderBy(canvasVersionsTable.version);
+      const lastVersion = versions[versions.length - 1];
+      const nextVersion = (lastVersion?.version ?? 0) + 1;
 
-    if (canvas[0].content && canvas[0].content !== "{}") {
       await db.insert(canvasVersionsTable).values({ id: generateId(), canvasId: id, version: nextVersion, content: canvas[0].content, createdBy: session.user.id, createdAt: now });
       if (versions.length >= 50) {
         const oldest = versions[0];
