@@ -14,7 +14,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
   return (
     <div className="flex h-screen overflow-hidden">
-      <Sidebar user={{ name: userData?.name ?? "User", email: userData?.email ?? "", isAdmin: userData?.isAdmin ?? false }} />
+      <Sidebar user={{ name: userData?.name ?? "User", email: userData?.email ?? "", image: userData?.image ?? null, isAdmin: userData?.isAdmin ?? false }} />
       <main className="flex-1 overflow-y-auto bg-[hsl(var(--background))]">{children}</main>
     </div>
   );

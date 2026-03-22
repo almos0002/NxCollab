@@ -1,7 +1,10 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { getServerSession } from "@/lib/session";
 import { redirect } from "next/navigation";
 import { Layers, Users, Lock, History, Zap, ArrowRight } from "lucide-react";
+
+export const metadata: Metadata = { title: "Canvas — Collaborative Workspace" };
 
 export default async function LandingPage() {
   const session = await getServerSession();

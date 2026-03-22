@@ -1,4 +1,7 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+
+export const metadata: Metadata = { title: "Settings — Canvas" };
 import { getServerSession } from "@/lib/session";
 import { db } from "@workspace/db";
 import { usersTable } from "@workspace/db";

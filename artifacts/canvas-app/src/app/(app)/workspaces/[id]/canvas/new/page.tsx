@@ -1,8 +1,11 @@
+import type { Metadata } from "next";
 import { redirect, notFound } from "next/navigation";
 import { getServerSession } from "@/lib/session";
 import { getUserWorkspaceRole, canEdit } from "@/lib/workspace";
 import { NewCanvasForm } from "@/components/workspace/new-canvas-form";
 import Link from "next/link";
+
+export const metadata: Metadata = { title: "New Canvas — Canvas" };
 
 interface Props { params: Promise<{ id: string }> }
 

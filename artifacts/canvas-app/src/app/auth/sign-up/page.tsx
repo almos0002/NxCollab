@@ -1,8 +1,11 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { getServerSession } from "@/lib/session";
 import { SignUpForm } from "@/components/auth/sign-up-form";
 import { db } from "@workspace/db";
 import { appSettingsTable } from "@workspace/db";
+
+export const metadata: Metadata = { title: "Sign Up — Canvas" };
 import { eq } from "drizzle-orm";
 import Link from "next/link";
 

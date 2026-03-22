@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { getServerSession } from "@/lib/session";
 import { db } from "@workspace/db";
@@ -7,6 +8,12 @@ import { getUserWorkspaceRole, canEdit } from "@/lib/workspace";
 import { CollaborativeCanvas } from "@/components/canvas/collaborative-canvas";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params;
+  const c = await db.select({ name: canvasesTable.name }).from(canvasesTable).where(eq(canvasesTable.id, id)).limit(1);
+  return { title: c[0] ? `${c[0].name} — Canvas` : "Canvas" };
+}
 
 interface Props { params: Promise<{ id: string }> }
 

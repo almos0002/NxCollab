@@ -1,7 +1,10 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { getServerSession } from "@/lib/session";
 import { SignInForm } from "@/components/auth/sign-in-form";
 import Link from "next/link";
+
+export const metadata: Metadata = { title: "Sign In — Canvas" };
 
 export default async function SignInPage() {
   const session = await getServerSession();

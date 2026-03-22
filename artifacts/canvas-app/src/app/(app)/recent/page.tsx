@@ -1,4 +1,7 @@
+import type { Metadata } from "next";
 import { getServerSession } from "@/lib/session";
+
+export const metadata: Metadata = { title: "Recent — Canvas" };
 import { db } from "@workspace/db";
 import { canvasesTable, workspacesTable } from "@workspace/db";
 import { eq, desc } from "drizzle-orm";

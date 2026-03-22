@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { getServerSession } from "@/lib/session";
 import { db } from "@workspace/db";
@@ -8,6 +9,12 @@ import { formatDate } from "@/lib/utils";
 import { getUserWorkspaceRole, canEdit, canManageMembers } from "@/lib/workspace";
 import { Plus, FileText, Users, Activity } from "lucide-react";
 import { WorkspaceActions } from "@/components/workspace/workspace-actions";
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params;
+  const ws = await db.select({ name: workspacesTable.name }).from(workspacesTable).where(eq(workspacesTable.id, id)).limit(1);
+  return { title: ws[0] ? `${ws[0].name} — Canvas` : "Workspace — Canvas" };
+}
 
 interface Props { params: Promise<{ id: string }> }
 
