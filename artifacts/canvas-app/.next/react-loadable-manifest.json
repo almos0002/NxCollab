@@ -1,1 +1,560 @@
-{}
+{
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/chunk-3KPV5WBD.js -> ./data/image-WB3WPX2D.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/chunk-3KPV5WBD.js -> ./data/image-WB3WPX2D.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-024e5c.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/chunk-3KPV5WBD.js -> ./subset-shared.chunk.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/chunk-3KPV5WBD.js -> ./subset-shared.chunk.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-f40985.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/chunk-3KPV5WBD.js -> ./subset-worker.chunk.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/chunk-3KPV5WBD.js -> ./subset-worker.chunk.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-776a91.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/chunk-3KPV5WBD.js -> image-blob-reduce": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/chunk-3KPV5WBD.js -> image-blob-reduce",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_image-blob-reduce_3_0_1_node_modules_image-blob-reduce_d-f0fef7.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/chunk-3KPV5WBD.js -> pica": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/chunk-3KPV5WBD.js -> pica",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_pica_7_1_1_node_modules_pica_dist_pica_js.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./data/image-WB3WPX2D.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./data/image-WB3WPX2D.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-024e5c.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/ar-SA-XORAP2EK.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/ar-SA-XORAP2EK.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-35bdf5.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/az-AZ-NAUU3Z4Y.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/az-AZ-NAUU3Z4Y.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-993d78.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/bg-BG-AAABLFCY.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/bg-BG-AAABLFCY.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-378bd4.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/bn-BD-PM4AC5WG.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/bn-BD-PM4AC5WG.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-33555a.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/ca-ES-YNNMFRQX.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/ca-ES-YNNMFRQX.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-b643e4.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/cs-CZ-DGZA5IKG.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/cs-CZ-DGZA5IKG.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-21c852.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/da-DK-N76F4QAJ.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/da-DK-N76F4QAJ.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-602846.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/de-DE-DMRXZ2SZ.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/de-DE-DMRXZ2SZ.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-2a6559.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/el-GR-HIKPLEXI.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/el-GR-HIKPLEXI.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-bbe152.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/en-OZCJJ2HN.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/en-OZCJJ2HN.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-909f82.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/es-ES-AQYVXC32.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/es-ES-AQYVXC32.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-b6c04b.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/eu-ES-3TOEU5DE.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/eu-ES-3TOEU5DE.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-018633.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/fa-IR-527GAKUP.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/fa-IR-527GAKUP.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-dfd537.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/fi-FI-M3WLVDFP.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/fi-FI-M3WLVDFP.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-5e6989.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/fr-FR-YE4VDJFI.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/fr-FR-YE4VDJFI.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-4e91c2.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/gl-ES-KMXUYGUN.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/gl-ES-KMXUYGUN.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-f356b2.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/he-IL-4MU5N22B.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/he-IL-4MU5N22B.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-f71dc9.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/hi-IN-ZHZNZWFC.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/hi-IN-ZHZNZWFC.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-a86f65.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/hu-HU-VIYZI3X4.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/hu-HU-VIYZI3X4.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-1b956b.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/id-ID-22TWZNLA.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/id-ID-22TWZNLA.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-9b577f.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/it-IT-MDEQ2SG3.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/it-IT-MDEQ2SG3.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-c9564e.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/ja-JP-K2DI4W6B.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/ja-JP-K2DI4W6B.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-e66518.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/kaa-6BPSNM3R.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/kaa-6BPSNM3R.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-0e7cf0.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/kab-KAB-2S7ZURK7.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/kab-KAB-2S7ZURK7.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-3f83d2.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/kk-KZ-UJPYGRQQ.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/kk-KZ-UJPYGRQQ.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-a59d0e.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/km-KH-M5T5JKUE.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/km-KH-M5T5JKUE.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-0cccb8.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/ko-KR-RQX37SNF.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/ko-KR-RQX37SNF.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-9f9d0c.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/ku-TR-5XJDIERL.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/ku-TR-5XJDIERL.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-69a468.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/lt-LT-MGUBX6CA.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/lt-LT-MGUBX6CA.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-657474.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/lv-LV-MD7N5VHD.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/lv-LV-MD7N5VHD.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-9b1f52.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/mr-IN-4XWMNGQC.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/mr-IN-4XWMNGQC.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-b97fb0.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/my-MM-O4Z74GN5.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/my-MM-O4Z74GN5.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-c06035.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/nb-NO-BMB73KRH.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/nb-NO-BMB73KRH.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-9e70d3.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/nl-NL-F2257BLQ.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/nl-NL-F2257BLQ.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-27e998.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/nn-NO-NCORG7TS.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/nn-NO-NCORG7TS.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-759705.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/oc-FR-ATFBDMF6.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/oc-FR-ATFBDMF6.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-05a33f.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/pa-IN-D2I375G4.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/pa-IN-D2I375G4.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-77083a.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/percentages-YKFLWNK2.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/percentages-YKFLWNK2.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-97432b.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/pl-PL-YJHOWAAW.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/pl-PL-YJHOWAAW.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-02a2a1.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/pt-BR-APOPYZJ7.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/pt-BR-APOPYZJ7.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-eb50c7.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/pt-PT-W56WCN7P.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/pt-PT-W56WCN7P.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-fd560e.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/ro-RO-L575VRQA.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/ro-RO-L575VRQA.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-0e3540.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/ru-RU-BLG6HZG5.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/ru-RU-BLG6HZG5.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-95a839.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/si-LK-KT7GGO6D.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/si-LK-KT7GGO6D.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-e0eba5.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/sk-SK-DY6IPO5U.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/sk-SK-DY6IPO5U.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-1769fe.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/sl-SI-5DZSRA47.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/sl-SI-5DZSRA47.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-d5220b.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/sv-SE-V32YHALQ.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/sv-SE-V32YHALQ.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-205f76.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/ta-IN-5JRAGQAO.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/ta-IN-5JRAGQAO.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-a7415d.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/th-TH-55ACRHDJ.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/th-TH-55ACRHDJ.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-098f42.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/tr-TR-7QYBXDBO.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/tr-TR-7QYBXDBO.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-28f2ab.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/uk-UA-TJS2TMRH.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/uk-UA-TJS2TMRH.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-e86452.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/vi-VN-Y5CQ2EKQ.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/vi-VN-Y5CQ2EKQ.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-6d2192.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/zh-CN-4MXUOFTH.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/zh-CN-4MXUOFTH.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-747976.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/zh-HK-RBTGIU3U.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/zh-HK-RBTGIU3U.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-f1558c.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/zh-TW-U5VF4CCU.js": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> ./locales/zh-TW-U5VF4CCU.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-eae18a.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> @excalidraw/mermaid-to-excalidraw": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> @excalidraw/mermaid-to-excalidraw",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_mermaid-to-excalidraw_1_1_2_node_modules_exca-05e992.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> canvas-roundrect-polyfill": {
+    "id": "../../../node_modules/.pnpm/@excalidraw+excalidraw@0.18.0_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_f45eb50857705edb78109bb25c66b400/node_modules/@excalidraw/excalidraw/dist/dev/index.js -> canvas-roundrect-polyfill",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_canvas-roundrect-polyfill_0_0_1_node_modules_canvas-roun-7e01c9.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/browser-fs-access@0.29.1/node_modules/browser-fs-access/dist/index.mjs -> ./directory-open-01563666.js": {
+    "id": "../../../node_modules/.pnpm/browser-fs-access@0.29.1/node_modules/browser-fs-access/dist/index.mjs -> ./directory-open-01563666.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_browser-fs-access_0_29_1_node_modules_browser-fs-access_-5dbe0a.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/browser-fs-access@0.29.1/node_modules/browser-fs-access/dist/index.mjs -> ./directory-open-4ed118d0.js": {
+    "id": "../../../node_modules/.pnpm/browser-fs-access@0.29.1/node_modules/browser-fs-access/dist/index.mjs -> ./directory-open-4ed118d0.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_browser-fs-access_0_29_1_node_modules_browser-fs-access_-a6c78a.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/browser-fs-access@0.29.1/node_modules/browser-fs-access/dist/index.mjs -> ./file-open-002ab408.js": {
+    "id": "../../../node_modules/.pnpm/browser-fs-access@0.29.1/node_modules/browser-fs-access/dist/index.mjs -> ./file-open-002ab408.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_browser-fs-access_0_29_1_node_modules_browser-fs-access_-86e883.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/browser-fs-access@0.29.1/node_modules/browser-fs-access/dist/index.mjs -> ./file-open-7c801643.js": {
+    "id": "../../../node_modules/.pnpm/browser-fs-access@0.29.1/node_modules/browser-fs-access/dist/index.mjs -> ./file-open-7c801643.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_browser-fs-access_0_29_1_node_modules_browser-fs-access_-e2216c.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/browser-fs-access@0.29.1/node_modules/browser-fs-access/dist/index.mjs -> ./file-save-3189631c.js": {
+    "id": "../../../node_modules/.pnpm/browser-fs-access@0.29.1/node_modules/browser-fs-access/dist/index.mjs -> ./file-save-3189631c.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_browser-fs-access_0_29_1_node_modules_browser-fs-access_-c7dbc7.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/browser-fs-access@0.29.1/node_modules/browser-fs-access/dist/index.mjs -> ./file-save-745eba88.js": {
+    "id": "../../../node_modules/.pnpm/browser-fs-access@0.29.1/node_modules/browser-fs-access/dist/index.mjs -> ./file-save-745eba88.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_browser-fs-access_0_29_1_node_modules_browser-fs-access_-fe4223.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/mermaid@10.9.3/node_modules/mermaid/dist/mermaid-b5860b54.js -> ./blockDiagram-38ab4fdb.js": {
+    "id": "../../../node_modules/.pnpm/mermaid@10.9.3/node_modules/mermaid/dist/mermaid-b5860b54.js -> ./blockDiagram-38ab4fdb.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_mermaid_10_9_3_node_modules_mermaid_dist_blockDiagram-38-b96c0b.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/mermaid@10.9.3/node_modules/mermaid/dist/mermaid-b5860b54.js -> ./c4Diagram-3d4e48cf.js": {
+    "id": "../../../node_modules/.pnpm/mermaid@10.9.3/node_modules/mermaid/dist/mermaid-b5860b54.js -> ./c4Diagram-3d4e48cf.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_mermaid_10_9_3_node_modules_mermaid_dist_c4Diagram-3d4e48cf_js.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/mermaid@10.9.3/node_modules/mermaid/dist/mermaid-b5860b54.js -> ./classDiagram-70f12bd4.js": {
+    "id": "../../../node_modules/.pnpm/mermaid@10.9.3/node_modules/mermaid/dist/mermaid-b5860b54.js -> ./classDiagram-70f12bd4.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_mermaid_10_9_3_node_modules_mermaid_dist_classDiagram-70-a18784.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/mermaid@10.9.3/node_modules/mermaid/dist/mermaid-b5860b54.js -> ./classDiagram-v2-f2320105.js": {
+    "id": "../../../node_modules/.pnpm/mermaid@10.9.3/node_modules/mermaid/dist/mermaid-b5860b54.js -> ./classDiagram-v2-f2320105.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_mermaid_10_9_3_node_modules_mermaid_dist_classDiagram-v2-3b25e4.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/mermaid@10.9.3/node_modules/mermaid/dist/mermaid-b5860b54.js -> ./erDiagram-9861fffd.js": {
+    "id": "../../../node_modules/.pnpm/mermaid@10.9.3/node_modules/mermaid/dist/mermaid-b5860b54.js -> ./erDiagram-9861fffd.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_mermaid_10_9_3_node_modules_mermaid_dist_erDiagram-9861fffd_js.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/mermaid@10.9.3/node_modules/mermaid/dist/mermaid-b5860b54.js -> ./flowDiagram-66a62f08.js": {
+    "id": "../../../node_modules/.pnpm/mermaid@10.9.3/node_modules/mermaid/dist/mermaid-b5860b54.js -> ./flowDiagram-66a62f08.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_mermaid_10_9_3_node_modules_mermaid_dist_flowDiagram-66a-88ca04.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/mermaid@10.9.3/node_modules/mermaid/dist/mermaid-b5860b54.js -> ./flowDiagram-v2-96b9c2cf.js": {
+    "id": "../../../node_modules/.pnpm/mermaid@10.9.3/node_modules/mermaid/dist/mermaid-b5860b54.js -> ./flowDiagram-v2-96b9c2cf.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_mermaid_10_9_3_node_modules_mermaid_dist_flowDiagram-v2--09d95a.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/mermaid@10.9.3/node_modules/mermaid/dist/mermaid-b5860b54.js -> ./flowchart-elk-definition-4a651766.js": {
+    "id": "../../../node_modules/.pnpm/mermaid@10.9.3/node_modules/mermaid/dist/mermaid-b5860b54.js -> ./flowchart-elk-definition-4a651766.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_mermaid_10_9_3_node_modules_mermaid_dist_flowchart-elk-d-aa55cd.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/mermaid@10.9.3/node_modules/mermaid/dist/mermaid-b5860b54.js -> ./ganttDiagram-c361ad54.js": {
+    "id": "../../../node_modules/.pnpm/mermaid@10.9.3/node_modules/mermaid/dist/mermaid-b5860b54.js -> ./ganttDiagram-c361ad54.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_mermaid_10_9_3_node_modules_mermaid_dist_ganttDiagram-c3-0d4079.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/mermaid@10.9.3/node_modules/mermaid/dist/mermaid-b5860b54.js -> ./gitGraphDiagram-72cf32ee.js": {
+    "id": "../../../node_modules/.pnpm/mermaid@10.9.3/node_modules/mermaid/dist/mermaid-b5860b54.js -> ./gitGraphDiagram-72cf32ee.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_mermaid_10_9_3_node_modules_mermaid_dist_gitGraphDiagram-91f2d4.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/mermaid@10.9.3/node_modules/mermaid/dist/mermaid-b5860b54.js -> ./infoDiagram-f8f76790.js": {
+    "id": "../../../node_modules/.pnpm/mermaid@10.9.3/node_modules/mermaid/dist/mermaid-b5860b54.js -> ./infoDiagram-f8f76790.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_mermaid_10_9_3_node_modules_mermaid_dist_infoDiagram-f8f-708978.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/mermaid@10.9.3/node_modules/mermaid/dist/mermaid-b5860b54.js -> ./journeyDiagram-49397b02.js": {
+    "id": "../../../node_modules/.pnpm/mermaid@10.9.3/node_modules/mermaid/dist/mermaid-b5860b54.js -> ./journeyDiagram-49397b02.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_mermaid_10_9_3_node_modules_mermaid_dist_journeyDiagram--49e3d0.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/mermaid@10.9.3/node_modules/mermaid/dist/mermaid-b5860b54.js -> ./mindmap-definition-fc14e90a.js": {
+    "id": "../../../node_modules/.pnpm/mermaid@10.9.3/node_modules/mermaid/dist/mermaid-b5860b54.js -> ./mindmap-definition-fc14e90a.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_mermaid_10_9_3_node_modules_mermaid_dist_mindmap-definit-cdee05.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/mermaid@10.9.3/node_modules/mermaid/dist/mermaid-b5860b54.js -> ./pieDiagram-8a3498a8.js": {
+    "id": "../../../node_modules/.pnpm/mermaid@10.9.3/node_modules/mermaid/dist/mermaid-b5860b54.js -> ./pieDiagram-8a3498a8.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_mermaid_10_9_3_node_modules_mermaid_dist_pieDiagram-8a34-9c25e2.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/mermaid@10.9.3/node_modules/mermaid/dist/mermaid-b5860b54.js -> ./quadrantDiagram-120e2f19.js": {
+    "id": "../../../node_modules/.pnpm/mermaid@10.9.3/node_modules/mermaid/dist/mermaid-b5860b54.js -> ./quadrantDiagram-120e2f19.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_mermaid_10_9_3_node_modules_mermaid_dist_quadrantDiagram-fdda9b.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/mermaid@10.9.3/node_modules/mermaid/dist/mermaid-b5860b54.js -> ./requirementDiagram-deff3bca.js": {
+    "id": "../../../node_modules/.pnpm/mermaid@10.9.3/node_modules/mermaid/dist/mermaid-b5860b54.js -> ./requirementDiagram-deff3bca.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_mermaid_10_9_3_node_modules_mermaid_dist_requirementDiag-81e6e2.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/mermaid@10.9.3/node_modules/mermaid/dist/mermaid-b5860b54.js -> ./sankeyDiagram-04a897e0.js": {
+    "id": "../../../node_modules/.pnpm/mermaid@10.9.3/node_modules/mermaid/dist/mermaid-b5860b54.js -> ./sankeyDiagram-04a897e0.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_mermaid_10_9_3_node_modules_mermaid_dist_sankeyDiagram-0-c36d5b.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/mermaid@10.9.3/node_modules/mermaid/dist/mermaid-b5860b54.js -> ./sequenceDiagram-704730f1.js": {
+    "id": "../../../node_modules/.pnpm/mermaid@10.9.3/node_modules/mermaid/dist/mermaid-b5860b54.js -> ./sequenceDiagram-704730f1.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_mermaid_10_9_3_node_modules_mermaid_dist_sequenceDiagram-46e335.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/mermaid@10.9.3/node_modules/mermaid/dist/mermaid-b5860b54.js -> ./stateDiagram-587899a1.js": {
+    "id": "../../../node_modules/.pnpm/mermaid@10.9.3/node_modules/mermaid/dist/mermaid-b5860b54.js -> ./stateDiagram-587899a1.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_mermaid_10_9_3_node_modules_mermaid_dist_stateDiagram-58-bc01a2.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/mermaid@10.9.3/node_modules/mermaid/dist/mermaid-b5860b54.js -> ./stateDiagram-v2-d93cdb3a.js": {
+    "id": "../../../node_modules/.pnpm/mermaid@10.9.3/node_modules/mermaid/dist/mermaid-b5860b54.js -> ./stateDiagram-v2-d93cdb3a.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_mermaid_10_9_3_node_modules_mermaid_dist_stateDiagram-v2-3b30fd.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/mermaid@10.9.3/node_modules/mermaid/dist/mermaid-b5860b54.js -> ./timeline-definition-85554ec2.js": {
+    "id": "../../../node_modules/.pnpm/mermaid@10.9.3/node_modules/mermaid/dist/mermaid-b5860b54.js -> ./timeline-definition-85554ec2.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_mermaid_10_9_3_node_modules_mermaid_dist_timeline-defini-9e31e7.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/mermaid@10.9.3/node_modules/mermaid/dist/mermaid-b5860b54.js -> ./xychartDiagram-e933f94c.js": {
+    "id": "../../../node_modules/.pnpm/mermaid@10.9.3/node_modules/mermaid/dist/mermaid-b5860b54.js -> ./xychartDiagram-e933f94c.js",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_mermaid_10_9_3_node_modules_mermaid_dist_xychartDiagram--307296.js"
+    ]
+  },
+  "../../../node_modules/.pnpm/mermaid@10.9.3/node_modules/mermaid/dist/mermaid-b5860b54.js -> katex": {
+    "id": "../../../node_modules/.pnpm/mermaid@10.9.3/node_modules/mermaid/dist/mermaid-b5860b54.js -> katex",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_katex_0_16_40_node_modules_katex_dist_katex_mjs.js"
+    ]
+  },
+  "components/canvas/collaborative-canvas.tsx -> @excalidraw/excalidraw": {
+    "id": "components/canvas/collaborative-canvas.tsx -> @excalidraw/excalidraw",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_pnpm_excalidraw_excalidraw_0_18_0__types_react-dom_19_2_3__ty-8b8db5.js"
+    ]
+  }
+}
