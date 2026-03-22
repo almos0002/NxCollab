@@ -48,7 +48,7 @@ export default async function LandingPage() {
       <main>
         <section className="max-w-3xl mx-auto px-6 pt-24 pb-20 text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[hsl(var(--muted))] text-xs font-medium text-[hsl(var(--muted-foreground))] mb-6 animate-fade-in">
-            <span className="w-1.5 h-1.5 rounded-full bg-[hsl(var(--success))]" />
+            <span className="w-1.5 h-1.5 rounded-full bg-[hsl(var(--success))]"></span>
             Open for collaboration
           </div>
           <h1 className="text-5xl font-bold tracking-tight text-[hsl(var(--foreground))] leading-[1.1] mb-5 animate-slide-up">

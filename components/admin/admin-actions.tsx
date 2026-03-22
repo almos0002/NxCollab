@@ -45,7 +45,7 @@ export function AdminActions({ signupDisabled: initialSignupDisabled, users: ini
             </div>
           </div>
           <button onClick={handleToggleSignup} disabled={togglingSignup} className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors disabled:opacity-50 ${signupDisabled ? "bg-[hsl(var(--muted-foreground)/0.3)]" : "bg-[hsl(var(--success))]"}`}>
-            <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform shadow-sm ${signupDisabled ? "translate-x-1" : "translate-x-6"}`} />
+            <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform shadow-sm ${signupDisabled ? "translate-x-1" : "translate-x-6"}`}></span>
           </button>
         </div>
       </div>
