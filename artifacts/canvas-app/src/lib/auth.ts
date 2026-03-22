@@ -7,6 +7,7 @@ import {
   accountsTable,
   verificationsTable,
 } from "@workspace/db";
+import { eq, sql } from "drizzle-orm";
 
 const baseURL = process.env.BETTER_AUTH_URL || "http://localhost:18724";
 
@@ -30,6 +31,17 @@ export const auth = betterAuth({
     updateAge: 60 * 60 * 24,
   },
   trustedOrigins: ["*"],
+  databaseHooks: {
+    user: {
+      create: {
+        after: async (user) => {
+          await db.execute(
+            sql`UPDATE users SET is_admin = true WHERE id = ${user.id} AND (SELECT count(*) FROM users) = 1`
+          );
+        },
+      },
+    },
+  },
 });
 
 export type Session = typeof auth.$Infer.Session;

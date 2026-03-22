@@ -35,7 +35,7 @@ A full-featured collaborative canvas web application built with Next.js 15, Bett
 ### Authentication
 - Email/password via Better Auth
 - Cookie-based sessions (7 day expiry)
-- First user must be manually set as admin via DB or a separate admin creation flow
+- First registered user is automatically promoted to admin (atomic SQL check)
 
 ### Role-Based Access
 - **Owner**: Full control including delete workspace
@@ -90,10 +90,15 @@ All API routes are in `artifacts/canvas-app/src/app/api/`:
 - Excalidraw is dynamically imported with SSR disabled to avoid Node.js incompatibilities
 - Dark/light/system theme stored in localStorage, applied via CSS variables
 
-## Making the First Admin
+## UI Design
 
-After registering the first account, run this SQL to promote to admin:
-```sql
-UPDATE users SET is_admin = true WHERE email = 'your@email.com';
-```
-Or use the Replit database tool to execute this query.
+- Inter font, neutral black/white/gray palette, no gradients
+- Consistent `rounded-lg`/`rounded-xl` borders with subtle shadows
+- Custom Combobox component replaces all native select dropdowns
+- Subtle CSS animations (`fade-in`, `slide-up`, `scale-in`)
+- Split-panel auth pages with branded illustration panel
+- Landing page at `/` with feature grid and CTAs
+
+## First Admin
+
+The first registered user is automatically promoted to admin via an atomic SQL update in Better Auth's `databaseHooks.user.create.after`. No manual SQL required.

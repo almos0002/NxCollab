@@ -15,7 +15,7 @@ export default async function SettingsPage() {
   return (
     <div className="p-8 max-w-2xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-2xl font-semibold text-[hsl(var(--foreground))]">Settings</h1>
+        <h1 className="text-2xl font-bold text-[hsl(var(--foreground))] tracking-tight">Settings</h1>
         <p className="text-sm text-[hsl(var(--muted-foreground))] mt-1">Manage your account settings</p>
       </div>
       <SettingsForm user={{ id: user[0].id, name: user[0].name, email: user[0].email }} />

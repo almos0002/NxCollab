@@ -1,12 +1,4 @@
 {
-  "/api/canvases/[id]/versions/route": "app/api/canvases/[id]/versions/route.js",
-  "/api/canvases/[id]/route": "app/api/canvases/[id]/route.js",
-  "/api/workspaces/[id]/invite/route": "app/api/workspaces/[id]/invite/route.js",
-  "/page": "app/page.js",
-  "/auth/sign-up/page": "app/auth/sign-up/page.js",
-  "/auth/sign-in/page": "app/auth/sign-in/page.js",
-  "/(app)/canvas/[id]/page": "app/(app)/canvas/[id]/page.js",
-  "/(app)/dashboard/page": "app/(app)/dashboard/page.js",
-  "/(app)/workspaces/page": "app/(app)/workspaces/page.js",
-  "/(app)/workspaces/[id]/page": "app/(app)/workspaces/[id]/page.js"
+  "/api/auth/[...all]/route": "app/api/auth/[...all]/route.js",
+  "/page": "app/page.js"
 }

@@ -6,6 +6,7 @@ import { eq } from "drizzle-orm";
 import { getUserWorkspaceRole, canEdit } from "@/lib/workspace";
 import { CollaborativeCanvas } from "@/components/canvas/collaborative-canvas";
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 
 interface Props { params: Promise<{ id: string }> }
 
@@ -30,16 +31,15 @@ export default async function CanvasPage({ params }: Props) {
 
   return (
     <div className="flex flex-col h-full">
-      <header className="flex items-center justify-between px-4 py-2.5 border-b border-[hsl(var(--border))] bg-[hsl(var(--card))] shrink-0">
+      <header className="flex items-center justify-between px-5 py-3 border-b border-[hsl(var(--border))] bg-[hsl(var(--card))] shrink-0">
         <div className="flex items-center gap-3">
-          <Link href={`/workspaces/${canvas[0].workspaceId}`} className="text-xs text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] transition-colors">← {canvas[0].workspaceName}</Link>
-          <span className="text-[hsl(var(--border))]">/</span>
-          <h1 className="text-sm font-medium text-[hsl(var(--foreground))]">{canvas[0].name}</h1>
-          <span className="text-xs px-2 py-0.5 rounded-full border border-[hsl(var(--border))] text-[hsl(var(--muted-foreground))] capitalize">{role}</span>
+          <Link href={`/workspaces/${canvas[0].workspaceId}`} className="flex items-center gap-1.5 text-xs text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] transition-colors">
+            <ArrowLeft className="w-3.5 h-3.5" /> {canvas[0].workspaceName}
+          </Link>
+          <span className="text-[hsl(var(--border))]">|</span>
+          <h1 className="text-sm font-semibold text-[hsl(var(--foreground))]">{canvas[0].name}</h1>
+          <span className="text-xs px-2 py-0.5 rounded-md bg-[hsl(var(--muted))] text-[hsl(var(--muted-foreground))] font-medium capitalize">{role}</span>
         </div>
-        {!isEditable && (
-          <span className="text-xs text-[hsl(var(--muted-foreground))]">View only</span>
-        )}
       </header>
       <div className="flex-1 overflow-hidden">
         <CollaborativeCanvas

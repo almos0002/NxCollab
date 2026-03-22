@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useTheme } from "../theme-provider";
-import { Sun, Moon, Monitor } from "lucide-react";
+import { Sun, Moon, Monitor, Check } from "lucide-react";
 
 interface SettingsFormProps { user: { id: string; name: string; email: string }; }
 
@@ -20,31 +20,53 @@ export function SettingsForm({ user }: SettingsFormProps) {
     setSaving(false);
   }
 
+  const themes = [
+    { value: "light" as const, label: "Light", icon: Sun },
+    { value: "dark" as const, label: "Dark", icon: Moon },
+    { value: "system" as const, label: "System", icon: Monitor },
+  ];
+
   return (
-    <div className="space-y-6">
-      <div className="rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-5">
-        <h2 className="text-sm font-semibold text-[hsl(var(--foreground))] mb-4">Profile</h2>
+    <div className="space-y-6 animate-fade-in">
+      <div className="rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-6">
+        <h2 className="text-sm font-semibold text-[hsl(var(--foreground))] mb-5">Profile</h2>
         <form onSubmit={handleSave} className="space-y-4">
-          {error && <div className="rounded-md bg-red-50 dark:bg-red-950/30 border border-red-200 px-4 py-3 text-sm text-red-600 dark:text-red-400">{error}</div>}
-          {success && <div className="rounded-md bg-green-50 dark:bg-green-950/30 border border-green-200 px-4 py-3 text-sm text-green-600 dark:text-green-400">Saved successfully!</div>}
+          {error && (
+            <div className="rounded-lg bg-[hsl(var(--destructive)/0.06)] border border-[hsl(var(--destructive)/0.15)] px-4 py-3 text-sm text-[hsl(var(--destructive))]">{error}</div>
+          )}
+          {success && (
+            <div className="rounded-lg bg-[hsl(var(--success)/0.06)] border border-[hsl(var(--success)/0.15)] px-4 py-3 text-sm text-[hsl(var(--success))] flex items-center gap-2">
+              <Check className="w-4 h-4" /> Saved successfully
+            </div>
+          )}
           <div className="space-y-1.5">
             <label className="text-sm font-medium text-[hsl(var(--foreground))]">Name</label>
-            <input value={name} onChange={e => setName(e.target.value)} className="w-full px-3 py-2 text-sm rounded-md border border-[hsl(var(--border))] bg-[hsl(var(--background))] text-[hsl(var(--foreground))] focus:outline-none focus:ring-2 focus:ring-[hsl(var(--ring))] focus:border-transparent" />
+            <input value={name} onChange={e => setName(e.target.value)} className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--background))] text-[hsl(var(--foreground))] hover:border-[hsl(var(--ring)/0.3)] focus:outline-none focus:ring-2 focus:ring-[hsl(var(--ring)/0.15)] focus:border-[hsl(var(--ring)/0.4)] transition-all" />
           </div>
           <div className="space-y-1.5">
             <label className="text-sm font-medium text-[hsl(var(--foreground))]">Email</label>
-            <input value={user.email} disabled className="w-full px-3 py-2 text-sm rounded-md border border-[hsl(var(--border))] bg-[hsl(var(--muted))] text-[hsl(var(--muted-foreground))] cursor-not-allowed" />
+            <input value={user.email} disabled className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--muted)/0.5)] text-[hsl(var(--muted-foreground))] cursor-not-allowed" />
             <p className="text-xs text-[hsl(var(--muted-foreground))]">Email cannot be changed</p>
           </div>
-          <button type="submit" disabled={saving} className="px-4 py-2 text-sm font-medium rounded-md bg-[hsl(var(--foreground))] text-[hsl(var(--background))] hover:opacity-90 disabled:opacity-50">{saving ? "Saving..." : "Save changes"}</button>
+          <button type="submit" disabled={saving} className="px-5 py-2.5 text-sm font-medium rounded-lg bg-[hsl(var(--foreground))] text-[hsl(var(--background))] hover:opacity-90 disabled:opacity-50 transition-opacity">
+            {saving ? "Saving..." : "Save changes"}
+          </button>
         </form>
       </div>
-      <div className="rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-5">
-        <h2 className="text-sm font-semibold text-[hsl(var(--foreground))] mb-4">Appearance</h2>
+
+      <div className="rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-6">
+        <h2 className="text-sm font-semibold text-[hsl(var(--foreground))] mb-5">Appearance</h2>
         <div className="grid grid-cols-3 gap-3">
-          {([["light", "Light", Sun], ["dark", "Dark", Moon], ["system", "System", Monitor]] as const).map(([value, label, Icon]) => (
-            <button key={value} onClick={() => setTheme(value)} className={`flex flex-col items-center gap-2 p-3 rounded-lg border transition-colors ${theme === value ? "border-[hsl(var(--foreground))] bg-[hsl(var(--accent))]" : "border-[hsl(var(--border))] hover:bg-[hsl(var(--accent))]"}`}>
-              <Icon className="w-5 h-5 text-[hsl(var(--foreground))]" />
+          {themes.map(({ value, label, icon: Icon }) => (
+            <button key={value} onClick={() => setTheme(value)} className={`relative flex flex-col items-center gap-2.5 p-4 rounded-xl border-2 transition-all ${theme === value ? "border-[hsl(var(--foreground))] bg-[hsl(var(--accent)/0.5)]" : "border-[hsl(var(--border))] hover:border-[hsl(var(--ring)/0.3)] hover:bg-[hsl(var(--accent)/0.3)]"}`}>
+              {theme === value && (
+                <div className="absolute top-2 right-2">
+                  <Check className="w-3.5 h-3.5 text-[hsl(var(--foreground))]" />
+                </div>
+              )}
+              <div className="w-10 h-10 rounded-lg bg-[hsl(var(--muted))] flex items-center justify-center">
+                <Icon className="w-5 h-5 text-[hsl(var(--foreground))]" />
+              </div>
               <span className="text-xs font-medium text-[hsl(var(--foreground))]">{label}</span>
             </button>
           ))}
