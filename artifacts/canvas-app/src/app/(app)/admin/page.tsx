@@ -29,7 +29,7 @@ export default async function AdminPage() {
       </div>
       <div className="grid grid-cols-3 gap-4 mb-8">
         {stats.map(({ label, value, icon: Icon }) => (
-          <div key={label} className="rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-5 hover:shadow-sm transition-shadow">
+          <div key={label} className="rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-5">
             <div className="flex items-center justify-between mb-4">
               <div className="w-9 h-9 rounded-lg bg-[hsl(var(--muted))] flex items-center justify-center">
                 <Icon className="w-4 h-4 text-[hsl(var(--muted-foreground))]" />

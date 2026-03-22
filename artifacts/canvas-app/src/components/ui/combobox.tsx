@@ -61,7 +61,7 @@ export function Combobox({ options, value, onChange, placeholder = "Select...", 
         <ChevronDown className={`w-4 h-4 text-[hsl(var(--muted-foreground))] transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
       {open && (
-        <div className="absolute z-50 mt-1.5 w-full rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--popover))] shadow-lg shadow-black/5 animate-scale-in overflow-hidden">
+        <div className="absolute z-50 mt-1.5 w-full rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--popover))] animate-scale-in overflow-hidden">
           {options.length > 4 && (
             <div className="p-2 border-b border-[hsl(var(--border))]">
               <input

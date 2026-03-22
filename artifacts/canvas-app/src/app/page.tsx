@@ -68,7 +68,7 @@ export default async function LandingPage() {
           <div className="rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-1.5">
             <div className="rounded-xl bg-[hsl(var(--muted))] w-full aspect-[16/9] flex items-center justify-center">
               <div className="text-center">
-                <div className="w-16 h-16 rounded-2xl bg-[hsl(var(--background))] flex items-center justify-center mx-auto mb-4 shadow-sm">
+                <div className="w-16 h-16 rounded-2xl bg-[hsl(var(--background))] flex items-center justify-center mx-auto mb-4">
                   <Layers className="w-8 h-8 text-[hsl(var(--muted-foreground))]" />
                 </div>
                 <p className="text-sm font-medium text-[hsl(var(--muted-foreground))]">Canvas preview</p>
@@ -88,7 +88,7 @@ export default async function LandingPage() {
               {features.map((f, i) => {
                 const Icon = f.icon;
                 return (
-                  <div key={i} className="rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-6 hover:shadow-sm transition-shadow">
+                  <div key={i} className="rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-6">
                     <div className="w-10 h-10 rounded-lg bg-[hsl(var(--muted))] flex items-center justify-center mb-4">
                       <Icon className="w-5 h-5 text-[hsl(var(--muted-foreground))]" />
                     </div>

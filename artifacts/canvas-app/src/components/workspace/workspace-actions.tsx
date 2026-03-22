@@ -19,7 +19,7 @@ export function WorkspaceActions({ workspaceId, role }: WorkspaceActionsProps) {
         {showMenu && (
           <>
             <div className="fixed inset-0 z-10" onClick={() => setShowMenu(false)} />
-            <div className="absolute right-0 top-full mt-1.5 z-20 w-52 rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--popover))] shadow-lg shadow-black/5 py-1.5 animate-scale-in">
+            <div className="absolute right-0 top-full mt-1.5 z-20 w-52 rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--popover))] py-1.5 animate-scale-in">
               <button onClick={() => { setShowMenu(false); setShowInvite(true); }} className="flex items-center gap-2.5 w-full px-3.5 py-2.5 text-sm text-[hsl(var(--foreground))] hover:bg-[hsl(var(--accent))] transition-colors">
                 <UserPlus className="w-4 h-4 text-[hsl(var(--muted-foreground))]" /> Invite members
               </button>

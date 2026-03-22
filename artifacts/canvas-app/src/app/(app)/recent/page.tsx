@@ -34,7 +34,7 @@ export default async function RecentPage() {
       ) : (
         <div className="space-y-2">
           {recentCanvases.map(canvas => (
-            <Link key={canvas.id} href={`/canvas/${canvas.id}`} className="group flex items-center justify-between p-4 rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] hover:shadow-sm hover:border-[hsl(var(--ring)/0.2)] transition-all">
+            <Link key={canvas.id} href={`/canvas/${canvas.id}`} className="group flex items-center justify-between p-4 rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] hover:border-[hsl(var(--ring)/0.2)] transition-all">
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-lg bg-[hsl(var(--muted))] flex items-center justify-center">
                   <FileText className="w-4 h-4 text-[hsl(var(--muted-foreground))]" />

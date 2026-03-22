@@ -56,7 +56,7 @@ export function Sidebar({ user }: SidebarProps) {
             <Link key={item.href} href={item.href} className={cn(
               "group flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all",
               active
-                ? "bg-[hsl(var(--accent))] text-[hsl(var(--foreground))] font-medium shadow-sm"
+                ? "bg-[hsl(var(--accent))] text-[hsl(var(--foreground))] font-medium"
                 : "text-[hsl(var(--muted-foreground))] hover:bg-[hsl(var(--accent)/0.6)] hover:text-[hsl(var(--foreground))]"
             )}>
               <Icon className="w-[18px] h-[18px] shrink-0" />
@@ -69,7 +69,7 @@ export function Sidebar({ user }: SidebarProps) {
           <Link href="/admin" className={cn(
             "group flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all",
             pathname.startsWith("/admin")
-              ? "bg-[hsl(var(--accent))] text-[hsl(var(--foreground))] font-medium shadow-sm"
+              ? "bg-[hsl(var(--accent))] text-[hsl(var(--foreground))] font-medium"
               : "text-[hsl(var(--muted-foreground))] hover:bg-[hsl(var(--accent)/0.6)] hover:text-[hsl(var(--foreground))]"
           )}>
             <Shield className="w-[18px] h-[18px] shrink-0" />

@@ -76,7 +76,7 @@ export default async function WorkspacePage({ params }: Props) {
             ) : (
               <div className="grid grid-cols-2 gap-3">
                 {canvases.map(canvas => (
-                  <Link key={canvas.id} href={`/canvas/${canvas.id}`} className="group rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-4 hover:shadow-sm hover:border-[hsl(var(--ring)/0.2)] transition-all">
+                  <Link key={canvas.id} href={`/canvas/${canvas.id}`} className="group rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-4 hover:border-[hsl(var(--ring)/0.2)] transition-all">
                     <div className="w-full h-20 rounded-lg bg-[hsl(var(--muted))] mb-3 flex items-center justify-center">
                       <FileText className="w-6 h-6 text-[hsl(var(--muted-foreground))]" />
                     </div>

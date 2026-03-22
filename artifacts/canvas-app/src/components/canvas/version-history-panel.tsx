@@ -25,7 +25,7 @@ export function VersionHistoryPanel({ canvasId, onClose, onRestore, isEditable }
   }
 
   return (
-    <div className="absolute top-0 right-0 h-full w-80 bg-[hsl(var(--card))] border-l border-[hsl(var(--border))] shadow-2xl shadow-black/10 z-20 flex flex-col animate-fade-in">
+    <div className="absolute top-0 right-0 h-full w-80 bg-[hsl(var(--card))] border-l border-[hsl(var(--border))] z-20 flex flex-col animate-fade-in">
       <div className="flex items-center justify-between px-5 py-4 border-b border-[hsl(var(--border))]">
         <div className="flex items-center gap-2">
           <Clock className="w-4 h-4 text-[hsl(var(--muted-foreground))]" />

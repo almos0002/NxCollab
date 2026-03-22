@@ -41,7 +41,7 @@ export function InviteModal({ workspaceId, onClose }: InviteModalProps) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" onClick={onClose} />
-      <div className="relative z-10 w-full max-w-md rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--popover))] p-6 shadow-2xl shadow-black/10 animate-scale-in">
+      <div className="relative z-10 w-full max-w-md rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--popover))] p-6 animate-scale-in">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg bg-[hsl(var(--muted))] flex items-center justify-center">

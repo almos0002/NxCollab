@@ -49,7 +49,7 @@ export default async function WorkspacesPage() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {allWorkspaces.map(ws => (
-            <Link key={ws.id} href={`/workspaces/${ws.id}`} className="group rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-5 hover:shadow-sm hover:border-[hsl(var(--ring)/0.2)] transition-all">
+            <Link key={ws.id} href={`/workspaces/${ws.id}`} className="group rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-5 hover:border-[hsl(var(--ring)/0.2)] transition-all">
               <div className="flex items-start justify-between mb-4">
                 <div className="w-10 h-10 rounded-xl bg-[hsl(var(--muted))] flex items-center justify-center text-base font-semibold text-[hsl(var(--muted-foreground))]">
                   {ws.name[0]?.toUpperCase()}

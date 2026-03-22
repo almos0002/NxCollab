@@ -95,17 +95,17 @@ export function CollaborativeCanvas({ canvasId, initialContent, isEditable, user
     <div className="relative h-full w-full excalidraw-wrapper">
       <div className="absolute top-3 right-3 z-[10] flex items-center gap-2">
         {collaborators.length > 0 && (
-          <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[hsl(var(--card))] border border-[hsl(var(--border))] text-xs text-[hsl(var(--muted-foreground))] shadow-sm">
+          <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[hsl(var(--card))] border border-[hsl(var(--border))] text-xs text-[hsl(var(--muted-foreground))]">
             <Users className="w-3.5 h-3.5" />
             <span>{collaborators.length + 1} online</span>
           </div>
         )}
         {isEditable && (
           <>
-            <button onClick={() => setShowVersions(true)} className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[hsl(var(--card))] border border-[hsl(var(--border))] text-xs font-medium text-[hsl(var(--foreground))] hover:bg-[hsl(var(--accent))] shadow-sm transition-colors">
+            <button onClick={() => setShowVersions(true)} className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[hsl(var(--card))] border border-[hsl(var(--border))] text-xs font-medium text-[hsl(var(--foreground))] hover:bg-[hsl(var(--accent))] transition-colors">
               <History className="w-3.5 h-3.5" /> History
             </button>
-            <button onClick={handleManualSave} disabled={saving} className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[hsl(var(--foreground))] text-[hsl(var(--background))] text-xs font-medium hover:opacity-90 disabled:opacity-50 shadow-sm transition-opacity">
+            <button onClick={handleManualSave} disabled={saving} className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[hsl(var(--foreground))] text-[hsl(var(--background))] text-xs font-medium hover:opacity-90 disabled:opacity-50 transition-opacity">
               <Save className="w-3.5 h-3.5" /> {saving ? "Saving..." : "Save"}
             </button>
           </>
