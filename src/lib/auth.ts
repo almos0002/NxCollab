@@ -9,7 +9,7 @@ import {
 } from "@/lib/db";
 import { eq, sql } from "drizzle-orm";
 
-const baseURL = process.env.BETTER_AUTH_URL || "http://localhost:18724";
+const baseURL = process.env.BETTER_AUTH_URL || "http://localhost:3000";
 
 export const auth = betterAuth({
   baseURL,
@@ -30,7 +30,7 @@ export const auth = betterAuth({
     expiresIn: 60 * 60 * 24 * 7,
     updateAge: 60 * 60 * 24,
   },
-  trustedOrigins: ["*"],
+  trustedOrigins: [baseURL],
   databaseHooks: {
     user: {
       create: {

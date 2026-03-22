@@ -10,12 +10,15 @@ This is a **standalone Next.js project** — no monorepo, no workspace dependenc
 
 ```
 ├── src/
-│   ├── app/                  # Next.js App Router pages and API routes
-│   │   ├── (app)/            # Authenticated app pages
+│   ├── app/                  # Next.js App Router (pages, layouts, API routes)
+│   │   ├── (app)/            # Authenticated app pages (dashboard, workspaces, canvas, etc.)
 │   │   ├── api/              # API route handlers
 │   │   ├── auth/             # Auth pages (sign-in, sign-up)
 │   │   ├── invite/           # Invite token handling
-│   │   └── layout.tsx        # Root layout
+│   │   ├── globals.css       # Global Tailwind + theme CSS variables
+│   │   ├── layout.tsx        # Root layout
+│   │   ├── page.tsx          # Landing page
+│   │   └── not-found.tsx     # 404 page
 │   ├── components/           # React components
 │   │   ├── ui/               # shadcn/ui components
 │   │   ├── canvas/           # Excalidraw canvas components
@@ -33,11 +36,11 @@ This is a **standalone Next.js project** — no monorepo, no workspace dependenc
 │       ├── workspace.ts      # Workspace permission helpers
 │       ├── encryption.ts     # AES-GCM client-side encryption
 │       └── utils.ts          # Utility functions
-├── public/                   # Static assets
-├── package.json              # Standalone dependencies
+├── public/                   # Static assets (favicon, OG image)
+├── package.json              # Standalone dependencies (npm/yarn/pnpm)
 ├── next.config.ts            # Next.js config
-├── tsconfig.json             # TypeScript config
-├── postcss.config.mjs        # PostCSS / Tailwind config
+├── tsconfig.json             # TypeScript config with @/* path alias
+├── postcss.config.mjs        # PostCSS / Tailwind CSS v4
 ├── drizzle.config.ts         # Drizzle Kit config (DB migrations)
 ├── components.json           # shadcn/ui config
 └── .env.example              # Environment variable template
