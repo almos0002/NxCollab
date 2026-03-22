@@ -9,33 +9,32 @@ A full-featured collaborative canvas web application built with Next.js 15, Bett
 This is a **standalone Next.js project** — no monorepo, no workspace dependencies. It runs anywhere with `npm install && npm run dev`.
 
 ```
-├── src/
-│   ├── app/                  # Next.js App Router (pages, layouts, API routes)
-│   │   ├── (app)/            # Authenticated app pages (dashboard, workspaces, canvas, etc.)
-│   │   ├── api/              # API route handlers
-│   │   ├── auth/             # Auth pages (sign-in, sign-up)
-│   │   ├── invite/           # Invite token handling
-│   │   ├── globals.css       # Global Tailwind + theme CSS variables
-│   │   ├── layout.tsx        # Root layout
-│   │   ├── page.tsx          # Landing page
-│   │   └── not-found.tsx     # 404 page
-│   ├── components/           # React components
-│   │   ├── ui/               # shadcn/ui components
-│   │   ├── canvas/           # Excalidraw canvas components
-│   │   ├── auth/             # Auth forms
-│   │   ├── workspace/        # Workspace management components
-│   │   ├── admin/            # Admin dashboard components
-│   │   └── settings/         # User settings components
-│   ├── hooks/                # Custom React hooks
-│   └── lib/
-│       ├── db/               # Database layer (Drizzle ORM + schema)
-│       │   └── schema/       # PostgreSQL table definitions
-│       ├── auth.ts           # Better Auth server config
-│       ├── auth-client.ts    # Better Auth browser client
-│       ├── session.ts        # Session helpers
-│       ├── workspace.ts      # Workspace permission helpers
-│       ├── encryption.ts     # AES-GCM client-side encryption
-│       └── utils.ts          # Utility functions
+├── app/                      # Next.js App Router (pages, layouts, API routes)
+│   ├── (app)/                # Authenticated app pages (dashboard, workspaces, canvas, etc.)
+│   ├── api/                  # API route handlers
+│   ├── auth/                 # Auth pages (sign-in, sign-up)
+│   ├── invite/               # Invite token handling
+│   ├── globals.css           # Global Tailwind + theme CSS variables
+│   ├── layout.tsx            # Root layout
+│   ├── page.tsx              # Landing page
+│   └── not-found.tsx         # 404 page
+├── components/               # React components
+│   ├── ui/                   # shadcn/ui components
+│   ├── canvas/               # Excalidraw canvas components
+│   ├── auth/                 # Auth forms
+│   ├── workspace/            # Workspace management components
+│   ├── admin/                # Admin dashboard components
+│   └── settings/             # User settings components
+├── hooks/                    # Custom React hooks
+├── lib/
+│   ├── db/                   # Database layer (Drizzle ORM + schema)
+│   │   └── schema/           # PostgreSQL table definitions
+│   ├── auth.ts               # Better Auth server config
+│   ├── auth-client.ts        # Better Auth browser client
+│   ├── session.ts            # Session helpers
+│   ├── workspace.ts          # Workspace permission helpers
+│   ├── encryption.ts         # AES-GCM client-side encryption
+│   └── utils.ts              # Utility functions
 ├── public/                   # Static assets (favicon, OG image)
 ├── package.json              # Standalone dependencies (npm/yarn/pnpm)
 ├── next.config.ts            # Next.js config
