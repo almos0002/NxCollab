@@ -53,7 +53,7 @@ This is a **standalone Next.js project** — no monorepo, no workspace dependenc
 - **Database**: PostgreSQL via Drizzle ORM
 - **Encryption**: AES-GCM via Web Crypto API (client-side)
 
-## Database Schema (`src/lib/db/schema/`)
+## Database Schema (`lib/db/schema/`)
 
 - `users` - User accounts with `isAdmin` flag for admin access
 - `sessions`, `accounts`, `verifications` - Better Auth tables
@@ -120,7 +120,7 @@ npm run dev
 
 ## API Routes
 
-All API routes are in `src/app/api/`:
+All API routes are in `app/api/`:
 - `POST /api/auth/sign-up/email` - Register (via Better Auth)
 - `POST /api/auth/sign-in/email` - Login (via Better Auth)
 - `GET /api/auth/get-session` - Get current session
