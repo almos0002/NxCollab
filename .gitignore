@@ -5,6 +5,10 @@ dist
 tmp
 out-tsc
 *.tsbuildinfo
+
+# Next.js
+.next/
+out/
 .expo
 .expo-shared
 

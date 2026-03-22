@@ -4,21 +4,54 @@
 
 A full-featured collaborative canvas web application built with Next.js 15, Better Auth, and Excalidraw. Real-time collaborative drawing and diagramming with workspace management, role-based access control, version history, and an admin dashboard.
 
-## Architecture
+## Project Structure
 
-### Monorepo Structure
-- `artifacts/canvas-app/` - Main Next.js 15 application (port 18724, proxy at `/`)
-- `artifacts/api-server/` - Legacy Express API server (port 8080, proxy at `/api/healthz`)
-- `lib/db/` - Drizzle ORM schema + PostgreSQL client
+This is a **standalone Next.js project** — no monorepo, no workspace dependencies. It runs anywhere with `npm install && npm run dev`.
 
-### Technology Stack
+```
+├── src/
+│   ├── app/                  # Next.js App Router pages and API routes
+│   │   ├── (app)/            # Authenticated app pages
+│   │   ├── api/              # API route handlers
+│   │   ├── auth/             # Auth pages (sign-in, sign-up)
+│   │   ├── invite/           # Invite token handling
+│   │   └── layout.tsx        # Root layout
+│   ├── components/           # React components
+│   │   ├── ui/               # shadcn/ui components
+│   │   ├── canvas/           # Excalidraw canvas components
+│   │   ├── auth/             # Auth forms
+│   │   ├── workspace/        # Workspace management components
+│   │   ├── admin/            # Admin dashboard components
+│   │   └── settings/         # User settings components
+│   ├── hooks/                # Custom React hooks
+│   └── lib/
+│       ├── db/               # Database layer (Drizzle ORM + schema)
+│       │   └── schema/       # PostgreSQL table definitions
+│       ├── auth.ts           # Better Auth server config
+│       ├── auth-client.ts    # Better Auth browser client
+│       ├── session.ts        # Session helpers
+│       ├── workspace.ts      # Workspace permission helpers
+│       ├── encryption.ts     # AES-GCM client-side encryption
+│       └── utils.ts          # Utility functions
+├── public/                   # Static assets
+├── package.json              # Standalone dependencies
+├── next.config.ts            # Next.js config
+├── tsconfig.json             # TypeScript config
+├── postcss.config.mjs        # PostCSS / Tailwind config
+├── drizzle.config.ts         # Drizzle Kit config (DB migrations)
+├── components.json           # shadcn/ui config
+└── .env.example              # Environment variable template
+```
+
+## Technology Stack
+
 - **Frontend**: Next.js 15, React 19, Tailwind CSS v4, Lucide React
 - **Auth**: Better Auth (email/password, cookie sessions)
 - **Canvas**: Excalidraw (dynamically loaded, SSR disabled)
 - **Database**: PostgreSQL via Drizzle ORM
 - **Encryption**: AES-GCM via Web Crypto API (client-side)
 
-## Database Schema (`lib/db/src/schema/`)
+## Database Schema (`src/lib/db/schema/`)
 
 - `users` - User accounts with `isAdmin` flag for admin access
 - `sessions`, `accounts`, `verifications` - Better Auth tables
@@ -30,12 +63,36 @@ A full-featured collaborative canvas web application built with Next.js 15, Bett
 - `activity_logs` - Audit log for workspace activity
 - `app_settings` - Key-value app configuration (signup_disabled etc.)
 
+## Running Locally
+
+```bash
+# 1. Install dependencies
+npm install
+
+# 2. Set up environment variables
+cp .env.example .env.local
+# Edit .env.local with your DATABASE_URL and BETTER_AUTH_URL
+
+# 3. Push database schema
+npm run db:push
+
+# 4. Start development server
+npm run dev
+```
+
+## Environment Variables
+
+| Variable | Description |
+|---|---|
+| `DATABASE_URL` | PostgreSQL connection string |
+| `BETTER_AUTH_URL` | Base URL of your app (e.g. `http://localhost:3000`) |
+
 ## Key Features
 
 ### Authentication
 - Email/password via Better Auth
 - Cookie-based sessions (7 day expiry)
-- First registered user is automatically promoted to admin (atomic SQL check)
+- First registered user is automatically promoted to admin
 
 ### Role-Based Access
 - **Owner**: Full control including delete workspace
@@ -45,10 +102,10 @@ A full-featured collaborative canvas web application built with Next.js 15, Bett
 
 ### Canvas Editor
 - Excalidraw integration (dynamic import, SSR disabled)
-- Auto-saves every 10 seconds after changes (content-diffed to avoid redundant saves)
-- Manual save button (only manual saves create version snapshots)
+- Auto-saves every 10 seconds after changes
+- Manual save button (creates version snapshots)
 - Version history panel (last 50 versions)
-- Version restore with confirmation warning dialog
+- Version restore with confirmation dialog
 
 ### Admin Dashboard
 - Toggle user registration on/off
@@ -58,14 +115,13 @@ A full-featured collaborative canvas web application built with Next.js 15, Bett
 ### Invite System
 - Generate invite links (valid 7 days)
 - Links auto-join users to workspace with specified role
-- Email invite form in workspace settings
 
 ## API Routes
 
-All API routes are in `artifacts/canvas-app/src/app/api/`:
+All API routes are in `src/app/api/`:
 - `POST /api/auth/sign-up/email` - Register (via Better Auth)
 - `POST /api/auth/sign-in/email` - Login (via Better Auth)
-- `GET /api/auth/get-session` - Get current session (via Better Auth)
+- `GET /api/auth/get-session` - Get current session
 - `POST /api/workspaces` - Create workspace
 - `POST /api/workspaces/[id]/canvases` - Create canvas
 - `POST /api/workspaces/[id]/invite` - Generate invite link
@@ -76,38 +132,10 @@ All API routes are in `artifacts/canvas-app/src/app/api/`:
 - `POST /api/admin/settings/signup` - Toggle signup (admin only)
 - `PATCH /api/user/profile` - Update user profile
 
-## Environment Variables
-
-- `DATABASE_URL` - PostgreSQL connection string (auto-provisioned)
-- `BETTER_AUTH_URL` - Base URL for Better Auth (set to Replit dev domain)
-- `PORT` - Service port (auto-set to 18724 for canvas-app)
-
-## Development Notes
-
-- The Replit proxy routes `/api/*` to the canvas-app on port 18724
-- The legacy api-server only handles `/api/healthz`
-- Better Auth `trustedOrigins: ["*"]` is set for development; restrict in production
-- Excalidraw is dynamically imported with SSR disabled to avoid Node.js incompatibilities
-- Dark/light/system theme stored in localStorage, applied via CSS variables
-
 ## UI Design
 
-- Inter font, neutral black/white/gray palette, no gradients, no shadows
-- Consistent `rounded-lg`/`rounded-xl` borders
-- Custom Combobox component replaces all native select dropdowns
-- Subtle CSS animations (`fade-in`, `slide-up`, `scale-in`)
+- Inter font, neutral black/white/gray palette
+- Custom Combobox component replaces native select dropdowns
+- Dark/light/system theme stored in localStorage
+- Collapsible sidebar with localStorage persistence
 - Split-panel auth pages with branded illustration panel
-- Landing page at `/` with feature grid and CTAs
-- Collapsible sidebar with localStorage persistence (`sidebar-collapsed` key)
-- Profile section at top of sidebar with avatar/initials, name, and email
-- Sidebar profile height matches canvas page header height (49px)
-- Per-page metadata/titles for browser tab (e.g., "Dashboard — Canvas")
-
-## Excalidraw CSS
-
-- Global `* { border-color }` rule is reverted inside `.excalidraw` via `.excalidraw, .excalidraw *, .excalidraw *::before, .excalidraw *::after { border-color: revert; box-sizing: revert; line-height: revert; }`
-- This prevents Tailwind's base styles from breaking Excalidraw's internal UI
-
-## First Admin
-
-The first registered user is automatically promoted to admin via an atomic SQL update in Better Auth's `databaseHooks.user.create.after`. No manual SQL required.
