@@ -1,0 +1,108 @@
+Build a Canvas Collaboration Web App with the Following Features
+
+Tech Stack
+
+- Use Next.js 16 with Partial Prerendering (PPR) even if the artifact is not available use next.js donot need to use react vite
+- Use Neon Database for storage
+- Use Neon Auth or a better-auth authentication system (modular and replaceable)
+
+Core Features
+
+Workspace System
+
+- Users can create and manage multiple workspaces
+- Each workspace can contain multiple collaborative canvases
+- Support role-based access:
+  - Owner
+  - Admin
+  - Member
+  - Viewer
+
+- Workspace permissions must control:
+  - Canvas access
+  - Editing rights
+  - Member management
+
+Collaboration
+
+- Real-time multi-user collaboration on canvas
+- Presence indicators (who is online and active)
+- Live cursor tracking
+- Real-time updates without refresh
+
+Extended Collaboration
+
+- Invite users via email or shareable links
+- Role-based invitations (admin/member/viewer)
+- Activity logs (who edited what and when)
+- Version history with restore capability
+
+Canvas Tool
+
+- Use Excalidraw strictly as the canvas engine
+- No custom canvas replacements
+- Maintain performance even with multiple users
+
+Security
+
+- Implement End-to-End Encryption (E2EE) for:
+  - Canvas data
+  - User-generated content
+
+- Ensure:
+  - Data is encrypted client-side
+  - Server cannot read sensitive canvas data
+
+Admin Dashboard
+
+- Central admin panel with the following controls:
+  - View all users
+  - View all workspaces
+  - Manage user roles globally
+  - Monitor system activity
+
+- Add a "Signup Disable System":
+  - Admin can enable/disable new user registrations
+  - When disabled:
+    - No new accounts can be created
+    - Show a controlled message on signup page
+
+Authentication & Access Control
+
+- Secure authentication system (Neon Auth or Better Auth)
+- Session management with proper token handling
+- Role-based access control across the system
+
+UI / UX Design
+
+- Modern, minimal, and clean web interface
+- Dark and light theme mode (neutral, not colorful)
+- Avoid:
+  - Bright colors
+  - Decorative UI elements
+  - AI-generic layouts
+
+- Design requirements:
+  - Smooth transitions and animations
+  - Clean typography
+  - Consistent spacing and layout grid
+
+Navigation
+
+- Sidebar-based layout with sections:
+  - Dashboard
+  - Workspaces
+  - Recent Canvases
+  - Admin Panel (only for admins)
+  - Profile / Settings
+
+Performance & Constraints
+
+- Optimize for real-time performance and low latency
+- Ensure scalability for multiple concurrent users
+- Use efficient data syncing mechanisms
+
+- System must:
+  - Prevent unauthorized access to canvases
+  - Handle concurrent edits without conflicts
+  - Maintain data consistency across clients

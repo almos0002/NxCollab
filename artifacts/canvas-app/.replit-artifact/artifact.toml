@@ -1,0 +1,25 @@
+kind = "web"
+previewPath = "/"
+title = "Canvas Collaboration App"
+version = "1.0.0"
+id = "artifacts/canvas-app"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/", "/api", "/auth", "/dashboard", "/workspaces", "/canvas", "/invite", "/recent", "/settings", "/admin" ]
+localPort = 18724
+
+[services.development]
+run = "pnpm --filter @workspace/canvas-app run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/canvas-app", "run", "build" ]
+
+[services.env]
+PORT = "18724"
+BASE_PATH = "/"

@@ -24,3 +24,8 @@ expertMode = true
 [postMerge]
 path = "scripts/post-merge.sh"
 timeoutMs = 20000
+
+[userenv]
+
+[userenv.shared]
+BETTER_AUTH_URL = "https://5cb00ba8-d7a1-4b11-ace9-6eaed4adfcb6-00-t1q4orhq5t2j.riker.replit.dev"
