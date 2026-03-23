@@ -60,8 +60,9 @@ This is a **Next.js project** running in a pnpm workspace on Replit. The app run
 - `workspaces` - Collaborative workspaces owned by users
 - `workspace_members` - Role-based membership (owner/admin/member/viewer)
 - `workspace_invites` - Invite tokens with expiry (7 days)
-- `canvases` - Canvas documents within workspaces (includes `library_data` for per-canvas Excalidraw library)
+- `canvases` - Canvas documents within workspaces (includes `library_data` for per-canvas Excalidraw library, `deleted_at` for soft delete)
 - `canvas_versions` - Auto-saved version history (up to 50 per canvas, skips duplicates)
+- `workspaces` includes `deleted_at` column for soft delete
 - `activity_logs` - Audit log for workspace activity
 - `app_settings` - Key-value app configuration (signup_disabled, site_name, site_favicon, site_logo)
 
@@ -126,11 +127,26 @@ npm run dev
 - Owner role is protected (cannot be changed or removed)
 - Role dropdown with inline change, remove button with confirmation dialog
 
+### Soft Delete & Trash System
+- Deleting workspaces or canvases sets `deletedAt` instead of hard delete
+- All list queries filter out soft-deleted items using `isNull(deletedAt)`
+- Trash page at `/trash` lists all deleted workspaces and canvases
+- Restore from trash or permanently delete
+- Workspace delete also soft-deletes all child canvases
+- API routes: `GET /api/trash`, `POST /api/trash/restore`, `POST /api/trash/permanent`
+- Sidebar includes Trash link
+
+### Popup Modals for Creation & Editing
+- Create workspace/canvas via popup modal dialog (no separate pages)
+- Edit workspace/canvas title and description via modal
+- Reusable components: `components/shared/confirm-dialog.tsx`, `components/shared/resource-form-dialog.tsx`
+- Delete confirmations use reusable ConfirmDialog (admin-actions, members-list, canvases-list, workspace detail)
+
 ### Search, Pagination & View Modes
 - Search bar on workspaces page, workspace detail (canvases), and dashboard (recent canvases)
 - Pagination with page navigation (12 items per page for workspaces/canvases, 8 for dashboard)
 - Grid/list view toggle with localStorage persistence
-- Reusable components: `components/shared/search-bar.tsx`, `pagination.tsx`, `view-toggle.tsx`
+- Reusable components: `components/shared/search-bar.tsx`, `pagination.tsx`, `view-toggle.tsx`, `confirm-dialog.tsx`, `resource-form-dialog.tsx`
 
 ### Invite System
 - Generate invite links (valid 7 days)
@@ -159,7 +175,11 @@ All API routes are in `app/api/`:
 - `POST /api/workspaces` - Create workspace
 - `POST /api/workspaces/[id]/canvases` - Create canvas
 - `POST /api/workspaces/[id]/invite` - Generate invite link
-- `GET/PATCH/DELETE /api/canvases/[id]` - Get/update/delete canvas content
+- `PATCH/DELETE /api/workspaces/[id]` - Edit/soft-delete workspace
+- `GET /api/trash` - List trashed items
+- `POST /api/trash/restore` - Restore from trash
+- `POST /api/trash/permanent` - Permanently delete
+- `GET/PATCH/DELETE /api/canvases/[id]` - Get/update/soft-delete canvas content
 - `GET /api/canvases/[id]/versions` - List versions
 - `POST /api/canvases/[id]/versions/[versionId]/restore` - Restore version
 - `GET /api/notifications` - List user notifications

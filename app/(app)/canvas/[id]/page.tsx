@@ -3,7 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import { getServerSession } from "@/lib/session";
 import { db } from "@/lib/db";
 import { canvasesTable, workspacesTable } from "@/lib/db";
-import { eq } from "drizzle-orm";
+import { eq, and, isNull } from "drizzle-orm";
 import { getUserWorkspaceRole, canEdit } from "@/lib/workspace";
 import { CanvasPageClient } from "./canvas-page-client";
 
@@ -25,7 +25,7 @@ export default async function CanvasPage({ params }: Props) {
     content: canvasesTable.content, libraryData: canvasesTable.libraryData, updatedAt: canvasesTable.updatedAt,
     workspaceName: workspacesTable.name,
   }).from(canvasesTable).innerJoin(workspacesTable, eq(canvasesTable.workspaceId, workspacesTable.id))
-    .where(eq(canvasesTable.id, id)).limit(1);
+    .where(and(eq(canvasesTable.id, id), isNull(canvasesTable.deletedAt))).limit(1);
 
   if (!canvas[0]) notFound();
 

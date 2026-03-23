@@ -4,7 +4,7 @@ import { getServerSession } from "@/lib/session";
 export const metadata: Metadata = { title: "Recent — Canvas" };
 import { db } from "@/lib/db";
 import { canvasesTable, workspacesTable } from "@/lib/db";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, and, isNull } from "drizzle-orm";
 import Link from "next/link";
 import { formatDate } from "@/lib/utils";
 import { FileText, Clock } from "lucide-react";
@@ -17,7 +17,7 @@ export default async function RecentPage() {
     id: canvasesTable.id, name: canvasesTable.name, workspaceId: canvasesTable.workspaceId,
     updatedAt: canvasesTable.updatedAt, workspaceName: workspacesTable.name,
   }).from(canvasesTable).innerJoin(workspacesTable, eq(canvasesTable.workspaceId, workspacesTable.id))
-    .where(eq(workspacesTable.ownerId, session.user.id)).orderBy(desc(canvasesTable.updatedAt)).limit(20);
+    .where(and(eq(workspacesTable.ownerId, session.user.id), isNull(canvasesTable.deletedAt), isNull(workspacesTable.deletedAt))).orderBy(desc(canvasesTable.updatedAt)).limit(20);
 
   return (
     <div className="p-8 max-w-5xl mx-auto animate-fade-in">

@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { formatDate } from "@/lib/utils";
 import { Shield, User, ToggleLeft, ToggleRight, Pencil, Trash2, X, Check, AlertTriangle } from "lucide-react";
+import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 
 interface UserRow { id: string; name: string; email: string; isAdmin: boolean; createdAt: string; }
 
@@ -18,8 +19,7 @@ export function AdminActions({ signupDisabled: initialSignupDisabled, users: ini
   const [editName, setEditName] = useState("");
   const [editEmail, setEditEmail] = useState("");
   const [savingEdit, setSavingEdit] = useState(false);
-  const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
-  const [deleting, setDeleting] = useState<string | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<UserRow | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   async function handleToggleSignup() {
@@ -66,17 +66,16 @@ export function AdminActions({ signupDisabled: initialSignupDisabled, users: ini
     setSavingEdit(false);
   }
 
-  async function handleDelete(userId: string) {
-    setDeleting(userId);
-    const res = await fetch(`/api/admin/users/${userId}/delete`, { method: "POST" });
+  async function handleDelete() {
+    if (!deleteTarget) return;
+    const res = await fetch(`/api/admin/users/${deleteTarget.id}/delete`, { method: "POST" });
     if (res.ok) {
-      setUsers(prev => prev.filter(u => u.id !== userId));
-      setDeleteConfirm(null);
+      setUsers(prev => prev.filter(u => u.id !== deleteTarget.id));
+      setDeleteTarget(null);
     } else {
       const data = await res.json();
       setError(data.error || "Failed to delete user");
     }
-    setDeleting(null);
   }
 
   return (
@@ -144,22 +143,6 @@ export function AdminActions({ signupDisabled: initialSignupDisabled, users: ini
                     </button>
                   </div>
                 </div>
-              ) : deleteConfirm === user.id ? (
-                <div className="p-3 rounded-lg bg-[hsl(var(--destructive)/0.05)] border border-[hsl(var(--destructive)/0.2)]">
-                  <div className="flex items-center gap-2 mb-2">
-                    <AlertTriangle className="w-4 h-4 text-[hsl(var(--destructive))]" />
-                    <span className="text-sm font-medium text-[hsl(var(--foreground))]">Delete {user.name}?</span>
-                  </div>
-                  <p className="text-xs text-[hsl(var(--muted-foreground))] mb-3">This will permanently remove the user and all their data. This action cannot be undone.</p>
-                  <div className="flex items-center gap-2">
-                    <button onClick={() => handleDelete(user.id)} disabled={deleting === user.id} className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-[hsl(var(--destructive))] text-white hover:opacity-90 disabled:opacity-50 transition-opacity">
-                      <Trash2 className="w-3 h-3" /> {deleting === user.id ? "Deleting..." : "Delete"}
-                    </button>
-                    <button onClick={() => setDeleteConfirm(null)} className="px-3 py-1.5 text-xs font-medium rounded-lg border border-[hsl(var(--border))] text-[hsl(var(--foreground))] hover:bg-[hsl(var(--accent))] transition-colors">
-                      Cancel
-                    </button>
-                  </div>
-                </div>
               ) : (
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
@@ -184,7 +167,7 @@ export function AdminActions({ signupDisabled: initialSignupDisabled, users: ini
                       <Pencil className="w-3.5 h-3.5" />
                     </button>
                     {user.id !== currentUserId && (
-                      <button onClick={() => setDeleteConfirm(user.id)} className="flex items-center justify-center w-8 h-8 rounded-lg border border-[hsl(var(--border))] text-[hsl(var(--muted-foreground))] hover:bg-[hsl(var(--destructive)/0.1)] hover:text-[hsl(var(--destructive))] hover:border-[hsl(var(--destructive)/0.3)] transition-colors" title="Delete user">
+                      <button onClick={() => setDeleteTarget(user)} className="flex items-center justify-center w-8 h-8 rounded-lg border border-[hsl(var(--border))] text-[hsl(var(--muted-foreground))] hover:bg-[hsl(var(--destructive)/0.1)] hover:text-[hsl(var(--destructive))] hover:border-[hsl(var(--destructive)/0.3)] transition-colors" title="Delete user">
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
                     )}
@@ -198,6 +181,16 @@ export function AdminActions({ signupDisabled: initialSignupDisabled, users: ini
           ))}
         </div>
       </div>
+
+      <ConfirmDialog
+        open={!!deleteTarget}
+        onClose={() => setDeleteTarget(null)}
+        onConfirm={handleDelete}
+        title={`Delete ${deleteTarget?.name}?`}
+        description="This will permanently remove the user and all their data. This action cannot be undone."
+        confirmLabel="Delete"
+        variant="danger"
+      />
     </div>
   );
 }

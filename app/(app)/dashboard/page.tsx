@@ -4,7 +4,7 @@ import { getServerSession } from "@/lib/session";
 export const metadata: Metadata = { title: "Dashboard — Canvas" };
 import { db } from "@/lib/db";
 import { workspacesTable, workspaceMembersTable, canvasesTable } from "@/lib/db";
-import { eq, desc, or, inArray } from "drizzle-orm";
+import { eq, desc, or, inArray, and, isNull } from "drizzle-orm";
 import Link from "next/link";
 import { Plus, Layers, FileText, Activity, ArrowRight } from "lucide-react";
 import { RecentCanvases } from "@/components/dashboard/recent-canvases";
@@ -14,7 +14,7 @@ export default async function DashboardPage() {
   if (!session?.user) return null;
   const userId = session.user.id;
 
-  const ownedWorkspaces = await db.select().from(workspacesTable).where(eq(workspacesTable.ownerId, userId));
+  const ownedWorkspaces = await db.select().from(workspacesTable).where(and(eq(workspacesTable.ownerId, userId), isNull(workspacesTable.deletedAt)));
   const memberEntries = await db.select({ workspaceId: workspaceMembersTable.workspaceId }).from(workspaceMembersTable).where(eq(workspaceMembersTable.userId, userId));
 
   const allWsIds = [...new Set([...ownedWorkspaces.map(w => w.id), ...memberEntries.map(m => m.workspaceId)])];
@@ -25,7 +25,7 @@ export default async function DashboardPage() {
       id: canvasesTable.id, name: canvasesTable.name, workspaceId: canvasesTable.workspaceId,
       updatedAt: canvasesTable.updatedAt, workspaceName: workspacesTable.name,
     }).from(canvasesTable).innerJoin(workspacesTable, eq(canvasesTable.workspaceId, workspacesTable.id))
-      .where(inArray(canvasesTable.workspaceId, allWsIds)).orderBy(desc(canvasesTable.updatedAt)).limit(50);
+      .where(and(inArray(canvasesTable.workspaceId, allWsIds), isNull(canvasesTable.deletedAt))).orderBy(desc(canvasesTable.updatedAt)).limit(50);
     recentCanvases = rows.map(r => ({ id: r.id, name: r.name, workspaceName: r.workspaceName, updatedAt: r.updatedAt.toISOString() }));
   }
 
@@ -72,7 +72,7 @@ export default async function DashboardPage() {
         <div>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-sm font-semibold text-[hsl(var(--foreground))]">Your Workspaces</h2>
-            <Link href="/workspaces/new" className="flex items-center gap-1.5 text-xs text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] transition-colors">
+            <Link href="/workspaces" className="flex items-center gap-1.5 text-xs text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] transition-colors">
               <Plus className="w-3 h-3" /> New
             </Link>
           </div>
@@ -83,7 +83,7 @@ export default async function DashboardPage() {
                   <Layers className="w-5 h-5 text-[hsl(var(--muted-foreground))]" />
                 </div>
                 <p className="text-sm text-[hsl(var(--muted-foreground))] mb-1">No workspaces yet</p>
-                <Link href="/workspaces/new" className="text-sm text-[hsl(var(--foreground))] font-medium hover:underline">Create one now</Link>
+                <Link href="/workspaces" className="text-sm text-[hsl(var(--foreground))] font-medium hover:underline">Create one now</Link>
               </div>
             ) : ownedWorkspaces.map(ws => (
               <Link key={ws.id} href={`/workspaces/${ws.id}`} className="group flex items-center gap-3 p-3.5 rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] hover:border-[hsl(var(--ring)/0.2)] transition-all">

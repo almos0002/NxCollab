@@ -5,7 +5,7 @@ import { canvasesTable, activityLogsTable, workspacesTable } from "@/lib/db";
 import { getUserWorkspaceRole, canEdit } from "@/lib/workspace";
 import { generateId } from "@/lib/utils";
 import { notifyWorkspaceMembers } from "@/lib/notifications";
-import { eq } from "drizzle-orm";
+import { eq, isNull, and } from "drizzle-orm";
 
 interface Params { params: Promise<{ id: string }> }
 
@@ -13,6 +13,9 @@ export async function POST(req: NextRequest, { params }: Params) {
   const { id: workspaceId } = await params;
   const session = await getServerSession();
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const ws = await db.select().from(workspacesTable).where(and(eq(workspacesTable.id, workspaceId), isNull(workspacesTable.deletedAt))).limit(1);
+  if (!ws[0]) return NextResponse.json({ error: "Workspace not found" }, { status: 404 });
 
   const role = await getUserWorkspaceRole(session.user.id, workspaceId);
   if (!role || !canEdit(role)) return NextResponse.json({ error: "Forbidden" }, { status: 403 });

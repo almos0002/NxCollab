@@ -18,6 +18,7 @@ export const canvasesTable = pgTable("canvases", {
   updatedBy: text("updated_by").references(() => usersTable.id),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  deletedAt: timestamp("deleted_at"),
 });
 
 export const canvasVersionsTable = pgTable("canvas_versions", {
