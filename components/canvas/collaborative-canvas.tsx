@@ -73,7 +73,7 @@ export const CollaborativeCanvas = forwardRef<CanvasHandle, CollaborativeCanvasP
       return {
         ...parsed.appState,
         theme: resolvedTheme === "dark" ? "dark" : "light",
-        viewBackgroundColor: parsed.appState?.viewBackgroundColor || bgColor,
+        viewBackgroundColor: bgColor,
       };
     } catch {
       return {
