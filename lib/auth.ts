@@ -11,6 +11,11 @@ import { eq, sql } from "drizzle-orm";
 
 const baseURL = process.env.BETTER_AUTH_URL || "http://localhost:3000";
 
+const trustedOrigins = [baseURL];
+if (process.env.REPLIT_DEV_DOMAIN) {
+  trustedOrigins.push(`https://${process.env.REPLIT_DEV_DOMAIN}`);
+}
+
 export const auth = betterAuth({
   baseURL,
   database: drizzleAdapter(db, {
@@ -30,7 +35,7 @@ export const auth = betterAuth({
     expiresIn: 60 * 60 * 24 * 7,
     updateAge: 60 * 60 * 24,
   },
-  trustedOrigins: [baseURL],
+  trustedOrigins,
   databaseHooks: {
     user: {
       create: {
