@@ -109,29 +109,29 @@ export function CollaborativeCanvas({ canvasId, initialContent, isEditable, user
 
   return (
     <div className="relative h-full w-full excalidraw-wrapper">
-      <div className="absolute top-3 right-3 z-[10] flex items-center gap-2">
+      <div className="absolute bottom-4 right-4 z-[10] flex items-center gap-2">
         {collaborators.length > 0 && (
-          <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[hsl(var(--card))] border border-[hsl(var(--border))] text-xs text-[hsl(var(--muted-foreground))]">
+          <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[hsl(var(--card))] border border-[hsl(var(--border))] text-xs text-[hsl(var(--muted-foreground))] shadow-sm">
             <Users className="w-3.5 h-3.5" />
             <span>{collaborators.length + 1} online</span>
           </div>
         )}
         {isEditable && (
           <>
-            <button onClick={() => setShowVersions(true)} className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[hsl(var(--card))] border border-[hsl(var(--border))] text-xs font-medium text-[hsl(var(--foreground))] hover:bg-[hsl(var(--accent))] transition-colors">
+            {lastSaved && <span className="text-xs text-[hsl(var(--muted-foreground))] bg-[hsl(var(--card))] px-2 py-1 rounded-md border border-[hsl(var(--border))] shadow-sm">Saved {lastSaved.toLocaleTimeString()}</span>}
+            <button onClick={() => setShowVersions(true)} className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[hsl(var(--card))] border border-[hsl(var(--border))] text-xs font-medium text-[hsl(var(--foreground))] hover:bg-[hsl(var(--accent))] transition-colors shadow-sm">
               <History className="w-3.5 h-3.5" /> History
             </button>
-            <button onClick={handleManualSave} disabled={saving} className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[hsl(var(--foreground))] text-[hsl(var(--background))] text-xs font-medium hover:opacity-90 disabled:opacity-50 transition-opacity">
+            <button onClick={handleManualSave} disabled={saving} className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[hsl(var(--foreground))] text-[hsl(var(--background))] text-xs font-medium hover:opacity-90 disabled:opacity-50 transition-opacity shadow-sm">
               <Save className="w-3.5 h-3.5" /> {saving ? "Saving..." : "Save"}
             </button>
           </>
         )}
         {!isEditable && (
-          <div className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[hsl(var(--muted))] text-xs font-medium text-[hsl(var(--muted-foreground))]">
+          <div className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[hsl(var(--muted))] text-xs font-medium text-[hsl(var(--muted-foreground))] shadow-sm">
             <Eye className="w-3.5 h-3.5" /> View only
           </div>
         )}
-        {lastSaved && <span className="text-xs text-[hsl(var(--muted-foreground))] bg-[hsl(var(--card))] px-2 py-1 rounded-md border border-[hsl(var(--border))]">Saved {lastSaved.toLocaleTimeString()}</span>}
       </div>
       <Excalidraw
         ref={setExcalidrawAPI}
