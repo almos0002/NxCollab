@@ -21,10 +21,10 @@ export function SidebarSkeleton({ collapsed = false }: SidebarSkeletonProps) {
         collapsed ? "w-[68px]" : "w-[260px]"
       )}
     >
-      <div className={cn("border-b border-[hsl(var(--border))] h-[49px] flex items-center", collapsed ? "px-2" : "px-2.5")}>
+      <div className={cn("border-b border-[hsl(var(--border))] h-[49px] flex items-center", collapsed ? "px-2" : "px-3")}>
         <div className={cn(
-          "flex items-center rounded-lg bg-[hsl(var(--accent)/0.5)]",
-          collapsed ? "justify-center p-1.5" : "gap-2.5 px-2.5 py-1.5"
+          "flex items-center rounded-lg",
+          collapsed ? "justify-center p-1.5" : "gap-2.5 px-2 py-1.5"
         )}>
           <div className="w-8 h-8 rounded-lg bg-[hsl(var(--muted))] shrink-0 animate-pulse" />
           {!collapsed && (
