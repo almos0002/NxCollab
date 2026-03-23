@@ -100,21 +100,21 @@ export function Sidebar({ user, siteLogo, siteName, initialCollapsed = false }: 
           collapsed ? "w-[68px]" : "w-[260px]"
         )}
       >
-        <div className={cn("border-b border-[hsl(var(--border))]", collapsed ? "p-2" : "p-3")}>
+        <div className={cn("border-b border-[hsl(var(--border))]", collapsed ? "px-2 py-1.5" : "px-2.5 py-1.5")}>
           <SidebarTooltip label={`${user.name}\n${user.email}`}>
             <Link
               href="/settings"
               className={cn(
-                "flex items-center rounded-xl bg-[hsl(var(--accent)/0.5)] hover:bg-[hsl(var(--accent))] transition-colors",
-                collapsed ? "justify-center p-2" : "gap-3 px-3 py-2.5"
+                "flex items-center rounded-lg bg-[hsl(var(--accent)/0.5)] hover:bg-[hsl(var(--accent))] transition-colors",
+                collapsed ? "justify-center p-1.5" : "gap-2.5 px-2.5 py-1.5"
               )}
             >
               <div className="relative shrink-0">
                 {user.image ? (
-                  <img src={user.image} alt={user.name} className="w-9 h-9 rounded-lg object-cover" />
+                  <img src={user.image} alt={user.name} className="w-8 h-8 rounded-lg object-cover" />
                 ) : (
-                  <div className="w-9 h-9 rounded-lg bg-[hsl(var(--foreground))] flex items-center justify-center">
-                    <span className="text-[11px] font-bold text-[hsl(var(--background))]">{initials}</span>
+                  <div className="w-8 h-8 rounded-lg bg-[hsl(var(--foreground))] flex items-center justify-center">
+                    <span className="text-[10px] font-bold text-[hsl(var(--background))]">{initials}</span>
                   </div>
                 )}
                 {siteLogo && (
