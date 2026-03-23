@@ -10,6 +10,7 @@ import { getUserWorkspaceRole, canEdit, canManageMembers } from "@/lib/workspace
 import { Plus, FileText, Users, Activity } from "lucide-react";
 import { WorkspaceActions } from "@/components/workspace/workspace-actions";
 import { CanvasesList } from "@/components/workspace/canvases-list";
+import { MembersList } from "@/components/workspace/members-list";
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params;
@@ -91,24 +92,12 @@ export default async function WorkspacePage({ params }: Props) {
         </div>
 
         <div className="space-y-6">
-          <div className="rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-5">
-            <h2 className="text-sm font-semibold text-[hsl(var(--foreground))] flex items-center gap-2 mb-4">
-              <Users className="w-4 h-4 text-[hsl(var(--muted-foreground))]" /> Members
-            </h2>
-            <div className="space-y-3">
-              {members.map(m => (
-                <div key={m.id} className="flex items-center justify-between">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-7 h-7 rounded-full bg-[hsl(var(--muted))] flex items-center justify-center text-xs font-semibold text-[hsl(var(--muted-foreground))]">
-                      {m.userName[0]?.toUpperCase()}
-                    </div>
-                    <span className="text-xs text-[hsl(var(--foreground))] font-medium">{m.userName}</span>
-                  </div>
-                  <span className="text-xs text-[hsl(var(--muted-foreground))] capitalize bg-[hsl(var(--muted))] px-2 py-0.5 rounded-md">{m.role}</span>
-                </div>
-              ))}
-            </div>
-          </div>
+          <MembersList
+            members={members.map(m => ({ id: m.id, role: m.role, userId: m.userId, userName: m.userName, userEmail: m.userEmail }))}
+            workspaceId={id}
+            currentUserRole={role}
+            ownerId={ws.ownerId}
+          />
 
           <div className="rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-5">
             <h2 className="text-sm font-semibold text-[hsl(var(--foreground))] flex items-center gap-2 mb-4">

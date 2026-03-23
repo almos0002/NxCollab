@@ -115,8 +115,16 @@ npm run dev
 ### Admin Dashboard
 - Toggle user registration on/off
 - Promote/demote users to admin role
+- Edit user name/email (with duplicate email check)
+- Delete users (with confirmation, cannot delete self)
 - View all registered users
 - Branding settings: site name, favicon URL, logo URL (reflected in browser tab, sidebar)
+
+### Workspace Member Management
+- Workspace owners and admins can change member roles (admin/member/viewer)
+- Workspace owners and admins can remove team members
+- Owner role is protected (cannot be changed or removed)
+- Role dropdown with inline change, remove button with confirmation dialog
 
 ### Search, Pagination & View Modes
 - Search bar on workspaces page, workspace detail (canvases), and dashboard (recent canvases)

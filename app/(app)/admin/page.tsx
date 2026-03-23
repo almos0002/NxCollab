@@ -52,7 +52,7 @@ export default async function AdminPage() {
       </div>
       <div className="space-y-6">
         <BrandingSettings initialSettings={{ site_name: brandingSettings.site_name, site_favicon: brandingSettings.site_favicon, site_logo: brandingSettings.site_logo }} />
-        <AdminActions signupDisabled={signupDisabled} users={users.map(u => ({ id: u.id, name: u.name, email: u.email, isAdmin: u.isAdmin ?? false, createdAt: u.createdAt.toISOString() }))} />
+        <AdminActions signupDisabled={signupDisabled} currentUserId={session.user.id} users={users.map(u => ({ id: u.id, name: u.name, email: u.email, isAdmin: u.isAdmin ?? false, createdAt: u.createdAt.toISOString() }))} />
       </div>
     </div>
   );
