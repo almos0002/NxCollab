@@ -6,8 +6,8 @@ import { requireAdmin } from "@/lib/session";
 import { db } from "@/lib/db";
 import { usersTable, appSettingsTable } from "@/lib/db";
 import { eq } from "drizzle-orm";
-import { formatDate } from "@/lib/utils";
 import { AdminActions } from "@/components/admin/admin-actions";
+import { BrandingSettings } from "@/components/admin/branding-settings";
 import { Shield, Users, UserCheck } from "lucide-react";
 
 export default async function AdminPage() {
@@ -17,6 +17,13 @@ export default async function AdminPage() {
   const users = await db.select().from(usersTable).orderBy(usersTable.createdAt);
   const signupSetting = await db.select().from(appSettingsTable).where(eq(appSettingsTable.key, "signup_disabled")).limit(1);
   const signupDisabled = signupSetting[0]?.value === "true";
+
+  const brandingKeys = ["site_name", "site_favicon", "site_logo"] as const;
+  const brandingSettings: Record<string, string> = { site_name: "", site_favicon: "", site_logo: "" };
+  for (const key of brandingKeys) {
+    const row = await db.select().from(appSettingsTable).where(eq(appSettingsTable.key, key)).limit(1);
+    if (row[0]) brandingSettings[key] = row[0].value;
+  }
 
   const stats = [
     { label: "Total Users", value: users.length, icon: Users },
@@ -43,7 +50,10 @@ export default async function AdminPage() {
           </div>
         ))}
       </div>
-      <AdminActions signupDisabled={signupDisabled} users={users.map(u => ({ id: u.id, name: u.name, email: u.email, isAdmin: u.isAdmin ?? false, createdAt: u.createdAt.toISOString() }))} />
+      <div className="space-y-6">
+        <BrandingSettings initialSettings={{ site_name: brandingSettings.site_name, site_favicon: brandingSettings.site_favicon, site_logo: brandingSettings.site_logo }} />
+        <AdminActions signupDisabled={signupDisabled} users={users.map(u => ({ id: u.id, name: u.name, email: u.email, isAdmin: u.isAdmin ?? false, createdAt: u.createdAt.toISOString() }))} />
+      </div>
     </div>
   );
 }

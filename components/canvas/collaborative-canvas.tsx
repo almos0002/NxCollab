@@ -1,7 +1,7 @@
 "use client";
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, useImperativeHandle, forwardRef } from "react";
 import dynamic from "next/dynamic";
-import { History, Save, Users, Eye } from "lucide-react";
+import { useTheme } from "@/components/theme-provider";
 import { VersionHistoryPanel } from "./version-history-panel";
 
 const ExcalidrawWrapper = dynamic(
@@ -11,38 +11,53 @@ const ExcalidrawWrapper = dynamic(
   { ssr: false, loading: () => <div className="flex items-center justify-center h-full text-[hsl(var(--muted-foreground))]">Loading canvas...</div> }
 );
 
+export interface CanvasHandle {
+  save: () => Promise<void>;
+  toggleHistory: () => void;
+  isSaving: boolean;
+  hasUnsavedChanges: boolean;
+}
+
 interface CollaborativeCanvasProps {
   canvasId: string;
   initialContent: string;
+  initialLibraryData: string | null;
   isEditable: boolean;
   userId: string;
   userName: string;
+  onSavingChange?: (saving: boolean) => void;
+  onShowVersionsChange?: (show: boolean) => void;
 }
 
-interface CollaboratorInfo {
-  userId: string;
-  userName: string;
-  color: string;
-}
-
-const COLORS = ["#f97316", "#8b5cf6", "#06b6d4", "#10b981", "#f59e0b", "#ef4444", "#3b82f6"];
 const AUTO_SAVE_DELAY = 10000;
 
-export function CollaborativeCanvas({ canvasId, initialContent, isEditable, userId, userName }: CollaborativeCanvasProps) {
+export const CollaborativeCanvas = forwardRef<CanvasHandle, CollaborativeCanvasProps>(function CollaborativeCanvas(
+  { canvasId, initialContent, initialLibraryData, isEditable, userId, userName, onSavingChange, onShowVersionsChange },
+  ref
+) {
   const [excalidrawAPI, setExcalidrawAPI] = useState<any>(null);
   const [saving, setSaving] = useState(false);
-  const [lastSaved, setLastSaved] = useState<Date | null>(null);
-  const [collaborators, setCollaborators] = useState<CollaboratorInfo[]>([]);
   const [showVersions, setShowVersions] = useState(false);
-  const [cssLoaded, setCssLoaded] = useState(false);
   const wsRef = useRef<WebSocket | null>(null);
   const saveTimeoutRef = useRef<ReturnType<typeof setTimeout>>(null);
   const lastSavedContentRef = useRef<string>(initialContent);
-  const myColor = COLORS[userId.charCodeAt(0) % COLORS.length];
+  const { resolvedTheme } = useTheme();
 
   useEffect(() => {
-    import("@excalidraw/excalidraw/index.css").then(() => setCssLoaded(true)).catch(() => setCssLoaded(true));
+    import("@excalidraw/excalidraw/index.css").catch(() => {});
   }, []);
+
+  useEffect(() => {
+    if (excalidrawAPI && resolvedTheme) {
+      const bgColor = resolvedTheme === "dark" ? "#121212" : "#ffffff";
+      excalidrawAPI.updateScene({
+        appState: {
+          theme: resolvedTheme === "dark" ? "dark" : "light",
+          viewBackgroundColor: bgColor,
+        },
+      });
+    }
+  }, [resolvedTheme, excalidrawAPI]);
 
   const getInitialElements = useCallback(() => {
     try {
@@ -54,9 +69,26 @@ export function CollaborativeCanvas({ canvasId, initialContent, isEditable, user
   const getInitialAppState = useCallback(() => {
     try {
       const parsed = JSON.parse(initialContent);
-      return parsed.appState ?? {};
-    } catch { return {}; }
-  }, [initialContent]);
+      const bgColor = resolvedTheme === "dark" ? "#121212" : "#ffffff";
+      return {
+        ...parsed.appState,
+        theme: resolvedTheme === "dark" ? "dark" : "light",
+        viewBackgroundColor: parsed.appState?.viewBackgroundColor || bgColor,
+      };
+    } catch {
+      return {
+        theme: resolvedTheme === "dark" ? "dark" : "light",
+        viewBackgroundColor: resolvedTheme === "dark" ? "#121212" : "#ffffff",
+      };
+    }
+  }, [initialContent, resolvedTheme]);
+
+  const getInitialLibrary = useCallback(() => {
+    if (!initialLibraryData) return undefined;
+    try {
+      return JSON.parse(initialLibraryData);
+    } catch { return undefined; }
+  }, [initialLibraryData]);
 
   const saveCanvas = useCallback(async (elements: readonly any[], appState: any, createVersion = false) => {
     if (!isEditable) return;
@@ -66,6 +98,7 @@ export function CollaborativeCanvas({ canvasId, initialContent, isEditable, user
     });
     if (content === lastSavedContentRef.current && !createVersion) return;
     setSaving(true);
+    onSavingChange?.(true);
     try {
       await fetch(`/api/canvases/${canvasId}`, {
         method: "PATCH",
@@ -73,10 +106,12 @@ export function CollaborativeCanvas({ canvasId, initialContent, isEditable, user
         body: JSON.stringify({ content, createVersion })
       });
       lastSavedContentRef.current = content;
-      setLastSaved(new Date());
     } catch (err) { console.error("Save failed:", err); }
-    finally { setSaving(false); }
-  }, [canvasId, isEditable]);
+    finally {
+      setSaving(false);
+      onSavingChange?.(false);
+    }
+  }, [canvasId, isEditable, onSavingChange]);
 
   const handleChange = useCallback((elements: readonly any[], appState: any) => {
     if (!isEditable) return;
@@ -87,17 +122,43 @@ export function CollaborativeCanvas({ canvasId, initialContent, isEditable, user
     }
   }, [isEditable, saveCanvas, userId, userName]);
 
+  const handleLibraryChange = useCallback(async (items: any[]) => {
+    if (!isEditable) return;
+    try {
+      await fetch(`/api/canvases/${canvasId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ libraryData: JSON.stringify(items) })
+      });
+    } catch (err) { console.error("Library save failed:", err); }
+  }, [canvasId, isEditable]);
+
   useEffect(() => {
     return () => { if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current); };
   }, []);
 
-  async function handleManualSave() {
+  const handleManualSave = useCallback(async () => {
     if (!excalidrawAPI) return;
     if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
     const elements = excalidrawAPI.getSceneElements();
     const appState = excalidrawAPI.getAppState();
     await saveCanvas(elements, appState, true);
-  }
+  }, [excalidrawAPI, saveCanvas]);
+
+  const toggleHistory = useCallback(() => {
+    setShowVersions(prev => {
+      const next = !prev;
+      onShowVersionsChange?.(next);
+      return next;
+    });
+  }, [onShowVersionsChange]);
+
+  useImperativeHandle(ref, () => ({
+    save: handleManualSave,
+    toggleHistory,
+    isSaving: saving,
+    hasUnsavedChanges: false,
+  }), [handleManualSave, toggleHistory, saving]);
 
   async function handleRestoreVersion(content: string) {
     if (!excalidrawAPI) return;
@@ -106,45 +167,30 @@ export function CollaborativeCanvas({ canvasId, initialContent, isEditable, user
       excalidrawAPI.updateScene({ elements: parsed.elements ?? [], appState: parsed.appState ?? {} });
       lastSavedContentRef.current = content;
       setShowVersions(false);
+      onShowVersionsChange?.(false);
     } catch {}
   }
 
+  const libraryItems = getInitialLibrary();
+
   return (
     <div className="relative h-full w-full excalidraw-wrapper">
-      <div className="absolute bottom-4 right-4 z-[10] flex items-center gap-2">
-        {collaborators.length > 0 && (
-          <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[hsl(var(--card))] border border-[hsl(var(--border))] text-xs text-[hsl(var(--muted-foreground))] shadow-sm">
-            <Users className="w-3.5 h-3.5" />
-            <span>{collaborators.length + 1} online</span>
-          </div>
-        )}
-        {isEditable && (
-          <>
-            {lastSaved && <span className="text-xs text-[hsl(var(--muted-foreground))] bg-[hsl(var(--card))] px-2 py-1 rounded-md border border-[hsl(var(--border))] shadow-sm">Saved {lastSaved.toLocaleTimeString()}</span>}
-            <button onClick={() => setShowVersions(true)} className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[hsl(var(--card))] border border-[hsl(var(--border))] text-xs font-medium text-[hsl(var(--foreground))] hover:bg-[hsl(var(--accent))] transition-colors shadow-sm">
-              <History className="w-3.5 h-3.5" /> History
-            </button>
-            <button onClick={handleManualSave} disabled={saving} className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[hsl(var(--foreground))] text-[hsl(var(--background))] text-xs font-medium hover:opacity-90 disabled:opacity-50 transition-opacity shadow-sm">
-              <Save className="w-3.5 h-3.5" /> {saving ? "Saving..." : "Save"}
-            </button>
-          </>
-        )}
-        {!isEditable && (
-          <div className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[hsl(var(--muted))] text-xs font-medium text-[hsl(var(--muted-foreground))] shadow-sm">
-            <Eye className="w-3.5 h-3.5" /> View only
-          </div>
-        )}
-      </div>
       <ExcalidrawWrapper
         excalidrawAPI={(api: any) => setExcalidrawAPI(api)}
-        initialData={{ elements: getInitialElements(), appState: getInitialAppState() }}
+        initialData={{
+          elements: getInitialElements(),
+          appState: getInitialAppState(),
+          ...(libraryItems ? { libraryItems } : {}),
+        }}
         onChange={handleChange}
+        onLibraryChange={handleLibraryChange}
         viewModeEnabled={!isEditable}
+        theme={resolvedTheme === "dark" ? "dark" : "light"}
         UIOptions={{ canvasActions: { export: false, loadScene: false, saveAsImage: true } }}
       />
       {showVersions && (
-        <VersionHistoryPanel canvasId={canvasId} onClose={() => setShowVersions(false)} onRestore={handleRestoreVersion} isEditable={isEditable} />
+        <VersionHistoryPanel canvasId={canvasId} onClose={() => { setShowVersions(false); onShowVersionsChange?.(false); }} onRestore={handleRestoreVersion} isEditable={isEditable} />
       )}
     </div>
   );
-}
+});

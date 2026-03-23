@@ -19,23 +19,30 @@ export async function PATCH(req: NextRequest, { params }: Params) {
   const role = await getUserWorkspaceRole(session.user.id, canvas[0].workspaceId);
   if (!role || !canEdit(role)) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
-  const { content, name, createVersion } = await req.json();
+  const { content, name, createVersion, libraryData } = await req.json();
   const now = new Date();
 
   if (content !== undefined) {
     if (createVersion && canvas[0].content && canvas[0].content !== "{}") {
-      const versions = await db.select().from(canvasVersionsTable).where(eq(canvasVersionsTable.canvasId, id)).orderBy(canvasVersionsTable.version);
-      const lastVersion = versions[versions.length - 1];
-      const nextVersion = (lastVersion?.version ?? 0) + 1;
+      const contentChanged = content !== canvas[0].content;
+      if (contentChanged) {
+        const versions = await db.select().from(canvasVersionsTable).where(eq(canvasVersionsTable.canvasId, id)).orderBy(canvasVersionsTable.version);
+        const lastVersion = versions[versions.length - 1];
+        const nextVersion = (lastVersion?.version ?? 0) + 1;
 
-      await db.insert(canvasVersionsTable).values({ id: generateId(), canvasId: id, version: nextVersion, content: canvas[0].content, createdBy: session.user.id, createdAt: now });
-      if (versions.length >= 50) {
-        const oldest = versions[0];
-        await db.delete(canvasVersionsTable).where(eq(canvasVersionsTable.id, oldest.id));
+        await db.insert(canvasVersionsTable).values({ id: generateId(), canvasId: id, version: nextVersion, content: canvas[0].content, createdBy: session.user.id, createdAt: now });
+        if (versions.length >= 50) {
+          const oldest = versions[0];
+          await db.delete(canvasVersionsTable).where(eq(canvasVersionsTable.id, oldest.id));
+        }
       }
     }
 
     await db.update(canvasesTable).set({ content, updatedBy: session.user.id, updatedAt: now }).where(eq(canvasesTable.id, id));
+  }
+
+  if (libraryData !== undefined) {
+    await db.update(canvasesTable).set({ libraryData, updatedAt: now }).where(eq(canvasesTable.id, id));
   }
 
   if (name !== undefined) {

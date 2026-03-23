@@ -10,6 +10,7 @@ export const canvasesTable = pgTable("canvases", {
   name: text("name").notNull(),
   description: text("description"),
   content: text("content").default("{}"),
+  libraryData: text("library_data"),
   thumbnail: text("thumbnail"),
   createdBy: text("created_by")
     .notNull()

@@ -5,9 +5,7 @@ import { db } from "@/lib/db";
 import { canvasesTable, workspacesTable } from "@/lib/db";
 import { eq } from "drizzle-orm";
 import { getUserWorkspaceRole, canEdit } from "@/lib/workspace";
-import { CollaborativeCanvas } from "@/components/canvas/collaborative-canvas";
-import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { CanvasPageClient } from "./canvas-page-client";
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params;
@@ -24,7 +22,7 @@ export default async function CanvasPage({ params }: Props) {
 
   const canvas = await db.select({
     id: canvasesTable.id, name: canvasesTable.name, workspaceId: canvasesTable.workspaceId,
-    content: canvasesTable.content, updatedAt: canvasesTable.updatedAt,
+    content: canvasesTable.content, libraryData: canvasesTable.libraryData, updatedAt: canvasesTable.updatedAt,
     workspaceName: workspacesTable.name,
   }).from(canvasesTable).innerJoin(workspacesTable, eq(canvasesTable.workspaceId, workspacesTable.id))
     .where(eq(canvasesTable.id, id)).limit(1);
@@ -37,26 +35,19 @@ export default async function CanvasPage({ params }: Props) {
   const isEditable = canEdit(role);
 
   return (
-    <div className="flex flex-col h-screen">
-      <header className="flex items-center justify-between px-5 h-[49px] border-b border-[hsl(var(--border))] bg-[hsl(var(--card))] shrink-0">
-        <div className="flex items-center gap-3">
-          <Link href={`/workspaces/${canvas[0].workspaceId}`} className="flex items-center gap-1.5 text-xs text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] transition-colors">
-            <ArrowLeft className="w-3.5 h-3.5" /> {canvas[0].workspaceName}
-          </Link>
-          <span className="text-[hsl(var(--border))]">|</span>
-          <h1 className="text-sm font-semibold text-[hsl(var(--foreground))]">{canvas[0].name}</h1>
-          <span className="text-xs px-2 py-0.5 rounded-md bg-[hsl(var(--muted))] text-[hsl(var(--muted-foreground))] font-medium capitalize">{role}</span>
-        </div>
-      </header>
-      <div className="flex-1 overflow-hidden">
-        <CollaborativeCanvas
-          canvasId={id}
-          initialContent={canvas[0].content ?? "{}"}
-          isEditable={isEditable}
-          userId={session.user.id}
-          userName={session.user.name ?? "Anonymous"}
-        />
-      </div>
-    </div>
+    <CanvasPageClient
+      canvas={{
+        id: canvas[0].id,
+        name: canvas[0].name,
+        workspaceId: canvas[0].workspaceId,
+        workspaceName: canvas[0].workspaceName,
+        content: canvas[0].content ?? "{}",
+        libraryData: canvas[0].libraryData ?? null,
+      }}
+      role={role}
+      isEditable={isEditable}
+      userId={session.user.id}
+      userName={session.user.name ?? "Anonymous"}
+    />
   );
 }

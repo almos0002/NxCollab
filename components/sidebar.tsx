@@ -11,6 +11,8 @@ import { LayoutDashboard, Layers, Clock, Settings, Shield, LogOut, Sun, Moon, Mo
 
 interface SidebarProps {
   user: { name: string; email: string; image?: string | null; isAdmin?: boolean };
+  siteLogo?: string;
+  siteName?: string;
 }
 
 const navItems = [
@@ -22,7 +24,7 @@ const navItems = [
 
 const SIDEBAR_KEY = "sidebar-collapsed";
 
-export function Sidebar({ user }: SidebarProps) {
+export function Sidebar({ user, siteLogo, siteName }: SidebarProps) {
   const pathname = usePathname();
   const { theme, setTheme } = useTheme();
   const router = useRouter();
@@ -66,6 +68,12 @@ export function Sidebar({ user }: SidebarProps) {
       )}
       style={!mounted ? { visibility: "hidden" } : undefined}
     >
+      {(siteLogo || siteName) && (
+        <div className={cn("flex items-center border-b border-[hsl(var(--border))] h-[49px]", collapsed ? "px-2 justify-center" : "px-5 gap-2.5")}>
+          {siteLogo && <img src={siteLogo} alt={siteName || "Logo"} className="w-7 h-7 rounded object-contain shrink-0" />}
+          {!collapsed && siteName && <span className="text-sm font-bold text-[hsl(var(--foreground))] truncate">{siteName}</span>}
+        </div>
+      )}
       <div className={cn("flex items-center border-b border-[hsl(var(--border))] h-[49px]", collapsed ? "px-2 justify-center" : "px-5 gap-3")}>
         {user.image ? (
           <img src={user.image} alt={user.name} className="w-8 h-8 rounded-full object-cover shrink-0" />

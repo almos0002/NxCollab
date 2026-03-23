@@ -60,10 +60,10 @@ This is a **standalone Next.js project** — no monorepo, no workspace dependenc
 - `workspaces` - Collaborative workspaces owned by users
 - `workspace_members` - Role-based membership (owner/admin/member/viewer)
 - `workspace_invites` - Invite tokens with expiry (7 days)
-- `canvases` - Canvas documents within workspaces
-- `canvas_versions` - Auto-saved version history (up to 50 per canvas)
+- `canvases` - Canvas documents within workspaces (includes `library_data` for per-canvas Excalidraw library)
+- `canvas_versions` - Auto-saved version history (up to 50 per canvas, skips duplicates)
 - `activity_logs` - Audit log for workspace activity
-- `app_settings` - Key-value app configuration (signup_disabled etc.)
+- `app_settings` - Key-value app configuration (signup_disabled, site_name, site_favicon, site_logo)
 
 ## Running Locally
 
@@ -105,14 +105,18 @@ npm run dev
 ### Canvas Editor
 - Excalidraw integration (dynamic import, SSR disabled)
 - Auto-saves every 10 seconds after changes
-- Manual save button (creates version snapshots)
+- Manual save button (creates version snapshots, skips if content unchanged)
 - Version history panel (last 50 versions)
 - Version restore with confirmation dialog
+- Save/History buttons in page header navbar (not floating overlay)
+- Per-canvas Excalidraw library persistence (saved to DB)
+- Canvas background color and theme follow website dark/light theme
 
 ### Admin Dashboard
 - Toggle user registration on/off
 - Promote/demote users to admin role
 - View all registered users
+- Branding settings: site name, favicon URL, logo URL (reflected in browser tab, sidebar)
 
 ### Invite System
 - Generate invite links (valid 7 days)
@@ -132,6 +136,7 @@ All API routes are in `app/api/`:
 - `POST /api/canvases/[id]/versions/[versionId]/restore` - Restore version
 - `POST /api/admin/users/[id]/role` - Toggle admin (admin only)
 - `POST /api/admin/settings/signup` - Toggle signup (admin only)
+- `GET/POST /api/admin/settings/branding` - Get/set branding (admin only)
 - `PATCH /api/user/profile` - Update user profile
 
 ## UI Design
