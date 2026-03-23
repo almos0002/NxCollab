@@ -52,6 +52,13 @@ function ActivitySection({ recentActivity }: { recentActivity: { id: string; act
   );
 }
 
+interface CanvasItem {
+  id: string;
+  name: string;
+  description: string | null;
+  updatedAt: string;
+}
+
 interface TrashedCanvas {
   id: string;
   name: string;
@@ -62,7 +69,7 @@ interface TrashedCanvas {
 interface WorkspaceDetailClientProps {
   workspace: { id: string; name: string; description: string | null; ownerId: string };
   role: string;
-  canvases: { id: string; name: string; description: string | null; updatedAt: string }[];
+  canvases: CanvasItem[];
   trashedCanvases: TrashedCanvas[];
   members: { id: string; role: string; userId: string; userName: string; userEmail: string }[];
   recentActivity: { id: string; action: string; createdAt: string; userName: string | null }[];
@@ -71,7 +78,7 @@ interface WorkspaceDetailClientProps {
 export function WorkspaceDetailClient({
   workspace,
   role,
-  canvases,
+  canvases: initialCanvases,
   trashedCanvases: initialTrashed,
   members,
   recentActivity,
@@ -81,8 +88,10 @@ export function WorkspaceDetailClient({
   const [showEditWorkspace, setShowEditWorkspace] = useState(false);
   const [showDeleteWorkspace, setShowDeleteWorkspace] = useState(false);
   const [showCanvasTrash, setShowCanvasTrash] = useState(false);
+  const [canvases, setCanvases] = useState(initialCanvases);
   const [trashedCanvases, setTrashedCanvases] = useState(initialTrashed);
   const [permanentDeleteTarget, setPermanentDeleteTarget] = useState<TrashedCanvas | null>(null);
+  const [restoreTarget, setRestoreTarget] = useState<TrashedCanvas | null>(null);
   const canEditWs = role === "owner" || role === "admin" || role === "member";
   const canManage = role === "owner" || role === "admin";
   const isOwner = role === "owner";
@@ -123,14 +132,33 @@ export function WorkspaceDetailClient({
     router.refresh();
   }
 
-  async function handleRestoreCanvas(item: TrashedCanvas) {
+  function handleCanvasDeleted(canvas: CanvasItem) {
+    setCanvases(prev => prev.filter(c => c.id !== canvas.id));
+    setTrashedCanvases(prev => [{
+      id: canvas.id,
+      name: canvas.name,
+      description: canvas.description,
+      deletedAt: new Date().toISOString(),
+    }, ...prev]);
+  }
+
+  async function handleRestoreCanvas() {
+    if (!restoreTarget) return;
     const res = await fetch("/api/trash/restore", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ type: "canvas", id: item.id }),
+      body: JSON.stringify({ type: "canvas", id: restoreTarget.id }),
     });
     if (res.ok) {
-      setTrashedCanvases(prev => prev.filter(c => c.id !== item.id));
+      const restored = restoreTarget;
+      setTrashedCanvases(prev => prev.filter(c => c.id !== restored.id));
+      setCanvases(prev => [{
+        id: restored.id,
+        name: restored.name,
+        description: restored.description,
+        updatedAt: new Date().toISOString(),
+      }, ...prev]);
+      setRestoreTarget(null);
       router.refresh();
     }
   }
@@ -221,7 +249,7 @@ export function WorkspaceDetailClient({
                     </div>
                     <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                       <button
-                        onClick={() => handleRestoreCanvas(item)}
+                        onClick={() => setRestoreTarget(item)}
                         className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-lg border border-[hsl(var(--border))] text-[hsl(var(--foreground))] hover:bg-[hsl(var(--accent))] transition-colors"
                       >
                         <RotateCcw className="w-3 h-3" /> Restore
@@ -247,7 +275,7 @@ export function WorkspaceDetailClient({
                 {canEditWs && <button onClick={() => setShowCreateCanvas(true)} className="text-sm text-[hsl(var(--foreground))] font-medium hover:underline">Create your first canvas</button>}
               </div>
             ) : (
-              <CanvasesList canvases={canvases} workspaceId={workspace.id} userRole={role} />
+              <CanvasesList canvases={canvases} workspaceId={workspace.id} userRole={role} onCanvasDeleted={handleCanvasDeleted} />
             )}
           </div>
         </div>
@@ -292,6 +320,14 @@ export function WorkspaceDetailClient({
         description={`"${workspace.name}" and all its canvases will be moved to trash. You can restore them from the trash later.`}
         confirmLabel="Move to trash"
         variant="danger"
+      />
+      <ConfirmDialog
+        open={!!restoreTarget}
+        onClose={() => setRestoreTarget(null)}
+        onConfirm={handleRestoreCanvas}
+        title="Restore canvas?"
+        description={`"${restoreTarget?.name}" will be restored and will appear in the canvases list again.`}
+        confirmLabel="Restore"
       />
       <ConfirmDialog
         open={!!permanentDeleteTarget}

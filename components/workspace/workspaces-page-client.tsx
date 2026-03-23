@@ -34,6 +34,7 @@ export function WorkspacesPageClient({ workspaces, trashedWorkspaces: initialTra
   const [tab, setTab] = useState<"active" | "trash">("active");
   const [trashedWorkspaces, setTrashedWorkspaces] = useState(initialTrashed);
   const [permanentDeleteTarget, setPermanentDeleteTarget] = useState<TrashedWorkspace | null>(null);
+  const [restoreTarget, setRestoreTarget] = useState<TrashedWorkspace | null>(null);
 
   async function handleCreate(data: { name: string; description: string }) {
     const res = await fetch("/api/workspaces", {
@@ -48,14 +49,16 @@ export function WorkspacesPageClient({ workspaces, trashedWorkspaces: initialTra
     router.refresh();
   }
 
-  async function handleRestore(item: TrashedWorkspace) {
+  async function handleRestore() {
+    if (!restoreTarget) return;
     const res = await fetch("/api/trash/restore", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ type: "workspace", id: item.id }),
+      body: JSON.stringify({ type: "workspace", id: restoreTarget.id }),
     });
     if (res.ok) {
-      setTrashedWorkspaces(prev => prev.filter(w => w.id !== item.id));
+      setTrashedWorkspaces(prev => prev.filter(w => w.id !== restoreTarget.id));
+      setRestoreTarget(null);
       router.refresh();
     }
   }
@@ -145,7 +148,7 @@ export function WorkspacesPageClient({ workspaces, trashedWorkspaces: initialTra
               </div>
               <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                 <button
-                  onClick={() => handleRestore(item)}
+                  onClick={() => setRestoreTarget(item)}
                   className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-[hsl(var(--border))] text-[hsl(var(--foreground))] hover:bg-[hsl(var(--accent))] transition-colors"
                 >
                   <RotateCcw className="w-3 h-3" /> Restore
@@ -170,6 +173,14 @@ export function WorkspacesPageClient({ workspaces, trashedWorkspaces: initialTra
         submitLabel="Create workspace"
         namePlaceholder="My Workspace"
         descriptionPlaceholder="What is this workspace for?"
+      />
+      <ConfirmDialog
+        open={!!restoreTarget}
+        onClose={() => setRestoreTarget(null)}
+        onConfirm={handleRestore}
+        title="Restore workspace?"
+        description={`"${restoreTarget?.name}" and all its canvases will be restored.`}
+        confirmLabel="Restore"
       />
       <ConfirmDialog
         open={!!permanentDeleteTarget}

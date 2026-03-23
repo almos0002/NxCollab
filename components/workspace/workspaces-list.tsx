@@ -19,7 +19,7 @@ interface WorkspacesListProps {
   workspaces: Workspace[];
 }
 
-const PAGE_SIZE = 12;
+const PAGE_SIZE = 6;
 const VIEW_KEY = "workspaces-view";
 
 export function WorkspacesList({ workspaces }: WorkspacesListProps) {

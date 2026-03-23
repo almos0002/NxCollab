@@ -21,14 +21,19 @@ interface CanvasesListProps {
   canvases: Canvas[];
   workspaceId: string;
   userRole?: string;
+  onCanvasDeleted?: (canvas: Canvas) => void;
 }
 
-const PAGE_SIZE = 12;
+const PAGE_SIZE = 6;
 const VIEW_KEY = "canvases-view";
 
-export function CanvasesList({ canvases: initialCanvases, workspaceId, userRole }: CanvasesListProps) {
+export function CanvasesList({ canvases: initialCanvases, workspaceId, userRole, onCanvasDeleted }: CanvasesListProps) {
   const router = useRouter();
   const [canvases, setCanvases] = useState(initialCanvases);
+
+  useEffect(() => {
+    setCanvases(initialCanvases);
+  }, [initialCanvases]);
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [view, setView] = useState<"grid" | "list">("grid");
@@ -80,8 +85,10 @@ export function CanvasesList({ canvases: initialCanvases, workspaceId, userRole 
     if (!deleteTarget) return;
     const res = await fetch(`/api/canvases/${deleteTarget.id}`, { method: "DELETE" });
     if (res.ok) {
-      setCanvases(prev => prev.filter(c => c.id !== deleteTarget.id));
+      const deleted = deleteTarget;
+      setCanvases(prev => prev.filter(c => c.id !== deleted.id));
       setDeleteTarget(null);
+      onCanvasDeleted?.(deleted);
       router.refresh();
     }
   }

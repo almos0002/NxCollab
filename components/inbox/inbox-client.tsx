@@ -54,6 +54,7 @@ export function InboxClient({ initialNotifications, initialTrashedNotifications 
   const [filter, setFilter] = useState<"all" | "unread" | "trash">("all");
   const [markingAll, setMarkingAll] = useState(false);
   const [permanentDeleteTarget, setPermanentDeleteTarget] = useState<TrashedNotification | null>(null);
+  const [restoreTarget, setRestoreTarget] = useState<TrashedNotification | null>(null);
 
   const filtered = filter === "unread" ? notifications.filter(n => !n.isRead) : filter === "all" ? notifications : [];
   const unreadCount = notifications.filter(n => !n.isRead).length;
@@ -82,16 +83,16 @@ export function InboxClient({ initialNotifications, initialTrashedNotifications 
     if (wasUnread) dispatchUnreadChange();
   }
 
-  async function restoreNotification(id: string) {
-    const res = await fetch(`/api/notifications/${id}/restore`, { method: "POST" });
+  async function handleRestore() {
+    if (!restoreTarget) return;
+    const res = await fetch(`/api/notifications/${restoreTarget.id}/restore`, { method: "POST" });
     if (res.ok) {
-      const notif = trashedNotifications.find(n => n.id === id);
-      if (notif) {
-        setTrashedNotifications(prev => prev.filter(n => n.id !== id));
-        const { deletedAt, ...restored } = notif;
-        setNotifications(prev => [restored, ...prev]);
-        if (!notif.isRead) dispatchUnreadChange();
-      }
+      const notif = restoreTarget;
+      setTrashedNotifications(prev => prev.filter(n => n.id !== notif.id));
+      const { deletedAt, ...restored } = notif;
+      setNotifications(prev => [restored, ...prev]);
+      setRestoreTarget(null);
+      if (!notif.isRead) dispatchUnreadChange();
     }
   }
 
@@ -180,7 +181,7 @@ export function InboxClient({ initialNotifications, initialTrashedNotifications 
                       </div>
                       <div className="flex items-center gap-1 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
                         <button
-                          onClick={() => restoreNotification(notification.id)}
+                          onClick={() => setRestoreTarget(notification)}
                           className="flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-md border border-[hsl(var(--border))] text-[hsl(var(--foreground))] hover:bg-[hsl(var(--accent))] transition-colors"
                           title="Restore"
                         >
@@ -277,11 +278,19 @@ export function InboxClient({ initialNotifications, initialTrashedNotifications 
       )}
 
       <ConfirmDialog
+        open={!!restoreTarget}
+        onClose={() => setRestoreTarget(null)}
+        onConfirm={handleRestore}
+        title="Restore notification?"
+        description={`"${restoreTarget?.title}" will be restored to your inbox.`}
+        confirmLabel="Restore"
+      />
+      <ConfirmDialog
         open={!!permanentDeleteTarget}
         onClose={() => setPermanentDeleteTarget(null)}
         onConfirm={handlePermanentDelete}
         title="Permanently delete?"
-        description={`This notification will be permanently deleted. This action cannot be undone.`}
+        description="This notification will be permanently deleted. This action cannot be undone."
         confirmLabel="Delete forever"
         variant="danger"
       />
