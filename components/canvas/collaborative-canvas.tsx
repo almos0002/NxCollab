@@ -96,7 +96,7 @@ export const CollaborativeCanvas = forwardRef<CanvasHandle, CollaborativeCanvasP
       elements,
       appState: { viewBackgroundColor: appState.viewBackgroundColor, gridSize: appState.gridSize }
     });
-    if (content === lastSavedContentRef.current && !createVersion) return;
+    if (content === lastSavedContentRef.current) return;
     setSaving(true);
     onSavingChange?.(true);
     try {

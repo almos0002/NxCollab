@@ -6,6 +6,37 @@ import { eq } from "drizzle-orm";
 import { getUserWorkspaceRole, canEdit } from "@/lib/workspace";
 import { generateId } from "@/lib/utils";
 
+function elementsChanged(storedContent: string, newContent: string): boolean {
+  try {
+    const stored = JSON.parse(storedContent);
+    const incoming = JSON.parse(newContent);
+    const storedEls = stored.elements ?? [];
+    const incomingEls = incoming.elements ?? [];
+    if (storedEls.length !== incomingEls.length) return true;
+    const storedIds = storedEls.map((e: any) => e.id).sort().join(",");
+    const incomingIds = incomingEls.map((e: any) => e.id).sort().join(",");
+    if (storedIds !== incomingIds) return true;
+    const storedMap = new Map(storedEls.map((e: any) => [e.id, e]));
+    for (const el of incomingEls) {
+      const prev = storedMap.get(el.id) as any;
+      if (!prev) return true;
+      if (el.type !== prev.type || el.x !== prev.x || el.y !== prev.y ||
+          el.width !== prev.width || el.height !== prev.height ||
+          el.angle !== prev.angle || el.isDeleted !== prev.isDeleted ||
+          el.strokeColor !== prev.strokeColor || el.backgroundColor !== prev.backgroundColor ||
+          el.fillStyle !== prev.fillStyle || el.strokeWidth !== prev.strokeWidth ||
+          el.roughness !== prev.roughness || el.opacity !== prev.opacity ||
+          JSON.stringify(el.points) !== JSON.stringify(prev.points) ||
+          el.text !== prev.text) {
+        return true;
+      }
+    }
+    return false;
+  } catch {
+    return storedContent !== newContent;
+  }
+}
+
 interface Params { params: Promise<{ id: string }> }
 
 export async function PATCH(req: NextRequest, { params }: Params) {
@@ -24,8 +55,8 @@ export async function PATCH(req: NextRequest, { params }: Params) {
 
   if (content !== undefined) {
     if (createVersion && canvas[0].content && canvas[0].content !== "{}") {
-      const contentChanged = content !== canvas[0].content;
-      if (contentChanged) {
+      const hasRealChanges = elementsChanged(canvas[0].content, content);
+      if (hasRealChanges) {
         const versions = await db.select().from(canvasVersionsTable).where(eq(canvasVersionsTable.canvasId, id)).orderBy(canvasVersionsTable.version);
         const lastVersion = versions[versions.length - 1];
         const nextVersion = (lastVersion?.version ?? 0) + 1;
