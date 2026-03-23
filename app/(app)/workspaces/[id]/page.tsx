@@ -3,7 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import { getServerSession } from "@/lib/session";
 import { db } from "@/lib/db";
 import { workspacesTable, workspaceMembersTable, canvasesTable, activityLogsTable, usersTable } from "@/lib/db";
-import { eq, desc, and, isNull } from "drizzle-orm";
+import { eq, desc, and, isNull, isNotNull } from "drizzle-orm";
 import { getUserWorkspaceRole } from "@/lib/workspace";
 import { WorkspaceDetailClient } from "@/components/workspace/workspace-detail-client";
 
@@ -37,6 +37,8 @@ export default async function WorkspacePage({ params }: Props) {
   }).from(activityLogsTable).leftJoin(usersTable, eq(activityLogsTable.userId, usersTable.id))
     .where(eq(activityLogsTable.workspaceId, id)).orderBy(desc(activityLogsTable.createdAt)).limit(10);
 
+  const trashedCanvases = await db.select().from(canvasesTable).where(and(eq(canvasesTable.workspaceId, id), isNotNull(canvasesTable.deletedAt))).orderBy(desc(canvasesTable.deletedAt));
+
   const ws = workspace[0];
 
   return (
@@ -44,6 +46,7 @@ export default async function WorkspacePage({ params }: Props) {
       workspace={{ id: ws.id, name: ws.name, description: ws.description, ownerId: ws.ownerId }}
       role={role}
       canvases={canvases.map(c => ({ id: c.id, name: c.name, description: c.description, updatedAt: c.updatedAt.toISOString() }))}
+      trashedCanvases={trashedCanvases.map(c => ({ id: c.id, name: c.name, description: c.description, deletedAt: c.deletedAt?.toISOString() || "" }))}
       members={members.map(m => ({ id: m.id, role: m.role, userId: m.userId, userName: m.userName, userEmail: m.userEmail }))}
       recentActivity={recentActivity.map(l => ({ id: l.id, action: l.action, createdAt: l.createdAt.toISOString(), userName: l.userName }))}
     />

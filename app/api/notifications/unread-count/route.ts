@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "@/lib/session";
 import { db } from "@/lib/db";
 import { notificationsTable } from "@/lib/db";
-import { eq, and, count } from "drizzle-orm";
+import { eq, and, count, isNull } from "drizzle-orm";
 
 export async function GET(req: NextRequest) {
   const session = await getServerSession();
@@ -10,7 +10,11 @@ export async function GET(req: NextRequest) {
 
   const result = await db.select({ count: count() })
     .from(notificationsTable)
-    .where(and(eq(notificationsTable.userId, session.user.id), eq(notificationsTable.isRead, false)));
+    .where(and(
+      eq(notificationsTable.userId, session.user.id),
+      eq(notificationsTable.isRead, false),
+      isNull(notificationsTable.deletedAt)
+    ));
 
   return NextResponse.json({ count: result[0]?.count ?? 0 });
 }

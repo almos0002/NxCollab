@@ -2,9 +2,10 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { formatDate } from "@/lib/utils";
-import { Mail, MailOpen, Trash2, CheckCheck, Bell, UserPlus, ShieldAlert, UserMinus, FileX, FilePlus, Users, ExternalLink } from "lucide-react";
+import { Mail, MailOpen, Trash2, CheckCheck, Bell, UserPlus, ShieldAlert, UserMinus, FileX, FilePlus, Users, ExternalLink, RotateCcw } from "lucide-react";
 import Link from "next/link";
 import { dispatchUnreadChange } from "@/lib/notification-events";
+import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 
 interface Notification {
   id: string;
@@ -15,6 +16,10 @@ interface Notification {
   metadata: string | null;
   isRead: boolean;
   createdAt: string;
+}
+
+interface TrashedNotification extends Notification {
+  deletedAt: string;
 }
 
 const typeIcons: Record<string, typeof Bell> = {
@@ -39,15 +44,18 @@ const typeColors: Record<string, string> = {
 
 interface InboxClientProps {
   initialNotifications: Notification[];
+  initialTrashedNotifications: TrashedNotification[];
 }
 
-export function InboxClient({ initialNotifications }: InboxClientProps) {
+export function InboxClient({ initialNotifications, initialTrashedNotifications }: InboxClientProps) {
   const router = useRouter();
   const [notifications, setNotifications] = useState(initialNotifications);
-  const [filter, setFilter] = useState<"all" | "unread">("all");
+  const [trashedNotifications, setTrashedNotifications] = useState(initialTrashedNotifications);
+  const [filter, setFilter] = useState<"all" | "unread" | "trash">("all");
   const [markingAll, setMarkingAll] = useState(false);
+  const [permanentDeleteTarget, setPermanentDeleteTarget] = useState<TrashedNotification | null>(null);
 
-  const filtered = filter === "unread" ? notifications.filter(n => !n.isRead) : notifications;
+  const filtered = filter === "unread" ? notifications.filter(n => !n.isRead) : filter === "all" ? notifications : [];
   const unreadCount = notifications.filter(n => !n.isRead).length;
 
   async function markAsRead(id: string) {
@@ -65,10 +73,35 @@ export function InboxClient({ initialNotifications }: InboxClientProps) {
   }
 
   async function deleteNotification(id: string) {
-    const wasUnread = notifications.find(n => n.id === id && !n.isRead);
+    const notif = notifications.find(n => n.id === id);
+    if (!notif) return;
+    const wasUnread = !notif.isRead;
     await fetch(`/api/notifications/${id}`, { method: "DELETE" });
     setNotifications(prev => prev.filter(n => n.id !== id));
+    setTrashedNotifications(prev => [{ ...notif, deletedAt: new Date().toISOString() }, ...prev]);
     if (wasUnread) dispatchUnreadChange();
+  }
+
+  async function restoreNotification(id: string) {
+    const res = await fetch(`/api/notifications/${id}/restore`, { method: "POST" });
+    if (res.ok) {
+      const notif = trashedNotifications.find(n => n.id === id);
+      if (notif) {
+        setTrashedNotifications(prev => prev.filter(n => n.id !== id));
+        const { deletedAt, ...restored } = notif;
+        setNotifications(prev => [restored, ...prev]);
+        if (!notif.isRead) dispatchUnreadChange();
+      }
+    }
+  }
+
+  async function handlePermanentDelete() {
+    if (!permanentDeleteTarget) return;
+    const res = await fetch(`/api/notifications/${permanentDeleteTarget.id}/permanent`, { method: "POST" });
+    if (res.ok) {
+      setTrashedNotifications(prev => prev.filter(n => n.id !== permanentDeleteTarget.id));
+      setPermanentDeleteTarget(null);
+    }
   }
 
   async function handleClick(notification: Notification) {
@@ -96,8 +129,14 @@ export function InboxClient({ initialNotifications }: InboxClientProps) {
           >
             Unread ({unreadCount})
           </button>
+          <button
+            onClick={() => setFilter("trash")}
+            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg transition-colors ${filter === "trash" ? "bg-[hsl(var(--foreground))] text-[hsl(var(--background))]" : "text-[hsl(var(--muted-foreground))] hover:bg-[hsl(var(--accent))]"}`}
+          >
+            <Trash2 className="w-3 h-3" /> Trash ({trashedNotifications.length})
+          </button>
         </div>
-        {unreadCount > 0 && (
+        {filter !== "trash" && unreadCount > 0 && (
           <button
             onClick={markAllAsRead}
             disabled={markingAll}
@@ -109,7 +148,60 @@ export function InboxClient({ initialNotifications }: InboxClientProps) {
         )}
       </div>
 
-      {filtered.length === 0 ? (
+      {filter === "trash" ? (
+        trashedNotifications.length === 0 ? (
+          <div className="rounded-xl border border-dashed border-[hsl(var(--border))] p-12 text-center">
+            <div className="w-12 h-12 rounded-xl bg-[hsl(var(--muted))] flex items-center justify-center mx-auto mb-3">
+              <Trash2 className="w-6 h-6 text-[hsl(var(--muted-foreground))]" />
+            </div>
+            <p className="text-sm font-medium text-[hsl(var(--foreground))] mb-1">No deleted notifications</p>
+            <p className="text-xs text-[hsl(var(--muted-foreground))]">Deleted notifications will appear here</p>
+          </div>
+        ) : (
+          <div className="rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] overflow-hidden divide-y divide-[hsl(var(--border))]">
+            {trashedNotifications.map(notification => {
+              const Icon = typeIcons[notification.type] ?? Bell;
+              const iconColor = typeColors[notification.type] ?? typeColors.general;
+
+              return (
+                <div
+                  key={notification.id}
+                  className="flex items-start gap-3.5 px-5 py-4 transition-colors group hover:bg-[hsl(var(--accent)/0.15)]"
+                >
+                  <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 mt-0.5 bg-[hsl(var(--muted))] opacity-60">
+                    <Icon className={`w-4 h-4 ${iconColor}`} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="min-w-0">
+                        <p className="text-sm font-medium text-[hsl(var(--muted-foreground))] truncate">{notification.title}</p>
+                        <p className="text-xs text-[hsl(var(--muted-foreground))] mt-0.5 line-clamp-2 opacity-70">{notification.message}</p>
+                        <p className="text-[10px] text-[hsl(var(--muted-foreground))] mt-1.5 opacity-70">Deleted {formatDate(notification.deletedAt)}</p>
+                      </div>
+                      <div className="flex items-center gap-1 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button
+                          onClick={() => restoreNotification(notification.id)}
+                          className="flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-md border border-[hsl(var(--border))] text-[hsl(var(--foreground))] hover:bg-[hsl(var(--accent))] transition-colors"
+                          title="Restore"
+                        >
+                          <RotateCcw className="w-3 h-3" /> Restore
+                        </button>
+                        <button
+                          onClick={() => setPermanentDeleteTarget(notification)}
+                          className="flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-md bg-[hsl(var(--destructive))] text-white hover:opacity-90 transition-opacity"
+                          title="Delete forever"
+                        >
+                          <Trash2 className="w-3 h-3" /> Delete forever
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )
+      ) : filtered.length === 0 ? (
         <div className="rounded-xl border border-dashed border-[hsl(var(--border))] p-12 text-center">
           <div className="w-12 h-12 rounded-xl bg-[hsl(var(--muted))] flex items-center justify-center mx-auto mb-3">
             <Mail className="w-6 h-6 text-[hsl(var(--muted-foreground))]" />
@@ -183,6 +275,16 @@ export function InboxClient({ initialNotifications }: InboxClientProps) {
           })}
         </div>
       )}
+
+      <ConfirmDialog
+        open={!!permanentDeleteTarget}
+        onClose={() => setPermanentDeleteTarget(null)}
+        onConfirm={handlePermanentDelete}
+        title="Permanently delete?"
+        description={`This notification will be permanently deleted. This action cannot be undone.`}
+        confirmLabel="Delete forever"
+        variant="danger"
+      />
     </div>
   );
 }

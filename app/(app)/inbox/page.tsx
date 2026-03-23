@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { getServerSession } from "@/lib/session";
 import { db } from "@/lib/db";
 import { notificationsTable } from "@/lib/db";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, isNull, isNotNull, and } from "drizzle-orm";
 import { InboxClient } from "@/components/inbox/inbox-client";
 
 export const metadata: Metadata = { title: "Inbox — Canvas" };
@@ -14,8 +14,14 @@ export default async function InboxPage() {
 
   const notifications = await db.select()
     .from(notificationsTable)
-    .where(eq(notificationsTable.userId, session.user.id))
+    .where(and(eq(notificationsTable.userId, session.user.id), isNull(notificationsTable.deletedAt)))
     .orderBy(desc(notificationsTable.createdAt))
+    .limit(100);
+
+  const trashedNotifications = await db.select()
+    .from(notificationsTable)
+    .where(and(eq(notificationsTable.userId, session.user.id), isNotNull(notificationsTable.deletedAt)))
+    .orderBy(desc(notificationsTable.deletedAt))
     .limit(100);
 
   return (
@@ -34,6 +40,17 @@ export default async function InboxPage() {
           metadata: n.metadata,
           isRead: n.isRead,
           createdAt: n.createdAt.toISOString(),
+        }))}
+        initialTrashedNotifications={trashedNotifications.map(n => ({
+          id: n.id,
+          type: n.type,
+          title: n.title,
+          message: n.message,
+          link: n.link,
+          metadata: n.metadata,
+          isRead: n.isRead,
+          createdAt: n.createdAt.toISOString(),
+          deletedAt: n.deletedAt?.toISOString() || "",
         }))}
       />
     </div>

@@ -4,7 +4,7 @@ import { getServerSession } from "@/lib/session";
 export const metadata: Metadata = { title: "Workspaces — Canvas" };
 import { db } from "@/lib/db";
 import { workspacesTable, workspaceMembersTable } from "@/lib/db";
-import { eq, and, isNull } from "drizzle-orm";
+import { eq, and, isNull, isNotNull } from "drizzle-orm";
 import { WorkspacesPageClient } from "@/components/workspace/workspaces-page-client";
 
 export default async function WorkspacesPage() {
@@ -26,5 +26,18 @@ export default async function WorkspacesPage() {
     ...memberWorkspaces.map(w => ({ id: w.id, name: w.name, description: w.description, role: w.role, createdAt: w.createdAt.toISOString() })),
   ];
 
-  return <WorkspacesPageClient workspaces={allWorkspaces} />;
+  const trashedWorkspaces = await db.select().from(workspacesTable).where(and(eq(workspacesTable.ownerId, userId), isNotNull(workspacesTable.deletedAt)));
+
+  return (
+    <WorkspacesPageClient
+      workspaces={allWorkspaces}
+      trashedWorkspaces={trashedWorkspaces.map(w => ({
+        id: w.id,
+        name: w.name,
+        description: w.description,
+        deletedAt: w.deletedAt?.toISOString() || "",
+        createdAt: w.createdAt.toISOString(),
+      }))}
+    />
+  );
 }

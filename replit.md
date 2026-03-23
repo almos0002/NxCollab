@@ -127,14 +127,16 @@ npm run dev
 - Owner role is protected (cannot be changed or removed)
 - Role dropdown with inline change, remove button with confirmation dialog
 
-### Soft Delete & Trash System
-- Deleting workspaces or canvases sets `deletedAt` instead of hard delete
+### Soft Delete & Contextual Trash System
+- Deleting workspaces, canvases, or notifications sets `deletedAt` instead of hard delete
 - All list queries filter out soft-deleted items using `isNull(deletedAt)`
-- Trash page at `/trash` lists all deleted workspaces and canvases
-- Restore from trash or permanently delete
+- Contextual trash bins (no centralized `/trash` page):
+  - **Workspaces page**: "Trash" tab shows deleted workspaces owned by the user with restore/permanent-delete
+  - **Workspace detail page**: "Trash" toggle shows deleted canvases within that workspace (owner only)
+  - **Inbox page**: "Trash" tab shows deleted notifications with restore/permanent-delete
 - Workspace delete also soft-deletes all child canvases
-- API routes: `GET /api/trash`, `POST /api/trash/restore`, `POST /api/trash/permanent`
-- Sidebar includes Trash link
+- API routes: `POST /api/trash/restore`, `POST /api/trash/permanent` (workspaces/canvases)
+- Notification trash API: `POST /api/notifications/[id]/restore`, `POST /api/notifications/[id]/permanent`
 
 ### Popup Modals for Creation & Editing
 - Create workspace/canvas via popup modal dialog (no separate pages)
@@ -154,7 +156,7 @@ npm run dev
 - Invite notifications sent directly to user's in-app inbox if they have an account
 
 ### In-App Notification System (Inbox)
-- `notificationsTable` stores per-user notifications with type, title, message, link, metadata
+- `notificationsTable` stores per-user notifications with type, title, message, link, metadata, deletedAt (soft delete)
 - Notification types: workspace_invite, role_changed, member_removed, canvas_deleted, canvas_created, member_joined, general
 - Sidebar "Inbox" link with live unread badge (polls every 30s + instant update via custom events on read/delete)
 - Inbox page (`/inbox`) with all/unread filter, mark-all-read, delete, and click-to-navigate
@@ -176,16 +178,17 @@ All API routes are in `app/api/`:
 - `POST /api/workspaces/[id]/canvases` - Create canvas
 - `POST /api/workspaces/[id]/invite` - Generate invite link
 - `PATCH/DELETE /api/workspaces/[id]` - Edit/soft-delete workspace
-- `GET /api/trash` - List trashed items
-- `POST /api/trash/restore` - Restore from trash
-- `POST /api/trash/permanent` - Permanently delete
+- `POST /api/trash/restore` - Restore workspace/canvas from trash
+- `POST /api/trash/permanent` - Permanently delete workspace/canvas
 - `GET/PATCH/DELETE /api/canvases/[id]` - Get/update/soft-delete canvas content
 - `GET /api/canvases/[id]/versions` - List versions
 - `POST /api/canvases/[id]/versions/[versionId]/restore` - Restore version
 - `GET /api/notifications` - List user notifications
 - `GET /api/notifications/unread-count` - Get unread count
 - `PATCH /api/notifications/[id]` - Mark notification as read
-- `DELETE /api/notifications/[id]` - Delete notification
+- `DELETE /api/notifications/[id]` - Soft-delete notification
+- `POST /api/notifications/[id]/restore` - Restore notification from trash
+- `POST /api/notifications/[id]/permanent` - Permanently delete notification
 - `POST /api/notifications/read-all` - Mark all as read
 - `PATCH/DELETE /api/workspaces/[id]/members/[memberId]` - Change role/remove member
 - `POST /api/admin/users/[id]/role` - Toggle admin (admin only)
