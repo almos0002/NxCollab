@@ -147,9 +147,6 @@
   height: 100%;
 }
 
-.excalidraw-wrapper .excalidraw .layer-ui__wrapper {
-  pointer-events: auto;
-}
 
 @keyframes fade-in {
   from { opacity: 0; transform: translateY(6px); }
