@@ -49,7 +49,7 @@ This is a **standalone Next.js project** — no monorepo, no workspace dependenc
 
 - **Frontend**: Next.js 15, React 19, Tailwind CSS v4, Lucide React
 - **Auth**: Better Auth (email/password, cookie sessions)
-- **Canvas**: Excalidraw (dynamically loaded, SSR disabled)
+- **Canvas**: Excalidraw v0.18 (dynamically loaded, SSR disabled, uses `excalidrawAPI` callback prop)
 - **Database**: PostgreSQL via Drizzle ORM
 - **Encryption**: AES-GCM via Web Crypto API (client-side)
 

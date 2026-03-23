@@ -1,15 +1,12 @@
 "use client";
 import { useEffect, useRef, useState, useCallback } from "react";
 import dynamic from "next/dynamic";
-import type { ExcalidrawElement } from "@excalidraw/excalidraw/types/element/types";
-import type { AppState, ExcalidrawImperativeAPI } from "@excalidraw/excalidraw/types/types";
 import { History, Save, Users, Eye } from "lucide-react";
 import { VersionHistoryPanel } from "./version-history-panel";
 
-const Excalidraw = dynamic(
-  () => import("@excalidraw/excalidraw").then(async (mod) => {
-    await import("@excalidraw/excalidraw/index.css");
-    return mod.Excalidraw;
+const ExcalidrawWrapper = dynamic(
+  () => import("@excalidraw/excalidraw").then((mod) => {
+    return { default: mod.Excalidraw };
   }),
   { ssr: false, loading: () => <div className="flex items-center justify-center h-full text-[hsl(var(--muted-foreground))]">Loading canvas...</div> }
 );
@@ -32,15 +29,20 @@ const COLORS = ["#f97316", "#8b5cf6", "#06b6d4", "#10b981", "#f59e0b", "#ef4444"
 const AUTO_SAVE_DELAY = 10000;
 
 export function CollaborativeCanvas({ canvasId, initialContent, isEditable, userId, userName }: CollaborativeCanvasProps) {
-  const [excalidrawAPI, setExcalidrawAPI] = useState<ExcalidrawImperativeAPI | null>(null);
+  const [excalidrawAPI, setExcalidrawAPI] = useState<any>(null);
   const [saving, setSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const [collaborators, setCollaborators] = useState<CollaboratorInfo[]>([]);
   const [showVersions, setShowVersions] = useState(false);
+  const [cssLoaded, setCssLoaded] = useState(false);
   const wsRef = useRef<WebSocket | null>(null);
   const saveTimeoutRef = useRef<ReturnType<typeof setTimeout>>(null);
   const lastSavedContentRef = useRef<string>(initialContent);
   const myColor = COLORS[userId.charCodeAt(0) % COLORS.length];
+
+  useEffect(() => {
+    import("@excalidraw/excalidraw/index.css").then(() => setCssLoaded(true)).catch(() => setCssLoaded(true));
+  }, []);
 
   const getInitialElements = useCallback(() => {
     try {
@@ -56,7 +58,7 @@ export function CollaborativeCanvas({ canvasId, initialContent, isEditable, user
     } catch { return {}; }
   }, [initialContent]);
 
-  const saveCanvas = useCallback(async (elements: readonly ExcalidrawElement[], appState: AppState, createVersion = false) => {
+  const saveCanvas = useCallback(async (elements: readonly any[], appState: any, createVersion = false) => {
     if (!isEditable) return;
     const content = JSON.stringify({
       elements,
@@ -76,7 +78,7 @@ export function CollaborativeCanvas({ canvasId, initialContent, isEditable, user
     finally { setSaving(false); }
   }, [canvasId, isEditable]);
 
-  const handleChange = useCallback((elements: readonly ExcalidrawElement[], appState: AppState) => {
+  const handleChange = useCallback((elements: readonly any[], appState: any) => {
     if (!isEditable) return;
     if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
     saveTimeoutRef.current = setTimeout(() => saveCanvas(elements, appState, false), AUTO_SAVE_DELAY);
@@ -133,8 +135,8 @@ export function CollaborativeCanvas({ canvasId, initialContent, isEditable, user
           </div>
         )}
       </div>
-      <Excalidraw
-        ref={setExcalidrawAPI}
+      <ExcalidrawWrapper
+        excalidrawAPI={(api: any) => setExcalidrawAPI(api)}
         initialData={{ elements: getInitialElements(), appState: getInitialAppState() }}
         onChange={handleChange}
         viewModeEnabled={!isEditable}
