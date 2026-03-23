@@ -3,7 +3,7 @@ import { getServerSession } from "@/lib/session";
 import { db } from "@/lib/db";
 import { workspacesTable, canvasesTable } from "@/lib/db";
 import { eq } from "drizzle-orm";
-import { getUserWorkspaceRole, canDelete } from "@/lib/workspace";
+import { getUserWorkspaceRole, canEdit } from "@/lib/workspace";
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession();
@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
     if (!canvas[0].deletedAt) return NextResponse.json({ error: "Item must be in trash first" }, { status: 400 });
 
     const role = await getUserWorkspaceRole(session.user.id, canvas[0].workspaceId);
-    if (!role || !canDelete(role)) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    if (!role || !canEdit(role)) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
     await db.delete(canvasesTable).where(eq(canvasesTable.id, id));
     return NextResponse.json({ success: true });

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "@/lib/session";
 import { db } from "@/lib/db";
 import { notificationsTable } from "@/lib/db";
-import { eq, desc, isNull } from "drizzle-orm";
+import { eq, desc, isNull, isNotNull, and } from "drizzle-orm";
 
 export async function GET(req: NextRequest) {
   const session = await getServerSession();
@@ -12,7 +12,6 @@ export async function GET(req: NextRequest) {
   const trashed = searchParams.get("trashed") === "true";
 
   if (trashed) {
-    const { isNotNull, and } = await import("drizzle-orm");
     const notifications = await db.select()
       .from(notificationsTable)
       .where(and(eq(notificationsTable.userId, session.user.id), isNotNull(notificationsTable.deletedAt)))
@@ -21,7 +20,6 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(notifications);
   }
 
-  const { and } = await import("drizzle-orm");
   const notifications = await db.select()
     .from(notificationsTable)
     .where(and(eq(notificationsTable.userId, session.user.id), isNull(notificationsTable.deletedAt)))

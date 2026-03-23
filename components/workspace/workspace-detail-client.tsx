@@ -186,7 +186,7 @@ export function WorkspaceDetailClient({
                 <span className="text-xs text-[hsl(var(--muted-foreground))] font-normal">({canvases.length})</span>
               </h2>
               <div className="flex items-center gap-2">
-                {trashedCanvases.length > 0 && isOwner && (
+                {trashedCanvases.length > 0 && canEditWs && (
                   <button
                     onClick={() => setShowCanvasTrash(!showCanvasTrash)}
                     className={`flex items-center gap-1.5 text-xs px-3 py-2 rounded-lg font-medium transition-colors ${showCanvasTrash ? "bg-[hsl(var(--accent))] text-[hsl(var(--foreground))]" : "text-[hsl(var(--muted-foreground))] hover:bg-[hsl(var(--accent))]"}`}
