@@ -216,5 +216,6 @@ All API routes are in `app/api/`:
 - Inter font, neutral black/white/gray palette
 - Custom Combobox component replaces native select dropdowns
 - Dark/light/system theme stored in localStorage
-- Collapsible sidebar with localStorage persistence
+- Collapsible sidebar with cookie persistence (SSR-readable, no flash on load)
+- Sidebar uses Suspense streaming with skeleton fallback for instant shell rendering
 - Split-panel auth pages with branded illustration panel

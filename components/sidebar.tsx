@@ -7,13 +7,14 @@ import { useTheme } from "./theme-provider";
 import { signOut } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useCallback } from "react";
-import { LayoutDashboard, Layers, Clock, Settings, Shield, LogOut, Sun, Moon, Monitor, ChevronRight, PanelLeftClose, PanelLeft, User, Inbox } from "lucide-react";
+import { LayoutDashboard, Layers, Clock, Settings, Shield, LogOut, Sun, Moon, Monitor, ChevronRight, PanelLeftClose, PanelLeft, Inbox } from "lucide-react";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
 
 interface SidebarProps {
   user: { name: string; email: string; image?: string | null; isAdmin?: boolean };
   siteLogo?: string;
   siteName?: string;
+  initialCollapsed?: boolean;
 }
 
 const navItems = [
@@ -24,14 +25,16 @@ const navItems = [
   { href: "/settings", label: "Settings", icon: Settings },
 ];
 
-const SIDEBAR_KEY = "sidebar-collapsed";
+function setCookie(name: string, value: string, days: number) {
+  const expires = new Date(Date.now() + days * 864e5).toUTCString();
+  document.cookie = `${name}=${value};expires=${expires};path=/;SameSite=Lax`;
+}
 
-export function Sidebar({ user, siteLogo, siteName }: SidebarProps) {
+export function Sidebar({ user, siteLogo, siteName, initialCollapsed = false }: SidebarProps) {
   const pathname = usePathname();
   const { theme, setTheme } = useTheme();
   const router = useRouter();
-  const [collapsed, setCollapsed] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const [collapsed, setCollapsed] = useState(initialCollapsed);
   const [unreadCount, setUnreadCount] = useState(0);
 
   const fetchUnread = useCallback(async () => {
@@ -45,9 +48,6 @@ export function Sidebar({ user, siteLogo, siteName }: SidebarProps) {
   }, []);
 
   useEffect(() => {
-    const stored = localStorage.getItem(SIDEBAR_KEY);
-    if (stored === "true") setCollapsed(true);
-    setMounted(true);
     fetchUnread();
     const interval = setInterval(fetchUnread, 30000);
     const handleChange = () => fetchUnread();
@@ -61,7 +61,7 @@ export function Sidebar({ user, siteLogo, siteName }: SidebarProps) {
   function toggleCollapsed() {
     const next = !collapsed;
     setCollapsed(next);
-    localStorage.setItem(SIDEBAR_KEY, String(next));
+    setCookie("sidebar-collapsed", String(next), 365);
   }
 
   async function handleSignOut() {
@@ -96,11 +96,9 @@ export function Sidebar({ user, siteLogo, siteName }: SidebarProps) {
     <TooltipProvider>
       <aside
         className={cn(
-          "flex flex-col min-h-screen border-r border-[hsl(var(--border))] bg-[hsl(var(--card))] shrink-0 overflow-hidden",
-          mounted && "transition-all duration-200",
+          "flex flex-col min-h-screen border-r border-[hsl(var(--border))] bg-[hsl(var(--card))] shrink-0 overflow-hidden transition-all duration-200",
           collapsed ? "w-[68px]" : "w-[260px]"
         )}
-        style={!mounted ? { visibility: "hidden" } : undefined}
       >
         {(siteLogo || siteName) && (
           <div className={cn("flex items-center border-b border-[hsl(var(--border))] h-[49px]", collapsed ? "px-2 justify-center" : "px-5 gap-2.5")}>
