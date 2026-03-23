@@ -2,13 +2,55 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Plus, FileText, Users, Activity, Pencil, Trash2 } from "lucide-react";
+import { Plus, FileText, Users, Activity, Pencil, Trash2, ChevronDown, ChevronUp } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 import { WorkspaceActions } from "@/components/workspace/workspace-actions";
 import { CanvasesList } from "@/components/workspace/canvases-list";
 import { MembersList } from "@/components/workspace/members-list";
 import { ResourceFormDialog } from "@/components/shared/resource-form-dialog";
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
+
+const ACTIVITY_PREVIEW_COUNT = 5;
+
+function ActivitySection({ recentActivity }: { recentActivity: { id: string; action: string; createdAt: string; userName: string | null }[] }) {
+  const [expanded, setExpanded] = useState(false);
+  const hasMore = recentActivity.length > ACTIVITY_PREVIEW_COUNT;
+  const visible = expanded ? recentActivity : recentActivity.slice(0, ACTIVITY_PREVIEW_COUNT);
+
+  return (
+    <div className="rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-5">
+      <h2 className="text-sm font-semibold text-[hsl(var(--foreground))] flex items-center gap-2 mb-4">
+        <Activity className="w-4 h-4 text-[hsl(var(--muted-foreground))]" /> Activity
+        {recentActivity.length > 0 && (
+          <span className="text-xs text-[hsl(var(--muted-foreground))] font-normal">({recentActivity.length})</span>
+        )}
+      </h2>
+      <div className="space-y-3">
+        {recentActivity.length === 0 ? (
+          <p className="text-xs text-[hsl(var(--muted-foreground))]">No activity yet</p>
+        ) : visible.map(log => (
+          <div key={log.id} className="text-xs border-l-2 border-[hsl(var(--border))] pl-3">
+            <span className="font-medium text-[hsl(var(--foreground))]">{log.userName}</span>{" "}
+            <span className="text-[hsl(var(--muted-foreground))]">{log.action}</span>
+            <div className="text-[hsl(var(--muted-foreground))] mt-0.5">{formatDate(log.createdAt)}</div>
+          </div>
+        ))}
+      </div>
+      {hasMore && (
+        <button
+          onClick={() => setExpanded(!expanded)}
+          className="flex items-center gap-1 mt-3 text-xs font-medium text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] transition-colors w-full justify-center pt-2 border-t border-[hsl(var(--border))]"
+        >
+          {expanded ? (
+            <><ChevronUp className="w-3 h-3" /> Show less</>
+          ) : (
+            <><ChevronDown className="w-3 h-3" /> View all activity</>
+          )}
+        </button>
+      )}
+    </div>
+  );
+}
 
 interface WorkspaceDetailClientProps {
   workspace: { id: string; name: string; description: string | null; ownerId: string };
@@ -133,22 +175,7 @@ export function WorkspaceDetailClient({
             ownerId={workspace.ownerId}
           />
 
-          <div className="rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-5">
-            <h2 className="text-sm font-semibold text-[hsl(var(--foreground))] flex items-center gap-2 mb-4">
-              <Activity className="w-4 h-4 text-[hsl(var(--muted-foreground))]" /> Activity
-            </h2>
-            <div className="space-y-3">
-              {recentActivity.length === 0 ? (
-                <p className="text-xs text-[hsl(var(--muted-foreground))]">No activity yet</p>
-              ) : recentActivity.map(log => (
-                <div key={log.id} className="text-xs border-l-2 border-[hsl(var(--border))] pl-3">
-                  <span className="font-medium text-[hsl(var(--foreground))]">{log.userName}</span>{" "}
-                  <span className="text-[hsl(var(--muted-foreground))]">{log.action}</span>
-                  <div className="text-[hsl(var(--muted-foreground))] mt-0.5">{formatDate(log.createdAt)}</div>
-                </div>
-              ))}
-            </div>
-          </div>
+          <ActivitySection recentActivity={recentActivity} />
         </div>
       </div>
 
