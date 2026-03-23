@@ -6,7 +6,7 @@ A full-featured collaborative canvas web application built with Next.js 15, Bett
 
 ## Project Structure
 
-This is a **standalone Next.js project** — no monorepo, no workspace dependencies. It runs anywhere with `npm install && npm run dev`.
+This is a **Next.js project** running in a pnpm workspace on Replit. The app runs on port 5000 via the "Start application" workflow.
 
 ```
 ├── app/                      # Next.js App Router (pages, layouts, API routes)

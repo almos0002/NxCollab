@@ -1,0 +1,15 @@
+kind = "web"
+title = "Canvas — Collaborative Workspace"
+version = "0.0.1"
+previewPath = "/"
+
+[[services]]
+name = "web"
+localPort = 5000
+paths = ["/"]
+
+[services.dev]
+command = "pnpm run dev"
+
+[services.dev.env]
+PORT = "5000"

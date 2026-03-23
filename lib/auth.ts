@@ -9,11 +9,16 @@ import {
 } from "@/lib/db";
 import { eq, sql } from "drizzle-orm";
 
-const baseURL = process.env.BETTER_AUTH_URL || "http://localhost:3000";
+const baseURL = process.env.BETTER_AUTH_URL
+  || (process.env.REPLIT_DEV_DOMAIN ? `https://${process.env.REPLIT_DEV_DOMAIN}` : null)
+  || `http://localhost:${process.env.PORT || 3000}`;
 
 const trustedOrigins = [baseURL];
 if (process.env.REPLIT_DEV_DOMAIN) {
-  trustedOrigins.push(`https://${process.env.REPLIT_DEV_DOMAIN}`);
+  const replitOrigin = `https://${process.env.REPLIT_DEV_DOMAIN}`;
+  if (!trustedOrigins.includes(replitOrigin)) {
+    trustedOrigins.push(replitOrigin);
+  }
 }
 
 export const auth = betterAuth({

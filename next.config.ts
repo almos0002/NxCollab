@@ -10,6 +10,7 @@ const nextConfig: NextConfig = {
     "*.kirk.replit.dev",
     "*.picard.replit.dev",
     "*.janeway.replit.dev",
+    "*.spock.replit.dev",
     "*.repl.co",
   ],
 };
