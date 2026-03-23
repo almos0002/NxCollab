@@ -29,7 +29,6 @@ export async function POST(req: NextRequest, { params }: Params) {
   await db.insert(canvasesTable).values({ id, name: name.trim(), description: description?.trim() ?? null, workspaceId, content: "{}", createdBy: session.user.id, updatedBy: session.user.id, createdAt: now, updatedAt: now });
   await db.insert(activityLogsTable).values({ id: generateId(), workspaceId, userId: session.user.id, action: `created canvas "${name.trim()}"`, createdAt: now });
 
-  const ws = await db.select({ name: workspacesTable.name }).from(workspacesTable).where(eq(workspacesTable.id, workspaceId)).limit(1);
   const wsName = ws[0]?.name ?? "a workspace";
 
   await notifyWorkspaceMembers(workspaceId, session.user.id, {
