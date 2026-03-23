@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
-export const metadata: Metadata = { title: "Settings — Canvas" };
+export const metadata: Metadata = { title: "Settings" };
 import { getServerSession } from "@/lib/session";
 import { db } from "@/lib/db";
 import { usersTable } from "@/lib/db";

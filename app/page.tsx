@@ -1,14 +1,33 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { getServerSession } from "@/lib/session";
 import { redirect } from "next/navigation";
+import { getBranding } from "@/lib/branding";
 import { Layers, Users, Lock, History, Zap, ArrowRight, Shield, Pen } from "lucide-react";
 
-export const metadata: Metadata = { title: "Canvas — Collaborative Workspace" };
+export async function generateMetadata() {
+  const { siteName } = await getBranding();
+  return { title: { absolute: `${siteName} — Collaborative Workspace` } };
+}
+
+function DefaultLogo({ size = 18, bgClass = "bg-[hsl(var(--foreground))]", fillColor = "hsl(var(--background))" }: { size?: number; bgClass?: string; fillColor?: string }) {
+  const containerSize = size === 12 ? "w-6 h-6 rounded-md" : "w-8 h-8 rounded-lg";
+  return (
+    <div className={`${containerSize} ${bgClass} flex items-center justify-center`}>
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+        <rect x="3" y="3" width="7" height="7" rx="1.5" fill={fillColor}/>
+        <rect x="14" y="3" width="7" height="7" rx="1.5" fill={fillColor}/>
+        <rect x="3" y="14" width="7" height="7" rx="1.5" fill={fillColor}/>
+        <rect x="14" y="14" width="7" height="7" rx="1.5" fill={fillColor}/>
+      </svg>
+    </div>
+  );
+}
 
 export default async function LandingPage() {
   const session = await getServerSession();
   if (session?.user) redirect("/dashboard");
+
+  const { siteName, siteLogo } = await getBranding();
 
   const features = [
     { icon: Layers, title: "Infinite Canvas", desc: "Draw, sketch, and diagram on a boundless whiteboard powered by Excalidraw." },
@@ -30,15 +49,12 @@ export default async function LandingPage() {
       <header className="fixed top-0 left-0 right-0 z-50 bg-[hsl(var(--background)/0.8)] backdrop-blur-xl border-b border-[hsl(var(--border)/0.5)]">
         <div className="max-w-6xl mx-auto flex items-center justify-between px-6 h-16">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-[hsl(var(--foreground))] flex items-center justify-center">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                <rect x="3" y="3" width="7" height="7" rx="1.5" fill="hsl(var(--background))"/>
-                <rect x="14" y="3" width="7" height="7" rx="1.5" fill="hsl(var(--background))"/>
-                <rect x="3" y="14" width="7" height="7" rx="1.5" fill="hsl(var(--background))"/>
-                <rect x="14" y="14" width="7" height="7" rx="1.5" fill="hsl(var(--background))"/>
-              </svg>
-            </div>
-            <span className="font-bold text-[hsl(var(--foreground))]">Canvas</span>
+            {siteLogo ? (
+              <img src={siteLogo} alt={siteName} className="w-8 h-8 rounded-lg object-contain" />
+            ) : (
+              <DefaultLogo />
+            )}
+            <span className="font-bold text-[hsl(var(--foreground))]">{siteName}</span>
           </div>
           <div className="flex items-center gap-2">
             <Link href="/auth/sign-in" className="px-4 py-2 text-sm font-medium text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] transition-colors rounded-lg hover:bg-[hsl(var(--accent)/0.5)]">
@@ -188,15 +204,12 @@ export default async function LandingPage() {
       <footer className="border-t border-[hsl(var(--border))]">
         <div className="max-w-6xl mx-auto px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2.5">
-            <div className="w-6 h-6 rounded-md bg-[hsl(var(--foreground))] flex items-center justify-center">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
-                <rect x="3" y="3" width="7" height="7" rx="1.5" fill="hsl(var(--background))"/>
-                <rect x="14" y="3" width="7" height="7" rx="1.5" fill="hsl(var(--background))"/>
-                <rect x="3" y="14" width="7" height="7" rx="1.5" fill="hsl(var(--background))"/>
-                <rect x="14" y="14" width="7" height="7" rx="1.5" fill="hsl(var(--background))"/>
-              </svg>
-            </div>
-            <span className="text-sm font-medium text-[hsl(var(--foreground))]">Canvas</span>
+            {siteLogo ? (
+              <img src={siteLogo} alt={siteName} className="w-6 h-6 rounded-md object-contain" />
+            ) : (
+              <DefaultLogo size={12} />
+            )}
+            <span className="text-sm font-medium text-[hsl(var(--foreground))]">{siteName}</span>
           </div>
           <p className="text-xs text-[hsl(var(--muted-foreground))]">Collaborative workspace for teams</p>
         </div>

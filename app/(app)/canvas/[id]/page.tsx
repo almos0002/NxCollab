@@ -10,7 +10,7 @@ import { CanvasPageClient } from "./canvas-page-client";
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params;
   const c = await db.select({ name: canvasesTable.name }).from(canvasesTable).where(eq(canvasesTable.id, id)).limit(1);
-  return { title: c[0] ? `${c[0].name} — Canvas` : "Canvas" };
+  return { title: c[0] ? c[0].name : "Canvas" };
 }
 
 interface Props { params: Promise<{ id: string }> }

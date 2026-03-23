@@ -10,7 +10,7 @@ import { WorkspaceDetailClient } from "@/components/workspace/workspace-detail-c
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params;
   const ws = await db.select({ name: workspacesTable.name }).from(workspacesTable).where(eq(workspacesTable.id, id)).limit(1);
-  return { title: ws[0] ? `${ws[0].name} — Canvas` : "Workspace — Canvas" };
+  return { title: ws[0] ? ws[0].name : "Workspace" };
 }
 
 interface Props { params: Promise<{ id: string }> }

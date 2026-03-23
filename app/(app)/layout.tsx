@@ -4,18 +4,15 @@ import { Suspense } from "react";
 import { getServerSession } from "@/lib/session";
 import { Sidebar } from "@/components/sidebar";
 import { SidebarSkeleton } from "@/components/sidebar-skeleton";
+import { getBranding } from "@/lib/branding";
 import { db } from "@/lib/db";
-import { usersTable, appSettingsTable } from "@/lib/db";
+import { usersTable } from "@/lib/db";
 import { eq } from "drizzle-orm";
 
 async function SidebarData({ userId, initialCollapsed }: { userId: string; initialCollapsed: boolean }) {
   const user = await db.select().from(usersTable).where(eq(usersTable.id, userId)).limit(1);
   const userData = user[0];
-
-  const logoRow = await db.select().from(appSettingsTable).where(eq(appSettingsTable.key, "site_logo")).limit(1);
-  const nameRow = await db.select().from(appSettingsTable).where(eq(appSettingsTable.key, "site_name")).limit(1);
-  const siteLogo = logoRow[0]?.value || "";
-  const siteName = nameRow[0]?.value || "";
+  const { siteName, siteLogo } = await getBranding();
 
   return (
     <Sidebar

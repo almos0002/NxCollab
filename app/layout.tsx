@@ -1,28 +1,17 @@
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
-import { db } from "@/lib/db";
-import { appSettingsTable } from "@/lib/db";
-import { eq } from "drizzle-orm";
-
-async function getBrandingSettings() {
-  const keys = ["site_name", "site_favicon", "site_logo"] as const;
-  const settings: Record<string, string> = {};
-  for (const key of keys) {
-    const row = await db.select().from(appSettingsTable).where(eq(appSettingsTable.key, key)).limit(1);
-    if (row[0]) settings[key] = row[0].value;
-  }
-  return settings;
-}
+import { getBranding } from "@/lib/branding";
 
 export async function generateMetadata() {
-  const branding = await getBrandingSettings();
-  const siteName = branding.site_name || "Canvas";
-  const favicon = branding.site_favicon || "/favicon.svg";
+  const { siteName, siteFavicon } = await getBranding();
 
   return {
-    title: `${siteName} — Collaborative Workspace`,
+    title: {
+      template: `%s — ${siteName}`,
+      default: `${siteName} — Collaborative Workspace`,
+    },
     description: "Real-time collaborative canvas for teams",
-    icons: { icon: favicon },
+    icons: { icon: siteFavicon },
   };
 }
 

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
-export const metadata: Metadata = { title: "Admin — Canvas" };
+export const metadata: Metadata = { title: "Admin" };
 import { requireAdmin } from "@/lib/session";
 import { db } from "@/lib/db";
 import { usersTable, appSettingsTable, userLimitsTable } from "@/lib/db";

@@ -218,4 +218,6 @@ All API routes are in `app/api/`:
 - Dark/light/system theme stored in localStorage
 - Collapsible sidebar with cookie persistence (SSR-readable, no flash on load)
 - Sidebar uses Suspense streaming with skeleton fallback for instant shell rendering
+- Dynamic branding across all pages (homepage, auth, page titles) via `lib/branding.ts` helper
+- Root layout uses Next.js title template (`%s — SiteName`) for consistent page titles
 - Split-panel auth pages with branded illustration panel

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { getServerSession } from "@/lib/session";
 
-export const metadata: Metadata = { title: "Dashboard — Canvas" };
+export const metadata: Metadata = { title: "Dashboard" };
 import { db } from "@/lib/db";
 import { workspacesTable, workspaceMembersTable, canvasesTable } from "@/lib/db";
 import { eq, desc, or, inArray, and, isNull } from "drizzle-orm";

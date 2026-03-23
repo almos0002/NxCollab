@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { NewWorkspaceForm } from "@/components/workspace/new-workspace-form";
 import Link from "next/link";
 
-export const metadata: Metadata = { title: "New Workspace — Canvas" };
+export const metadata: Metadata = { title: "New Workspace" };
 
 export default function NewWorkspacePage() {
   return (

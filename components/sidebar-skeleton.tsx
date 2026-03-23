@@ -21,7 +21,7 @@ export function SidebarSkeleton({ collapsed = false }: SidebarSkeletonProps) {
         collapsed ? "w-[68px]" : "w-[260px]"
       )}
     >
-      <div className={cn("flex items-center border-b border-[hsl(var(--border))] h-[49px]", collapsed ? "px-2 justify-center" : "px-5 gap-3")}>
+      <div className={cn("flex items-center h-[49px]", collapsed ? "px-2 justify-center" : "px-5 gap-3")}>
         <div className="w-8 h-8 rounded-full bg-[hsl(var(--muted))] shrink-0 animate-pulse" />
         {!collapsed && (
           <div className="flex-1 min-w-0 space-y-1.5">

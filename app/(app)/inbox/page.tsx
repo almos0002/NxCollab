@@ -6,7 +6,7 @@ import { notificationsTable } from "@/lib/db";
 import { eq, desc, isNull, isNotNull, and } from "drizzle-orm";
 import { InboxClient } from "@/components/inbox/inbox-client";
 
-export const metadata: Metadata = { title: "Inbox — Canvas" };
+export const metadata: Metadata = { title: "Inbox" };
 
 export default async function InboxPage() {
   const session = await getServerSession();

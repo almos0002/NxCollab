@@ -102,12 +102,18 @@ export function Sidebar({ user, siteLogo, siteName, initialCollapsed = false }: 
       >
         {(siteLogo || siteName) && (
           <div className={cn("flex items-center border-b border-[hsl(var(--border))] h-[49px]", collapsed ? "px-2 justify-center" : "px-5 gap-2.5")}>
-            {siteLogo && <img src={siteLogo} alt={siteName || "Logo"} className="w-7 h-7 rounded object-contain shrink-0" />}
+            {siteLogo ? (
+              <img src={siteLogo} alt={siteName || "Logo"} className="w-7 h-7 rounded object-contain shrink-0" />
+            ) : collapsed && siteName ? (
+              <div className="w-7 h-7 rounded bg-[hsl(var(--foreground))] flex items-center justify-center shrink-0">
+                <span className="text-xs font-bold text-[hsl(var(--background))]">{siteName.charAt(0).toUpperCase()}</span>
+              </div>
+            ) : null}
             {!collapsed && siteName && <span className="text-sm font-bold text-[hsl(var(--foreground))] truncate">{siteName}</span>}
           </div>
         )}
         <SidebarTooltip label={user.name}>
-          <div className={cn("flex items-center border-b border-[hsl(var(--border))] h-[49px]", collapsed ? "px-2 justify-center" : "px-5 gap-3")}>
+          <div className={cn("flex items-center h-[49px]", collapsed ? "px-2 justify-center" : "px-5 gap-3")}>
             {user.image ? (
               <img src={user.image} alt={user.name} className="w-8 h-8 rounded-full object-cover shrink-0" />
             ) : (
