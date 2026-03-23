@@ -19,7 +19,7 @@ export default async function InboxPage() {
     .limit(100);
 
   return (
-    <div className="p-8 max-w-3xl mx-auto animate-fade-in">
+    <div className="p-8 max-w-5xl mx-auto animate-fade-in">
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-[hsl(var(--foreground))] tracking-tight">Inbox</h1>
         <p className="text-sm text-[hsl(var(--muted-foreground))] mt-1">Your notifications and workspace invitations</p>

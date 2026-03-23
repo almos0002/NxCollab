@@ -20,7 +20,7 @@ export default async function RecentPage() {
     .where(eq(workspacesTable.ownerId, session.user.id)).orderBy(desc(canvasesTable.updatedAt)).limit(20);
 
   return (
-    <div className="p-8 max-w-4xl mx-auto animate-fade-in">
+    <div className="p-8 max-w-5xl mx-auto animate-fade-in">
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-[hsl(var(--foreground))] tracking-tight">Recent</h1>
         <p className="text-sm text-[hsl(var(--muted-foreground))] mt-1">Your recently updated canvases</p>
