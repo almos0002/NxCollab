@@ -50,3 +50,6 @@ timeoutMs = 20000
 
 [userenv.shared]
 BETTER_AUTH_URL = "https://18d33310-f06f-486e-a0ec-578d875ced88-00-104cvvjl5s9fl.riker.replit.dev"
+
+[nix]
+channel = "stable-25_05"
