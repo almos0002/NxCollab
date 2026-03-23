@@ -35,7 +35,7 @@ outputType = "webview"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "PORT=5000 npm run dev"
+args = "PORT=5000 pnpm run dev"
 waitForPort = 5000
 
 [agent]
@@ -49,4 +49,4 @@ timeoutMs = 20000
 [userenv]
 
 [userenv.shared]
-BETTER_AUTH_URL = "https://5cb00ba8-d7a1-4b11-ace9-6eaed4adfcb6-00-t1q4orhq5t2j.riker.replit.dev"
+BETTER_AUTH_URL = "https://18d33310-f06f-486e-a0ec-578d875ced88-00-104cvvjl5s9fl.riker.replit.dev"
