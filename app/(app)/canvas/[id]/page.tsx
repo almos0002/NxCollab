@@ -37,7 +37,7 @@ export default async function CanvasPage({ params }: Props) {
   const isEditable = canEdit(role);
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-screen">
       <header className="flex items-center justify-between px-5 h-[49px] border-b border-[hsl(var(--border))] bg-[hsl(var(--card))] shrink-0">
         <div className="flex items-center gap-3">
           <Link href={`/workspaces/${canvas[0].workspaceId}`} className="flex items-center gap-1.5 text-xs text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] transition-colors">

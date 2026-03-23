@@ -139,9 +139,9 @@
 .excalidraw *,
 .excalidraw *::before,
 .excalidraw *::after {
-  border-color: revert;
-  box-sizing: revert;
-  line-height: revert;
+  border-color: revert !important;
+  box-sizing: revert !important;
+  line-height: revert !important;
 }
 
 .excalidraw-wrapper {
