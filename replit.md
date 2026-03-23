@@ -132,7 +132,7 @@ npm run dev
 - All list queries filter out soft-deleted items using `isNull(deletedAt)`
 - Contextual trash bins (no centralized `/trash` page):
   - **Workspaces page**: "Trash" tab shows deleted workspaces owned by the user with restore/permanent-delete
-  - **Workspace detail page**: "Trash" toggle shows deleted canvases within that workspace (owner only)
+  - **Workspace detail page**: "Trash" toggle shows deleted canvases within that workspace (owner/admin/member)
   - **Inbox page**: "Trash" tab shows deleted notifications with restore/permanent-delete
 - Workspace delete also soft-deletes all child canvases
 - API routes: `POST /api/trash/restore`, `POST /api/trash/permanent` (workspaces/canvases)
