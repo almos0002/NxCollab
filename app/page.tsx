@@ -50,7 +50,7 @@ export default async function LandingPage() {
         <div className="max-w-6xl mx-auto flex items-center justify-between px-6 h-16">
           <div className="flex items-center gap-2.5">
             {siteLogo ? (
-              <img src={siteLogo} alt={siteName} className="w-8 h-8 rounded-lg object-contain" />
+              <img src={siteLogo} alt={siteName} className="w-8 h-8 object-contain" />
             ) : (
               <DefaultLogo />
             )}
@@ -205,7 +205,7 @@ export default async function LandingPage() {
         <div className="max-w-6xl mx-auto px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2.5">
             {siteLogo ? (
-              <img src={siteLogo} alt={siteName} className="w-6 h-6 rounded-md object-contain" />
+              <img src={siteLogo} alt={siteName} className="w-6 h-6 object-contain" />
             ) : (
               <DefaultLogo size={12} />
             )}

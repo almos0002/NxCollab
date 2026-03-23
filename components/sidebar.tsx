@@ -7,7 +7,7 @@ import { useTheme } from "./theme-provider";
 import { signOut } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useCallback } from "react";
-import { LayoutDashboard, Layers, Clock, Settings, Shield, LogOut, Sun, Moon, Monitor, ChevronRight, PanelLeftClose, PanelLeft, Inbox } from "lucide-react";
+import { LayoutDashboard, Layers, Clock, Settings, Shield, LogOut, Sun, Moon, Monitor, ChevronRight, PanelLeftClose, PanelLeft, Inbox, ChevronsUpDown } from "lucide-react";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
 
 interface SidebarProps {
@@ -100,35 +100,43 @@ export function Sidebar({ user, siteLogo, siteName, initialCollapsed = false }: 
           collapsed ? "w-[68px]" : "w-[260px]"
         )}
       >
-        {(siteLogo || siteName) && (
-          <div className={cn("flex items-center border-b border-[hsl(var(--border))] h-[49px]", collapsed ? "px-2 justify-center" : "px-5 gap-2.5")}>
-            {siteLogo ? (
-              <img src={siteLogo} alt={siteName || "Logo"} className="w-7 h-7 rounded object-contain shrink-0" />
-            ) : collapsed && siteName ? (
-              <div className="w-7 h-7 rounded bg-[hsl(var(--foreground))] flex items-center justify-center shrink-0">
-                <span className="text-xs font-bold text-[hsl(var(--background))]">{siteName.charAt(0).toUpperCase()}</span>
+        <div className={cn("border-b border-[hsl(var(--border))]", collapsed ? "p-2" : "p-3")}>
+          <SidebarTooltip label={`${user.name}\n${user.email}`}>
+            <Link
+              href="/settings"
+              className={cn(
+                "flex items-center rounded-xl bg-[hsl(var(--accent)/0.5)] hover:bg-[hsl(var(--accent))] transition-colors",
+                collapsed ? "justify-center p-2" : "gap-3 px-3 py-2.5"
+              )}
+            >
+              <div className="relative shrink-0">
+                {user.image ? (
+                  <img src={user.image} alt={user.name} className="w-9 h-9 rounded-lg object-cover" />
+                ) : (
+                  <div className="w-9 h-9 rounded-lg bg-[hsl(var(--foreground))] flex items-center justify-center">
+                    <span className="text-[11px] font-bold text-[hsl(var(--background))]">{initials}</span>
+                  </div>
+                )}
+                {siteLogo && (
+                  <img
+                    src={siteLogo}
+                    alt={siteName || "Logo"}
+                    className="absolute -bottom-1 -right-1 w-4 h-4 object-contain ring-2 ring-[hsl(var(--card))] bg-[hsl(var(--background))]"
+                  />
+                )}
               </div>
-            ) : null}
-            {!collapsed && siteName && <span className="text-sm font-bold text-[hsl(var(--foreground))] truncate">{siteName}</span>}
-          </div>
-        )}
-        <SidebarTooltip label={user.name}>
-          <div className={cn("flex items-center h-[49px]", collapsed ? "px-2 justify-center" : "px-5 gap-3")}>
-            {user.image ? (
-              <img src={user.image} alt={user.name} className="w-8 h-8 rounded-full object-cover shrink-0" />
-            ) : (
-              <div className="w-8 h-8 rounded-full bg-[hsl(var(--foreground))] flex items-center justify-center shrink-0">
-                <span className="text-[10px] font-semibold text-[hsl(var(--background))]">{initials}</span>
-              </div>
-            )}
-            {!collapsed && (
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-[hsl(var(--foreground))] truncate leading-tight">{user.name}</p>
-                <p className="text-[11px] text-[hsl(var(--muted-foreground))] truncate leading-tight">{user.email}</p>
-              </div>
-            )}
-          </div>
-        </SidebarTooltip>
+              {!collapsed && (
+                <>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-[hsl(var(--foreground))] truncate leading-tight">{user.name}</p>
+                    <p className="text-[11px] text-[hsl(var(--muted-foreground))] truncate leading-tight mt-0.5">{siteName || user.email}</p>
+                  </div>
+                  <ChevronsUpDown className="w-3.5 h-3.5 text-[hsl(var(--muted-foreground))] shrink-0 opacity-50" />
+                </>
+              )}
+            </Link>
+          </SidebarTooltip>
+        </div>
 
         <nav className={cn("flex-1 py-3 space-y-0.5 overflow-y-auto", collapsed ? "px-2" : "px-3")}>
           {navItems.map((item) => {

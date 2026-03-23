@@ -21,7 +21,7 @@ export default async function SignInPage() {
           <div className="mb-8">
             <Link href="/" className="inline-flex items-center gap-2 mb-8">
               {siteLogo ? (
-                <img src={siteLogo} alt={siteName} className="w-8 h-8 rounded-lg object-contain" />
+                <img src={siteLogo} alt={siteName} className="w-8 h-8 object-contain" />
               ) : (
                 <div className="w-8 h-8 rounded-lg bg-[hsl(var(--foreground))] flex items-center justify-center">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
@@ -48,7 +48,7 @@ export default async function SignInPage() {
         <div className="text-center max-w-sm px-8">
           <div className="w-20 h-20 rounded-2xl bg-[hsl(var(--muted))] flex items-center justify-center mx-auto mb-6">
             {siteLogo ? (
-              <img src={siteLogo} alt={siteName} className="w-10 h-10 rounded-xl object-contain" />
+              <img src={siteLogo} alt={siteName} className="w-10 h-10 object-contain" />
             ) : (
               <svg width="36" height="36" viewBox="0 0 24 24" fill="none">
                 <rect x="3" y="3" width="7" height="7" rx="1.5" fill="hsl(var(--muted-foreground))"/>

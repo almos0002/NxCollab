@@ -21,14 +21,19 @@ export function SidebarSkeleton({ collapsed = false }: SidebarSkeletonProps) {
         collapsed ? "w-[68px]" : "w-[260px]"
       )}
     >
-      <div className={cn("flex items-center h-[49px]", collapsed ? "px-2 justify-center" : "px-5 gap-3")}>
-        <div className="w-8 h-8 rounded-full bg-[hsl(var(--muted))] shrink-0 animate-pulse" />
-        {!collapsed && (
-          <div className="flex-1 min-w-0 space-y-1.5">
-            <div className="h-3.5 w-24 bg-[hsl(var(--muted))] rounded animate-pulse" />
-            <div className="h-3 w-32 bg-[hsl(var(--muted))] rounded animate-pulse" />
-          </div>
-        )}
+      <div className={cn("border-b border-[hsl(var(--border))]", collapsed ? "p-2" : "p-3")}>
+        <div className={cn(
+          "flex items-center rounded-xl bg-[hsl(var(--accent)/0.5)]",
+          collapsed ? "justify-center p-2" : "gap-3 px-3 py-2.5"
+        )}>
+          <div className="w-9 h-9 rounded-lg bg-[hsl(var(--muted))] shrink-0 animate-pulse" />
+          {!collapsed && (
+            <div className="flex-1 min-w-0 space-y-1.5">
+              <div className="h-3.5 w-24 bg-[hsl(var(--muted))] rounded animate-pulse" />
+              <div className="h-3 w-16 bg-[hsl(var(--muted))] rounded animate-pulse" />
+            </div>
+          )}
+        </div>
       </div>
 
       <nav className={cn("flex-1 py-3 space-y-0.5", collapsed ? "px-2" : "px-3")}>
