@@ -140,8 +140,11 @@ npm run dev
 ### In-App Notification System (Inbox)
 - `notificationsTable` stores per-user notifications with type, title, message, link, metadata
 - Notification types: workspace_invite, role_changed, member_removed, canvas_deleted, canvas_created, member_joined, general
-- Sidebar "Inbox" link with live unread badge (polls every 30s)
+- Sidebar "Inbox" link with live unread badge (polls every 30s + instant update via custom events on read/delete)
 - Inbox page (`/inbox`) with all/unread filter, mark-all-read, delete, and click-to-navigate
+- Invite confirmation page: shows workspace name, role, inviter — user must Accept or Decline (no auto-join)
+- Accept/Decline API routes: `POST /api/invites/[token]/accept` (transactional), `POST /api/invites/[token]/decline` (marks invite used)
+- `lib/notification-events.ts` dispatches `notification-change` custom event for instant sidebar badge sync
 - Notifications auto-created for: workspace invites, role changes, member removal, canvas creation/deletion, member joins
 - Helper functions: `createNotification()` for single user, `notifyWorkspaceMembers()` for broadcasting to all members
 - Schema: `lib/db/schema/notifications.ts`, helpers: `lib/notifications.ts`

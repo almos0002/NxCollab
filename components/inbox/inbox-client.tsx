@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { formatDate } from "@/lib/utils";
 import { Mail, MailOpen, Trash2, CheckCheck, Bell, UserPlus, ShieldAlert, UserMinus, FileX, FilePlus, Users, ExternalLink } from "lucide-react";
 import Link from "next/link";
+import { dispatchUnreadChange } from "@/lib/notification-events";
 
 interface Notification {
   id: string;
@@ -52,6 +53,7 @@ export function InboxClient({ initialNotifications }: InboxClientProps) {
   async function markAsRead(id: string) {
     await fetch(`/api/notifications/${id}`, { method: "PATCH" });
     setNotifications(prev => prev.map(n => n.id === id ? { ...n, isRead: true } : n));
+    dispatchUnreadChange();
   }
 
   async function markAllAsRead() {
@@ -59,11 +61,14 @@ export function InboxClient({ initialNotifications }: InboxClientProps) {
     await fetch("/api/notifications/read-all", { method: "POST" });
     setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
     setMarkingAll(false);
+    dispatchUnreadChange();
   }
 
   async function deleteNotification(id: string) {
+    const wasUnread = notifications.find(n => n.id === id && !n.isRead);
     await fetch(`/api/notifications/${id}`, { method: "DELETE" });
     setNotifications(prev => prev.filter(n => n.id !== id));
+    if (wasUnread) dispatchUnreadChange();
   }
 
   async function handleClick(notification: Notification) {

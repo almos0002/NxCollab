@@ -49,7 +49,12 @@ export function Sidebar({ user, siteLogo, siteName }: SidebarProps) {
     setMounted(true);
     fetchUnread();
     const interval = setInterval(fetchUnread, 30000);
-    return () => clearInterval(interval);
+    const handleChange = () => fetchUnread();
+    window.addEventListener("notification-change", handleChange);
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener("notification-change", handleChange);
+    };
   }, [fetchUnread]);
 
   function toggleCollapsed() {
@@ -125,12 +130,12 @@ export function Sidebar({ user, siteLogo, siteName }: SidebarProps) {
               <div className="relative shrink-0">
                 <Icon className="w-[18px] h-[18px]" />
                 {item.href === "/inbox" && unreadCount > 0 && collapsed && (
-                  <span className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-[hsl(var(--destructive))] text-white text-[9px] font-bold flex items-center justify-center">{unreadCount > 9 ? "9+" : unreadCount}</span>
+                  <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-[hsl(var(--foreground))] text-[hsl(var(--background))] text-[10px] font-bold flex items-center justify-center ring-2 ring-[hsl(var(--card))]">{unreadCount > 9 ? "9+" : unreadCount}</span>
                 )}
               </div>
               {!collapsed && <span className="flex-1">{item.label}</span>}
               {!collapsed && item.href === "/inbox" && unreadCount > 0 && (
-                <span className="px-1.5 py-0.5 rounded-full bg-[hsl(var(--destructive))] text-white text-[10px] font-bold leading-none">{unreadCount > 99 ? "99+" : unreadCount}</span>
+                <span className="min-w-[20px] h-5 px-1.5 rounded-md bg-[hsl(var(--foreground))] text-[hsl(var(--background))] text-[11px] font-bold flex items-center justify-center">{unreadCount > 99 ? "99+" : unreadCount}</span>
               )}
               {!collapsed && active && item.href !== "/inbox" && <ChevronRight className="w-3.5 h-3.5 opacity-40" />}
             </Link>
