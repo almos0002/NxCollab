@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getServerSession } from "@/lib/session";
 import { redirect } from "next/navigation";
-import { Layers, Users, Lock, History, Zap, ArrowRight, Sparkles, Shield, Pen } from "lucide-react";
+import { Layers, Users, Lock, History, Zap, ArrowRight, Shield, Pen } from "lucide-react";
 
 export const metadata: Metadata = { title: "Canvas — Collaborative Workspace" };
 
@@ -58,11 +58,6 @@ export default async function LandingPage() {
           </div>
 
           <div className="relative max-w-4xl mx-auto px-6 text-center">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[hsl(var(--border))] bg-[hsl(var(--card))] text-xs font-medium text-[hsl(var(--muted-foreground))] mb-8 animate-fade-in">
-              <Sparkles className="w-3.5 h-3.5" />
-              Collaborative canvas for teams
-            </div>
-
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-[hsl(var(--foreground))] leading-[1.05] mb-6 animate-slide-up">
               Think together,
               <br />
