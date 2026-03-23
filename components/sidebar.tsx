@@ -8,6 +8,7 @@ import { signOut } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useCallback } from "react";
 import { LayoutDashboard, Layers, Clock, Settings, Shield, LogOut, Sun, Moon, Monitor, ChevronRight, PanelLeftClose, PanelLeft, User, Inbox } from "lucide-react";
+import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
 
 interface SidebarProps {
   user: { name: string; email: string; image?: string | null; isAdmin?: boolean };
@@ -79,122 +80,142 @@ export function Sidebar({ user, siteLogo, siteName }: SidebarProps) {
     .toUpperCase()
     .slice(0, 2);
 
-  return (
-    <aside
-      className={cn(
-        "flex flex-col min-h-screen border-r border-[hsl(var(--border))] bg-[hsl(var(--card))] shrink-0 overflow-hidden",
-        mounted && "transition-all duration-200",
-        collapsed ? "w-[68px]" : "w-[260px]"
-      )}
-      style={!mounted ? { visibility: "hidden" } : undefined}
-    >
-      {(siteLogo || siteName) && (
-        <div className={cn("flex items-center border-b border-[hsl(var(--border))] h-[49px]", collapsed ? "px-2 justify-center" : "px-5 gap-2.5")}>
-          {siteLogo && <img src={siteLogo} alt={siteName || "Logo"} className="w-7 h-7 rounded object-contain shrink-0" />}
-          {!collapsed && siteName && <span className="text-sm font-bold text-[hsl(var(--foreground))] truncate">{siteName}</span>}
-        </div>
-      )}
-      <div className={cn("flex items-center border-b border-[hsl(var(--border))] h-[49px]", collapsed ? "px-2 justify-center" : "px-5 gap-3")}>
-        {user.image ? (
-          <img src={user.image} alt={user.name} className="w-8 h-8 rounded-full object-cover shrink-0" />
-        ) : (
-          <div className="w-8 h-8 rounded-full bg-[hsl(var(--foreground))] flex items-center justify-center shrink-0">
-            <span className="text-[10px] font-semibold text-[hsl(var(--background))]">{initials}</span>
-          </div>
-        )}
-        {!collapsed && (
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold text-[hsl(var(--foreground))] truncate leading-tight">{user.name}</p>
-            <p className="text-[11px] text-[hsl(var(--muted-foreground))] truncate leading-tight">{user.email}</p>
-          </div>
-        )}
-      </div>
+  const themeLabel = theme === "system" ? "System" : theme === "light" ? "Light" : "Dark";
 
-      <nav className={cn("flex-1 py-3 space-y-0.5 overflow-y-auto", collapsed ? "px-2" : "px-3")}>
-        {navItems.map((item) => {
-          const Icon = item.icon;
-          const active = pathname.startsWith(item.href);
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              title={collapsed ? item.label : undefined}
+  function SidebarTooltip({ label, children }: { label: string; children: React.ReactNode }) {
+    if (!collapsed) return <>{children}</>;
+    return (
+      <Tooltip delayDuration={150}>
+        <TooltipTrigger asChild>{children}</TooltipTrigger>
+        <TooltipContent side="right" className="text-xs font-medium">{label}</TooltipContent>
+      </Tooltip>
+    );
+  }
+
+  return (
+    <TooltipProvider>
+      <aside
+        className={cn(
+          "flex flex-col min-h-screen border-r border-[hsl(var(--border))] bg-[hsl(var(--card))] shrink-0 overflow-hidden",
+          mounted && "transition-all duration-200",
+          collapsed ? "w-[68px]" : "w-[260px]"
+        )}
+        style={!mounted ? { visibility: "hidden" } : undefined}
+      >
+        {(siteLogo || siteName) && (
+          <div className={cn("flex items-center border-b border-[hsl(var(--border))] h-[49px]", collapsed ? "px-2 justify-center" : "px-5 gap-2.5")}>
+            {siteLogo && <img src={siteLogo} alt={siteName || "Logo"} className="w-7 h-7 rounded object-contain shrink-0" />}
+            {!collapsed && siteName && <span className="text-sm font-bold text-[hsl(var(--foreground))] truncate">{siteName}</span>}
+          </div>
+        )}
+        <SidebarTooltip label={user.name}>
+          <div className={cn("flex items-center border-b border-[hsl(var(--border))] h-[49px]", collapsed ? "px-2 justify-center" : "px-5 gap-3")}>
+            {user.image ? (
+              <img src={user.image} alt={user.name} className="w-8 h-8 rounded-full object-cover shrink-0" />
+            ) : (
+              <div className="w-8 h-8 rounded-full bg-[hsl(var(--foreground))] flex items-center justify-center shrink-0">
+                <span className="text-[10px] font-semibold text-[hsl(var(--background))]">{initials}</span>
+              </div>
+            )}
+            {!collapsed && (
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold text-[hsl(var(--foreground))] truncate leading-tight">{user.name}</p>
+                <p className="text-[11px] text-[hsl(var(--muted-foreground))] truncate leading-tight">{user.email}</p>
+              </div>
+            )}
+          </div>
+        </SidebarTooltip>
+
+        <nav className={cn("flex-1 py-3 space-y-0.5 overflow-y-auto", collapsed ? "px-2" : "px-3")}>
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            const active = pathname.startsWith(item.href);
+            return (
+              <SidebarTooltip key={item.href} label={item.href === "/inbox" && unreadCount > 0 ? `${item.label} (${unreadCount})` : item.label}>
+                <Link
+                  href={item.href}
+                  className={cn(
+                    "group flex items-center rounded-lg text-sm transition-all",
+                    collapsed ? "justify-center px-0 py-2.5" : "gap-3 px-3 py-2.5",
+                    active
+                      ? "bg-[hsl(var(--accent))] text-[hsl(var(--foreground))] font-medium"
+                      : "text-[hsl(var(--muted-foreground))] hover:bg-[hsl(var(--accent)/0.6)] hover:text-[hsl(var(--foreground))]"
+                  )}
+                >
+                  <div className="relative shrink-0">
+                    <Icon className="w-[18px] h-[18px]" />
+                    {item.href === "/inbox" && unreadCount > 0 && collapsed && (
+                      <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-[hsl(var(--foreground))] text-[hsl(var(--background))] text-[10px] font-bold flex items-center justify-center ring-2 ring-[hsl(var(--card))]">{unreadCount > 9 ? "9+" : unreadCount}</span>
+                    )}
+                  </div>
+                  {!collapsed && <span className="flex-1">{item.label}</span>}
+                  {!collapsed && item.href === "/inbox" && unreadCount > 0 && (
+                    <span className="min-w-[20px] h-5 px-1.5 rounded-md bg-[hsl(var(--foreground))] text-[hsl(var(--background))] text-[11px] font-bold flex items-center justify-center">{unreadCount > 99 ? "99+" : unreadCount}</span>
+                  )}
+                  {!collapsed && active && item.href !== "/inbox" && <ChevronRight className="w-3.5 h-3.5 opacity-40" />}
+                </Link>
+              </SidebarTooltip>
+            );
+          })}
+          {user.isAdmin && (
+            <SidebarTooltip label="Admin">
+              <Link
+                href="/admin"
+                className={cn(
+                  "group flex items-center rounded-lg text-sm transition-all",
+                  collapsed ? "justify-center px-0 py-2.5" : "gap-3 px-3 py-2.5",
+                  pathname.startsWith("/admin")
+                    ? "bg-[hsl(var(--accent))] text-[hsl(var(--foreground))] font-medium"
+                    : "text-[hsl(var(--muted-foreground))] hover:bg-[hsl(var(--accent)/0.6)] hover:text-[hsl(var(--foreground))]"
+                )}
+              >
+                <Shield className="w-[18px] h-[18px] shrink-0" />
+                {!collapsed && <span className="flex-1">Admin</span>}
+                {!collapsed && pathname.startsWith("/admin") && <ChevronRight className="w-3.5 h-3.5 opacity-40" />}
+              </Link>
+            </SidebarTooltip>
+          )}
+        </nav>
+
+        <div className={cn("border-t border-[hsl(var(--border))] space-y-0.5", collapsed ? "px-2 py-3" : "px-3 py-3")}>
+          <SidebarTooltip label={`${themeLabel} mode`}>
+            <button
+              onClick={() => setTheme(nextTheme)}
               className={cn(
-                "group flex items-center rounded-lg text-sm transition-all",
-                collapsed ? "justify-center px-0 py-2.5" : "gap-3 px-3 py-2.5",
-                active
-                  ? "bg-[hsl(var(--accent))] text-[hsl(var(--foreground))] font-medium"
-                  : "text-[hsl(var(--muted-foreground))] hover:bg-[hsl(var(--accent)/0.6)] hover:text-[hsl(var(--foreground))]"
+                "flex items-center w-full rounded-lg text-sm text-[hsl(var(--muted-foreground))] hover:bg-[hsl(var(--accent)/0.6)] hover:text-[hsl(var(--foreground))] transition-all",
+                collapsed ? "justify-center px-0 py-2.5" : "gap-3 px-3 py-2.5"
               )}
             >
-              <div className="relative shrink-0">
-                <Icon className="w-[18px] h-[18px]" />
-                {item.href === "/inbox" && unreadCount > 0 && collapsed && (
-                  <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-[hsl(var(--foreground))] text-[hsl(var(--background))] text-[10px] font-bold flex items-center justify-center ring-2 ring-[hsl(var(--card))]">{unreadCount > 9 ? "9+" : unreadCount}</span>
-                )}
-              </div>
-              {!collapsed && <span className="flex-1">{item.label}</span>}
-              {!collapsed && item.href === "/inbox" && unreadCount > 0 && (
-                <span className="min-w-[20px] h-5 px-1.5 rounded-md bg-[hsl(var(--foreground))] text-[hsl(var(--background))] text-[11px] font-bold flex items-center justify-center">{unreadCount > 99 ? "99+" : unreadCount}</span>
+              <ThemeIcon className="w-[18px] h-[18px] shrink-0" />
+              {!collapsed && <span>{themeLabel} mode</span>}
+            </button>
+          </SidebarTooltip>
+          <SidebarTooltip label="Sign out">
+            <button
+              onClick={handleSignOut}
+              className={cn(
+                "flex items-center w-full rounded-lg text-sm text-[hsl(var(--muted-foreground))] hover:bg-[hsl(var(--accent)/0.6)] hover:text-[hsl(var(--foreground))] transition-all",
+                collapsed ? "justify-center px-0 py-2.5" : "gap-3 px-3 py-2.5"
               )}
-              {!collapsed && active && item.href !== "/inbox" && <ChevronRight className="w-3.5 h-3.5 opacity-40" />}
-            </Link>
-          );
-        })}
-        {user.isAdmin && (
-          <Link
-            href="/admin"
-            title={collapsed ? "Admin" : undefined}
-            className={cn(
-              "group flex items-center rounded-lg text-sm transition-all",
-              collapsed ? "justify-center px-0 py-2.5" : "gap-3 px-3 py-2.5",
-              pathname.startsWith("/admin")
-                ? "bg-[hsl(var(--accent))] text-[hsl(var(--foreground))] font-medium"
-                : "text-[hsl(var(--muted-foreground))] hover:bg-[hsl(var(--accent)/0.6)] hover:text-[hsl(var(--foreground))]"
-            )}
-          >
-            <Shield className="w-[18px] h-[18px] shrink-0" />
-            {!collapsed && <span className="flex-1">Admin</span>}
-            {!collapsed && pathname.startsWith("/admin") && <ChevronRight className="w-3.5 h-3.5 opacity-40" />}
-          </Link>
-        )}
-      </nav>
-
-      <div className={cn("border-t border-[hsl(var(--border))] space-y-0.5", collapsed ? "px-2 py-3" : "px-3 py-3")}>
-        <button
-          onClick={() => setTheme(nextTheme)}
-          title={collapsed ? `${theme === "system" ? "System" : theme === "light" ? "Light" : "Dark"} mode` : undefined}
-          className={cn(
-            "flex items-center w-full rounded-lg text-sm text-[hsl(var(--muted-foreground))] hover:bg-[hsl(var(--accent)/0.6)] hover:text-[hsl(var(--foreground))] transition-all",
-            collapsed ? "justify-center px-0 py-2.5" : "gap-3 px-3 py-2.5"
-          )}
-        >
-          <ThemeIcon className="w-[18px] h-[18px] shrink-0" />
-          {!collapsed && <span>{theme === "system" ? "System" : theme === "light" ? "Light" : "Dark"} mode</span>}
-        </button>
-        <button
-          onClick={handleSignOut}
-          title={collapsed ? "Sign out" : undefined}
-          className={cn(
-            "flex items-center w-full rounded-lg text-sm text-[hsl(var(--muted-foreground))] hover:bg-[hsl(var(--accent)/0.6)] hover:text-[hsl(var(--foreground))] transition-all",
-            collapsed ? "justify-center px-0 py-2.5" : "gap-3 px-3 py-2.5"
-          )}
-        >
-          <LogOut className="w-[18px] h-[18px] shrink-0" />
-          {!collapsed && <span>Sign out</span>}
-        </button>
-        <button
-          onClick={toggleCollapsed}
-          title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-          className={cn(
-            "flex items-center w-full rounded-lg text-sm text-[hsl(var(--muted-foreground))] hover:bg-[hsl(var(--accent)/0.6)] hover:text-[hsl(var(--foreground))] transition-all",
-            collapsed ? "justify-center px-0 py-2.5" : "gap-3 px-3 py-2.5"
-          )}
-        >
-          {collapsed ? <PanelLeft className="w-[18px] h-[18px] shrink-0" /> : <PanelLeftClose className="w-[18px] h-[18px] shrink-0" />}
-          {!collapsed && <span>Collapse</span>}
-        </button>
-      </div>
-    </aside>
+            >
+              <LogOut className="w-[18px] h-[18px] shrink-0" />
+              {!collapsed && <span>Sign out</span>}
+            </button>
+          </SidebarTooltip>
+          <SidebarTooltip label={collapsed ? "Expand sidebar" : "Collapse sidebar"}>
+            <button
+              onClick={toggleCollapsed}
+              className={cn(
+                "flex items-center w-full rounded-lg text-sm text-[hsl(var(--muted-foreground))] hover:bg-[hsl(var(--accent)/0.6)] hover:text-[hsl(var(--foreground))] transition-all",
+                collapsed ? "justify-center px-0 py-2.5" : "gap-3 px-3 py-2.5"
+              )}
+            >
+              {collapsed ? <PanelLeft className="w-[18px] h-[18px] shrink-0" /> : <PanelLeftClose className="w-[18px] h-[18px] shrink-0" />}
+              {!collapsed && <span>Collapse</span>}
+            </button>
+          </SidebarTooltip>
+        </div>
+      </aside>
+    </TooltipProvider>
   );
 }

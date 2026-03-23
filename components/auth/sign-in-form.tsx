@@ -11,13 +11,14 @@ export function SignInForm() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPass, setShowPass] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
     setLoading(true);
     try {
-      const result = await signIn.email({ email, password });
+      const result = await signIn.email({ email, password, rememberMe });
       if (result.error) {
         setError(result.error.message || "Invalid credentials");
         setLoading(false);
@@ -52,6 +53,24 @@ export function SignInForm() {
           </button>
         </div>
       </div>
+      <label className="flex items-center gap-2 cursor-pointer select-none group">
+        <div className="relative flex items-center">
+          <input
+            type="checkbox"
+            checked={rememberMe}
+            onChange={e => setRememberMe(e.target.checked)}
+            className="peer sr-only"
+          />
+          <div className="w-[18px] h-[18px] rounded-[5px] border border-[hsl(var(--border))] bg-[hsl(var(--background))] peer-checked:bg-[hsl(var(--foreground))] peer-checked:border-[hsl(var(--foreground))] transition-all flex items-center justify-center">
+            {rememberMe && (
+              <svg className="w-3 h-3 text-[hsl(var(--background))]" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M2.5 6L5 8.5L9.5 3.5" />
+              </svg>
+            )}
+          </div>
+        </div>
+        <span className="text-sm text-[hsl(var(--muted-foreground))] group-hover:text-[hsl(var(--foreground))] transition-colors">Remember me</span>
+      </label>
       <button type="submit" disabled={loading} className="w-full py-2.5 px-4 text-sm font-medium rounded-lg bg-[hsl(var(--foreground))] text-[hsl(var(--background))] hover:opacity-90 disabled:opacity-50 transition-opacity mt-2">
         {loading ? "Signing in..." : "Sign in"}
       </button>
