@@ -7,7 +7,10 @@ import { History, Save, Users, Eye } from "lucide-react";
 import { VersionHistoryPanel } from "./version-history-panel";
 
 const Excalidraw = dynamic(
-  () => import("@excalidraw/excalidraw").then((mod) => mod.Excalidraw),
+  () => import("@excalidraw/excalidraw").then(async (mod) => {
+    await import("@excalidraw/excalidraw/index.css");
+    return mod.Excalidraw;
+  }),
   { ssr: false, loading: () => <div className="flex items-center justify-center h-full text-[hsl(var(--muted-foreground))]">Loading canvas...</div> }
 );
 
