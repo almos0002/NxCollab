@@ -58,8 +58,8 @@ export function InviteModal({ workspaceId, onClose }: InviteModalProps) {
             <div className="w-12 h-12 rounded-full bg-[hsl(var(--success)/0.1)] flex items-center justify-center mx-auto mb-3">
               <CheckCircle2 className="w-6 h-6 text-[hsl(var(--success))]" />
             </div>
-            <p className="text-sm font-medium text-[hsl(var(--foreground))] mb-1">Invite created!</p>
-            <p className="text-xs text-[hsl(var(--muted-foreground))] mb-4">Share the link below with your teammate</p>
+            <p className="text-sm font-medium text-[hsl(var(--foreground))] mb-1">Invite sent!</p>
+            <p className="text-xs text-[hsl(var(--muted-foreground))] mb-4">{email ? `An invitation has been sent to ${email}'s inbox. You can also share the link below.` : "Share the link below with your teammate."}</p>
             {inviteLink && (
               <div className="flex gap-2 mb-4">
                 <input value={inviteLink} readOnly className="flex-1 px-3 py-2 text-xs rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--muted))] text-[hsl(var(--muted-foreground))] font-mono" />

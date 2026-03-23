@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "@/lib/session";
 import { db } from "@/lib/db";
-import { canvasesTable, canvasVersionsTable, activityLogsTable } from "@/lib/db";
+import { canvasesTable, canvasVersionsTable, activityLogsTable, workspacesTable } from "@/lib/db";
 import { eq } from "drizzle-orm";
 import { getUserWorkspaceRole, canEdit } from "@/lib/workspace";
 import { generateId } from "@/lib/utils";
+import { notifyWorkspaceMembers } from "@/lib/notifications";
 
 function elementsChanged(storedContent: string, newContent: string): boolean {
   try {
@@ -95,4 +96,34 @@ export async function GET(req: NextRequest, { params }: Params) {
   if (!role) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   return NextResponse.json(canvas[0]);
+}
+
+export async function DELETE(req: NextRequest, { params }: Params) {
+  const { id } = await params;
+  const session = await getServerSession();
+  if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const canvas = await db.select().from(canvasesTable).where(eq(canvasesTable.id, id)).limit(1);
+  if (!canvas[0]) return NextResponse.json({ error: "Not found" }, { status: 404 });
+
+  const role = await getUserWorkspaceRole(session.user.id, canvas[0].workspaceId);
+  if (!role || !canEdit(role)) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
+  const ws = await db.select({ name: workspacesTable.name }).from(workspacesTable).where(eq(workspacesTable.id, canvas[0].workspaceId)).limit(1);
+  const wsName = ws[0]?.name ?? "a workspace";
+  const canvasName = canvas[0].name;
+  const workspaceId = canvas[0].workspaceId;
+
+  await db.delete(canvasesTable).where(eq(canvasesTable.id, id));
+  await db.insert(activityLogsTable).values({ id: generateId(), workspaceId, userId: session.user.id, action: `deleted canvas "${canvasName}"`, createdAt: new Date() });
+
+  await notifyWorkspaceMembers(workspaceId, session.user.id, {
+    type: "canvas_deleted",
+    title: `Canvas deleted in ${wsName}`,
+    message: `${session.user.name} deleted the canvas "${canvasName}" from "${wsName}".`,
+    link: `/workspaces/${workspaceId}`,
+    metadata: { workspaceId, workspaceName: wsName, canvasName },
+  });
+
+  return NextResponse.json({ success: true });
 }

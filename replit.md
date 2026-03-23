@@ -135,6 +135,17 @@ npm run dev
 ### Invite System
 - Generate invite links (valid 7 days)
 - Links auto-join users to workspace with specified role
+- Invite notifications sent directly to user's in-app inbox if they have an account
+
+### In-App Notification System (Inbox)
+- `notificationsTable` stores per-user notifications with type, title, message, link, metadata
+- Notification types: workspace_invite, role_changed, member_removed, canvas_deleted, canvas_created, member_joined, general
+- Sidebar "Inbox" link with live unread badge (polls every 30s)
+- Inbox page (`/inbox`) with all/unread filter, mark-all-read, delete, and click-to-navigate
+- Notifications auto-created for: workspace invites, role changes, member removal, canvas creation/deletion, member joins
+- Helper functions: `createNotification()` for single user, `notifyWorkspaceMembers()` for broadcasting to all members
+- Schema: `lib/db/schema/notifications.ts`, helpers: `lib/notifications.ts`
+- Canvas delete endpoint added: `DELETE /api/canvases/[id]`
 
 ## API Routes
 
@@ -145,10 +156,18 @@ All API routes are in `app/api/`:
 - `POST /api/workspaces` - Create workspace
 - `POST /api/workspaces/[id]/canvases` - Create canvas
 - `POST /api/workspaces/[id]/invite` - Generate invite link
-- `GET/PATCH /api/canvases/[id]` - Get/update canvas content
+- `GET/PATCH/DELETE /api/canvases/[id]` - Get/update/delete canvas content
 - `GET /api/canvases/[id]/versions` - List versions
 - `POST /api/canvases/[id]/versions/[versionId]/restore` - Restore version
+- `GET /api/notifications` - List user notifications
+- `GET /api/notifications/unread-count` - Get unread count
+- `PATCH /api/notifications/[id]` - Mark notification as read
+- `DELETE /api/notifications/[id]` - Delete notification
+- `POST /api/notifications/read-all` - Mark all as read
+- `PATCH/DELETE /api/workspaces/[id]/members/[memberId]` - Change role/remove member
 - `POST /api/admin/users/[id]/role` - Toggle admin (admin only)
+- `POST /api/admin/users/[id]/edit` - Edit user name/email (admin only)
+- `POST /api/admin/users/[id]/delete` - Delete user (admin only)
 - `POST /api/admin/settings/signup` - Toggle signup (admin only)
 - `GET/POST /api/admin/settings/branding` - Get/set branding (admin only)
 - `PATCH /api/user/profile` - Update user profile

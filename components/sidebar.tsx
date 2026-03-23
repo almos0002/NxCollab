@@ -6,8 +6,8 @@ import { cn } from "@/lib/utils";
 import { useTheme } from "./theme-provider";
 import { signOut } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
-import { LayoutDashboard, Layers, Clock, Settings, Shield, LogOut, Sun, Moon, Monitor, ChevronRight, PanelLeftClose, PanelLeft, User } from "lucide-react";
+import { useState, useEffect, useCallback } from "react";
+import { LayoutDashboard, Layers, Clock, Settings, Shield, LogOut, Sun, Moon, Monitor, ChevronRight, PanelLeftClose, PanelLeft, User, Inbox } from "lucide-react";
 
 interface SidebarProps {
   user: { name: string; email: string; image?: string | null; isAdmin?: boolean };
@@ -18,6 +18,7 @@ interface SidebarProps {
 const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/workspaces", label: "Workspaces", icon: Layers },
+  { href: "/inbox", label: "Inbox", icon: Inbox },
   { href: "/recent", label: "Recent", icon: Clock },
   { href: "/settings", label: "Settings", icon: Settings },
 ];
@@ -30,12 +31,26 @@ export function Sidebar({ user, siteLogo, siteName }: SidebarProps) {
   const router = useRouter();
   const [collapsed, setCollapsed] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  const fetchUnread = useCallback(async () => {
+    try {
+      const res = await fetch("/api/notifications/unread-count");
+      if (res.ok) {
+        const data = await res.json();
+        setUnreadCount(data.count ?? 0);
+      }
+    } catch {}
+  }, []);
 
   useEffect(() => {
     const stored = localStorage.getItem(SIDEBAR_KEY);
     if (stored === "true") setCollapsed(true);
     setMounted(true);
-  }, []);
+    fetchUnread();
+    const interval = setInterval(fetchUnread, 30000);
+    return () => clearInterval(interval);
+  }, [fetchUnread]);
 
   function toggleCollapsed() {
     const next = !collapsed;
@@ -107,9 +122,17 @@ export function Sidebar({ user, siteLogo, siteName }: SidebarProps) {
                   : "text-[hsl(var(--muted-foreground))] hover:bg-[hsl(var(--accent)/0.6)] hover:text-[hsl(var(--foreground))]"
               )}
             >
-              <Icon className="w-[18px] h-[18px] shrink-0" />
+              <div className="relative shrink-0">
+                <Icon className="w-[18px] h-[18px]" />
+                {item.href === "/inbox" && unreadCount > 0 && collapsed && (
+                  <span className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-[hsl(var(--destructive))] text-white text-[9px] font-bold flex items-center justify-center">{unreadCount > 9 ? "9+" : unreadCount}</span>
+                )}
+              </div>
               {!collapsed && <span className="flex-1">{item.label}</span>}
-              {!collapsed && active && <ChevronRight className="w-3.5 h-3.5 opacity-40" />}
+              {!collapsed && item.href === "/inbox" && unreadCount > 0 && (
+                <span className="px-1.5 py-0.5 rounded-full bg-[hsl(var(--destructive))] text-white text-[10px] font-bold leading-none">{unreadCount > 99 ? "99+" : unreadCount}</span>
+              )}
+              {!collapsed && active && item.href !== "/inbox" && <ChevronRight className="w-3.5 h-3.5 opacity-40" />}
             </Link>
           );
         })}
