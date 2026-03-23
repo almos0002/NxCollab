@@ -31,10 +31,6 @@ interface CollaborativeCanvasProps {
 
 const AUTO_SAVE_DELAY = 10000;
 
-function getThemeBgColor(theme: "light" | "dark") {
-  return theme === "dark" ? "#121212" : "#ffffff";
-}
-
 export const CollaborativeCanvas = forwardRef<CanvasHandle, CollaborativeCanvasProps>(function CollaborativeCanvas(
   { canvasId, initialContent, initialLibraryData, isEditable, userId, userName, onSavingChange, onShowVersionsChange },
   ref
@@ -46,8 +42,13 @@ export const CollaborativeCanvas = forwardRef<CanvasHandle, CollaborativeCanvasP
   const saveTimeoutRef = useRef<ReturnType<typeof setTimeout>>(null);
   const lastSavedContentRef = useRef<string>(initialContent);
   const { resolvedTheme } = useTheme();
-  const [themeMounted, setThemeMounted] = useState(false);
-  const prevThemeRef = useRef<string | null>(null);
+
+  const [activeTheme, setActiveTheme] = useState<"light" | "dark">(() => {
+    if (typeof document !== "undefined") {
+      return document.documentElement.classList.contains("dark") ? "dark" : "light";
+    }
+    return "light";
+  });
 
   useEffect(() => {
     import("@excalidraw/excalidraw/index.css").catch(() => {});
@@ -55,23 +56,8 @@ export const CollaborativeCanvas = forwardRef<CanvasHandle, CollaborativeCanvasP
 
   useEffect(() => {
     const isDark = document.documentElement.classList.contains("dark");
-    if (!themeMounted) {
-      setThemeMounted(true);
-      prevThemeRef.current = isDark ? "dark" : "light";
-    }
-  }, [themeMounted]);
-
-  useEffect(() => {
-    if (!excalidrawAPI || !themeMounted) return;
-    if (prevThemeRef.current === resolvedTheme) return;
-    prevThemeRef.current = resolvedTheme;
-    const bgColor = getThemeBgColor(resolvedTheme);
-    excalidrawAPI.updateScene({
-      appState: {
-        viewBackgroundColor: bgColor,
-      },
-    });
-  }, [resolvedTheme, excalidrawAPI, themeMounted]);
+    setActiveTheme(isDark ? "dark" : "light");
+  }, [resolvedTheme]);
 
   const getInitialElements = useCallback(() => {
     try {
@@ -80,30 +66,15 @@ export const CollaborativeCanvas = forwardRef<CanvasHandle, CollaborativeCanvasP
     } catch { return []; }
   }, [initialContent]);
 
-  const getActualTheme = useCallback((): "light" | "dark" => {
-    if (typeof document !== "undefined") {
-      return document.documentElement.classList.contains("dark") ? "dark" : "light";
-    }
-    return resolvedTheme;
-  }, [resolvedTheme]);
-
   const getInitialAppState = useCallback(() => {
-    const actualTheme = getActualTheme();
-    const bgColor = getThemeBgColor(actualTheme);
     try {
       const parsed = JSON.parse(initialContent);
-      return {
-        ...parsed.appState,
-        theme: actualTheme,
-        viewBackgroundColor: bgColor,
-      };
+      const { viewBackgroundColor, ...rest } = parsed.appState || {};
+      return rest;
     } catch {
-      return {
-        theme: actualTheme,
-        viewBackgroundColor: bgColor,
-      };
+      return {};
     }
-  }, [initialContent, getActualTheme]);
+  }, [initialContent]);
 
   const getInitialLibrary = useCallback(() => {
     if (!initialLibraryData) return undefined;
@@ -116,7 +87,7 @@ export const CollaborativeCanvas = forwardRef<CanvasHandle, CollaborativeCanvasP
     if (!isEditable) return;
     const content = JSON.stringify({
       elements,
-      appState: { viewBackgroundColor: appState.viewBackgroundColor, gridSize: appState.gridSize }
+      appState: { gridSize: appState.gridSize }
     });
     if (content === lastSavedContentRef.current) return;
     setSaving(true);
@@ -194,11 +165,6 @@ export const CollaborativeCanvas = forwardRef<CanvasHandle, CollaborativeCanvasP
   }
 
   const libraryItems = getInitialLibrary();
-  const currentTheme = getActualTheme();
-
-  if (!themeMounted) {
-    return <div className="flex items-center justify-center h-full text-[hsl(var(--muted-foreground))]">Loading canvas...</div>;
-  }
 
   return (
     <div className="relative h-full w-full excalidraw-wrapper">
@@ -212,7 +178,7 @@ export const CollaborativeCanvas = forwardRef<CanvasHandle, CollaborativeCanvasP
         onChange={handleChange}
         onLibraryChange={handleLibraryChange}
         viewModeEnabled={!isEditable}
-        theme={currentTheme}
+        theme={activeTheme}
         UIOptions={{ canvasActions: { export: false, loadScene: false, saveAsImage: true } }}
       />
       {showVersions && (
