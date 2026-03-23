@@ -106,7 +106,7 @@ export function Sidebar({ user, siteLogo, siteName, initialCollapsed = false }: 
               href="/settings"
               className={cn(
                 "flex items-center rounded-lg hover:bg-[hsl(var(--accent)/0.6)] transition-colors w-full",
-                collapsed ? "justify-center p-1.5" : "gap-2.5 px-2 py-1.5"
+                collapsed ? "justify-center py-2" : "gap-2.5 px-2 py-2"
               )}
             >
               <div className="relative shrink-0">
