@@ -105,7 +105,7 @@ export function Sidebar({ user, siteLogo, siteName, initialCollapsed = false }: 
             <Link
               href="/settings"
               className={cn(
-                "flex items-center rounded-lg hover:bg-[hsl(var(--accent)/0.6)] transition-colors w-full",
+                "flex items-center w-full",
                 collapsed ? "justify-center py-2" : "gap-2.5 px-2 py-2"
               )}
             >
