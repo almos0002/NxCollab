@@ -9,6 +9,7 @@ import { formatDate } from "@/lib/utils";
 import { getUserWorkspaceRole, canEdit, canManageMembers } from "@/lib/workspace";
 import { Plus, FileText, Users, Activity } from "lucide-react";
 import { WorkspaceActions } from "@/components/workspace/workspace-actions";
+import { CanvasesList } from "@/components/workspace/canvases-list";
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params;
@@ -41,6 +42,8 @@ export default async function WorkspacePage({ params }: Props) {
     .where(eq(activityLogsTable.workspaceId, id)).orderBy(desc(activityLogsTable.createdAt)).limit(10);
 
   const ws = workspace[0];
+  const canvasData = canvases.map(c => ({ id: c.id, name: c.name, updatedAt: c.updatedAt.toISOString() }));
+
   return (
     <div className="p-8 max-w-5xl mx-auto animate-fade-in">
       <div className="flex items-start justify-between mb-8">
@@ -65,6 +68,7 @@ export default async function WorkspacePage({ params }: Props) {
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-sm font-semibold text-[hsl(var(--foreground))] flex items-center gap-2">
                 <FileText className="w-4 h-4 text-[hsl(var(--muted-foreground))]" /> Canvases
+                <span className="text-xs text-[hsl(var(--muted-foreground))] font-normal">({canvases.length})</span>
               </h2>
               {canEdit(role) && (
                 <Link href={`/workspaces/${id}/canvas/new`} className="flex items-center gap-1.5 text-xs px-3 py-2 rounded-lg bg-[hsl(var(--foreground))] text-[hsl(var(--background))] hover:opacity-90 transition-opacity font-medium">
@@ -81,17 +85,7 @@ export default async function WorkspacePage({ params }: Props) {
                 {canEdit(role) && <Link href={`/workspaces/${id}/canvas/new`} className="text-sm text-[hsl(var(--foreground))] font-medium hover:underline">Create your first canvas</Link>}
               </div>
             ) : (
-              <div className="grid grid-cols-2 gap-3">
-                {canvases.map(canvas => (
-                  <Link key={canvas.id} href={`/canvas/${canvas.id}`} className="group rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-4 hover:border-[hsl(var(--ring)/0.2)] transition-all">
-                    <div className="w-full h-20 rounded-lg bg-[hsl(var(--muted))] mb-3 flex items-center justify-center">
-                      <FileText className="w-6 h-6 text-[hsl(var(--muted-foreground))]" />
-                    </div>
-                    <p className="text-sm font-medium text-[hsl(var(--foreground))] truncate">{canvas.name}</p>
-                    <p className="text-xs text-[hsl(var(--muted-foreground))] mt-0.5">{formatDate(canvas.updatedAt)}</p>
-                  </Link>
-                ))}
-              </div>
+              <CanvasesList canvases={canvasData} workspaceId={id} />
             )}
           </div>
         </div>

@@ -118,6 +118,12 @@ npm run dev
 - View all registered users
 - Branding settings: site name, favicon URL, logo URL (reflected in browser tab, sidebar)
 
+### Search, Pagination & View Modes
+- Search bar on workspaces page, workspace detail (canvases), and dashboard (recent canvases)
+- Pagination with page navigation (12 items per page for workspaces/canvases, 8 for dashboard)
+- Grid/list view toggle with localStorage persistence
+- Reusable components: `components/shared/search-bar.tsx`, `pagination.tsx`, `view-toggle.tsx`
+
 ### Invite System
 - Generate invite links (valid 7 days)
 - Links auto-join users to workspace with specified role

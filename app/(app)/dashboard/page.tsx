@@ -3,32 +3,38 @@ import { getServerSession } from "@/lib/session";
 
 export const metadata: Metadata = { title: "Dashboard — Canvas" };
 import { db } from "@/lib/db";
-import { workspacesTable, workspaceMembersTable, canvasesTable, activityLogsTable, usersTable } from "@/lib/db";
-import { eq, desc } from "drizzle-orm";
+import { workspacesTable, workspaceMembersTable, canvasesTable } from "@/lib/db";
+import { eq, desc, or, inArray } from "drizzle-orm";
 import Link from "next/link";
-import { formatDate } from "@/lib/utils";
 import { Plus, Layers, FileText, Activity, ArrowRight } from "lucide-react";
+import { RecentCanvases } from "@/components/dashboard/recent-canvases";
 
 export default async function DashboardPage() {
   const session = await getServerSession();
   if (!session?.user) return null;
   const userId = session.user.id;
 
-  const ownedWorkspaces = await db.select().from(workspacesTable).where(eq(workspacesTable.ownerId, userId)).limit(5);
-  const memberWorkspaceIds = await db.select({ workspaceId: workspaceMembersTable.workspaceId }).from(workspaceMembersTable).where(eq(workspaceMembersTable.userId, userId));
+  const ownedWorkspaces = await db.select().from(workspacesTable).where(eq(workspacesTable.ownerId, userId));
+  const memberEntries = await db.select({ workspaceId: workspaceMembersTable.workspaceId }).from(workspaceMembersTable).where(eq(workspaceMembersTable.userId, userId));
 
-  const recentCanvases = await db.select({
-    id: canvasesTable.id, name: canvasesTable.name, workspaceId: canvasesTable.workspaceId,
-    updatedAt: canvasesTable.updatedAt, workspaceName: workspacesTable.name,
-  }).from(canvasesTable).innerJoin(workspacesTable, eq(canvasesTable.workspaceId, workspacesTable.id))
-    .where(eq(workspacesTable.ownerId, userId)).orderBy(desc(canvasesTable.updatedAt)).limit(6);
+  const allWsIds = [...new Set([...ownedWorkspaces.map(w => w.id), ...memberEntries.map(m => m.workspaceId)])];
 
-  const totalWorkspaces = ownedWorkspaces.length + memberWorkspaceIds.length;
+  let recentCanvases: { id: string; name: string; workspaceName: string; updatedAt: string }[] = [];
+  if (allWsIds.length > 0) {
+    const rows = await db.select({
+      id: canvasesTable.id, name: canvasesTable.name, workspaceId: canvasesTable.workspaceId,
+      updatedAt: canvasesTable.updatedAt, workspaceName: workspacesTable.name,
+    }).from(canvasesTable).innerJoin(workspacesTable, eq(canvasesTable.workspaceId, workspacesTable.id))
+      .where(inArray(canvasesTable.workspaceId, allWsIds)).orderBy(desc(canvasesTable.updatedAt)).limit(50);
+    recentCanvases = rows.map(r => ({ id: r.id, name: r.name, workspaceName: r.workspaceName, updatedAt: r.updatedAt.toISOString() }));
+  }
+
+  const totalWorkspaces = allWsIds.length;
 
   const stats = [
     { label: "Workspaces", value: totalWorkspaces, icon: Layers },
     { label: "Canvases", value: recentCanvases.length, icon: FileText },
-    { label: "Memberships", value: memberWorkspaceIds.length, icon: Activity },
+    { label: "Memberships", value: memberEntries.length, icon: Activity },
   ];
 
   return (
@@ -60,30 +66,7 @@ export default async function DashboardPage() {
               View all <ArrowRight className="w-3 h-3" />
             </Link>
           </div>
-          <div className="space-y-2">
-            {recentCanvases.length === 0 ? (
-              <div className="rounded-xl border border-dashed border-[hsl(var(--border))] p-8 text-center">
-                <div className="w-10 h-10 rounded-lg bg-[hsl(var(--muted))] flex items-center justify-center mx-auto mb-3">
-                  <FileText className="w-5 h-5 text-[hsl(var(--muted-foreground))]" />
-                </div>
-                <p className="text-sm text-[hsl(var(--muted-foreground))] mb-1">No canvases yet</p>
-                <Link href="/workspaces" className="text-sm text-[hsl(var(--foreground))] font-medium hover:underline">Create your first workspace</Link>
-              </div>
-            ) : recentCanvases.map(canvas => (
-              <Link key={canvas.id} href={`/canvas/${canvas.id}`} className="group flex items-center justify-between p-3.5 rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] hover:border-[hsl(var(--ring)/0.2)] transition-all">
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-lg bg-[hsl(var(--muted))] flex items-center justify-center shrink-0">
-                    <FileText className="w-4 h-4 text-[hsl(var(--muted-foreground))]" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-[hsl(var(--foreground))]">{canvas.name}</p>
-                    <p className="text-xs text-[hsl(var(--muted-foreground))]">{canvas.workspaceName}</p>
-                  </div>
-                </div>
-                <p className="text-xs text-[hsl(var(--muted-foreground))]">{formatDate(canvas.updatedAt)}</p>
-              </Link>
-            ))}
-          </div>
+          <RecentCanvases canvases={recentCanvases} />
         </div>
 
         <div>
