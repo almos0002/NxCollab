@@ -100,12 +100,12 @@ export function Sidebar({ user, siteLogo, siteName, initialCollapsed = false }: 
           collapsed ? "w-[68px]" : "w-[260px]"
         )}
       >
-        <div className={cn("border-b border-[hsl(var(--border))]", collapsed ? "px-2 py-1.5" : "px-2.5 py-1.5")}>
+        <div className={cn("border-b border-[hsl(var(--border))] h-[49px] flex items-center", collapsed ? "px-2" : "px-2.5")}>
           <SidebarTooltip label={`${user.name}\n${user.email}`}>
             <Link
               href="/settings"
               className={cn(
-                "flex items-center rounded-lg bg-[hsl(var(--accent)/0.5)] hover:bg-[hsl(var(--accent))] transition-colors",
+                "flex items-center rounded-lg bg-[hsl(var(--accent)/0.5)] hover:bg-[hsl(var(--accent))] transition-colors w-full",
                 collapsed ? "justify-center p-1.5" : "gap-2.5 px-2.5 py-1.5"
               )}
             >
