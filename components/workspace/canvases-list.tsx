@@ -3,7 +3,7 @@ import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { formatDate } from "@/lib/utils";
-import { FileText, Pencil, Trash2, MoreVertical } from "lucide-react";
+import { FileText, Pencil, Trash2, MoreVertical, ArrowUpDown } from "lucide-react";
 import { SearchBar } from "@/components/shared/search-bar";
 import { Pagination } from "@/components/shared/pagination";
 import { ViewToggle } from "@/components/shared/view-toggle";
@@ -27,6 +27,8 @@ interface CanvasesListProps {
 const PAGE_SIZE = 6;
 const VIEW_KEY = "canvases-view";
 
+type SortOption = "updated-newest" | "updated-oldest" | "name-asc" | "name-desc";
+
 export function CanvasesList({ canvases: initialCanvases, workspaceId, userRole, onCanvasDeleted }: CanvasesListProps) {
   const router = useRouter();
   const [canvases, setCanvases] = useState(initialCanvases);
@@ -40,6 +42,8 @@ export function CanvasesList({ canvases: initialCanvases, workspaceId, userRole,
   const [editTarget, setEditTarget] = useState<Canvas | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<Canvas | null>(null);
   const [menuOpen, setMenuOpen] = useState<string | null>(null);
+  const [sort, setSort] = useState<SortOption>("updated-newest");
+  const [showSortMenu, setShowSortMenu] = useState(false);
 
   const canEdit = userRole === "owner" || userRole === "admin" || userRole === "member";
 
@@ -53,17 +57,37 @@ export function CanvasesList({ canvases: initialCanvases, workspaceId, userRole,
     localStorage.setItem(VIEW_KEY, v);
   }
 
-  const filtered = useMemo(() => {
-    if (!search.trim()) return canvases;
-    const q = search.trim().toLowerCase();
-    return canvases.filter(c => c.name.toLowerCase().includes(q));
-  }, [canvases, search]);
+  const processed = useMemo(() => {
+    let result = [...canvases];
 
-  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+    if (search.trim()) {
+      const q = search.trim().toLowerCase();
+      result = result.filter(c => c.name.toLowerCase().includes(q));
+    }
+
+    result.sort((a, b) => {
+      switch (sort) {
+        case "name-asc":
+          return a.name.localeCompare(b.name);
+        case "name-desc":
+          return b.name.localeCompare(a.name);
+        case "updated-newest":
+          return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
+        case "updated-oldest":
+          return new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime();
+        default:
+          return 0;
+      }
+    });
+
+    return result;
+  }, [canvases, search, sort]);
+
+  const totalPages = Math.max(1, Math.ceil(processed.length / PAGE_SIZE));
   const safePage = Math.min(page, totalPages);
-  const paginated = filtered.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
+  const paginated = processed.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
 
-  useEffect(() => { setPage(1); }, [search]);
+  useEffect(() => { setPage(1); }, [search, sort]);
 
   async function handleEdit(data: { name: string; description: string }) {
     if (!editTarget) return;
@@ -129,16 +153,47 @@ export function CanvasesList({ canvases: initialCanvases, workspaceId, userRole,
 
   if (canvases.length === 0) return null;
 
+  const sortLabels: Record<SortOption, string> = {
+    "updated-newest": "Recently updated",
+    "updated-oldest": "Oldest updated",
+    "name-asc": "Name (A-Z)",
+    "name-desc": "Name (Z-A)",
+  };
+
   return (
     <div>
       <div className="flex items-center gap-3 mb-4">
         <div className="flex-1">
           <SearchBar value={search} onChange={setSearch} placeholder="Search canvases..." />
         </div>
+        <div className="relative">
+          <button
+            onClick={() => setShowSortMenu(!showSortMenu)}
+            className="flex items-center gap-1.5 px-3 py-2 text-xs font-medium rounded-lg border border-[hsl(var(--border))] text-[hsl(var(--muted-foreground))] hover:bg-[hsl(var(--accent))] hover:text-[hsl(var(--foreground))] transition-colors"
+          >
+            <ArrowUpDown className="w-3.5 h-3.5" /> {sortLabels[sort]}
+          </button>
+          {showSortMenu && (
+            <>
+              <div className="fixed inset-0 z-10" onClick={() => setShowSortMenu(false)} />
+              <div className="absolute right-0 top-full mt-1 z-20 w-44 rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--popover))] py-1.5 shadow-lg animate-scale-in">
+                {(Object.entries(sortLabels) as [SortOption, string][]).map(([key, label]) => (
+                  <button
+                    key={key}
+                    onClick={() => { setSort(key); setShowSortMenu(false); }}
+                    className={`w-full px-3 py-2 text-xs text-left transition-colors ${sort === key ? "bg-[hsl(var(--accent))] text-[hsl(var(--foreground))] font-medium" : "text-[hsl(var(--muted-foreground))] hover:bg-[hsl(var(--accent))]"}`}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
         <ViewToggle view={view} onViewChange={handleViewChange} />
       </div>
 
-      {filtered.length === 0 ? (
+      {processed.length === 0 ? (
         <div className="rounded-xl border border-dashed border-[hsl(var(--border))] p-8 text-center">
           <p className="text-sm text-[hsl(var(--muted-foreground))]">No canvases match "{search}"</p>
         </div>

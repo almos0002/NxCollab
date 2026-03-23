@@ -4,11 +4,13 @@ import { redirect } from "next/navigation";
 export const metadata: Metadata = { title: "Admin — Canvas" };
 import { requireAdmin } from "@/lib/session";
 import { db } from "@/lib/db";
-import { usersTable, appSettingsTable } from "@/lib/db";
+import { usersTable, appSettingsTable, userLimitsTable } from "@/lib/db";
 import { eq } from "drizzle-orm";
 import { AdminActions } from "@/components/admin/admin-actions";
 import { BrandingSettings } from "@/components/admin/branding-settings";
+import { LimitsSettings } from "@/components/admin/limits-settings";
 import { Shield, Users, UserCheck } from "lucide-react";
+import { getDefaultLimits } from "@/lib/limits";
 
 export default async function AdminPage() {
   const session = await requireAdmin();
@@ -23,6 +25,14 @@ export default async function AdminPage() {
   for (const key of brandingKeys) {
     const row = await db.select().from(appSettingsTable).where(eq(appSettingsTable.key, key)).limit(1);
     if (row[0]) brandingSettings[key] = row[0].value;
+  }
+
+  const defaultLimits = await getDefaultLimits();
+
+  const userLimitsRows = await db.select().from(userLimitsTable);
+  const userLimitsMap: Record<string, { workspaceLimit: number | null; canvasPerWorkspaceLimit: number | null }> = {};
+  for (const row of userLimitsRows) {
+    userLimitsMap[row.userId] = { workspaceLimit: row.workspaceLimit, canvasPerWorkspaceLimit: row.canvasPerWorkspaceLimit };
   }
 
   const stats = [
@@ -52,7 +62,14 @@ export default async function AdminPage() {
       </div>
       <div className="space-y-6">
         <BrandingSettings initialSettings={{ site_name: brandingSettings.site_name, site_favicon: brandingSettings.site_favicon, site_logo: brandingSettings.site_logo }} />
-        <AdminActions signupDisabled={signupDisabled} currentUserId={session.user.id} users={users.map(u => ({ id: u.id, name: u.name, email: u.email, isAdmin: u.isAdmin ?? false, createdAt: u.createdAt.toISOString() }))} />
+        <LimitsSettings defaultWorkspaceLimit={defaultLimits.workspaceLimit} defaultCanvasPerWorkspaceLimit={defaultLimits.canvasPerWorkspaceLimit} />
+        <AdminActions
+          signupDisabled={signupDisabled}
+          currentUserId={session.user.id}
+          users={users.map(u => ({ id: u.id, name: u.name, email: u.email, isAdmin: u.isAdmin ?? false, createdAt: u.createdAt.toISOString() }))}
+          defaultLimits={defaultLimits}
+          userLimitsMap={userLimitsMap}
+        />
       </div>
     </div>
   );

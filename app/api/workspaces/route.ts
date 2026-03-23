@@ -3,6 +3,7 @@ import { getServerSession } from "@/lib/session";
 import { db } from "@/lib/db";
 import { workspacesTable, activityLogsTable } from "@/lib/db";
 import { generateId, generateSlug } from "@/lib/utils";
+import { checkWorkspaceLimit } from "@/lib/limits";
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession();
@@ -10,6 +11,14 @@ export async function POST(req: NextRequest) {
 
   const { name, description } = await req.json();
   if (!name?.trim()) return NextResponse.json({ error: "Name is required" }, { status: 400 });
+
+  const limitCheck = await checkWorkspaceLimit(session.user.id);
+  if (!limitCheck.allowed) {
+    return NextResponse.json(
+      { error: `Workspace limit reached (${limitCheck.current}/${limitCheck.limit}). Contact an admin to increase your limit.` },
+      { status: 403 }
+    );
+  }
 
   const id = generateId();
   const slug = generateSlug(name);

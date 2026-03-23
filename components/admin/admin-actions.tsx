@@ -2,14 +2,20 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { formatDate } from "@/lib/utils";
-import { Shield, User, ToggleLeft, ToggleRight, Pencil, Trash2, X, Check, AlertTriangle } from "lucide-react";
+import { Shield, User, ToggleLeft, ToggleRight, Pencil, Trash2, X, Check, AlertTriangle, Gauge } from "lucide-react";
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 
 interface UserRow { id: string; name: string; email: string; isAdmin: boolean; createdAt: string; }
 
-interface AdminActionsProps { signupDisabled: boolean; users: UserRow[]; currentUserId: string; }
+interface AdminActionsProps {
+  signupDisabled: boolean;
+  users: UserRow[];
+  currentUserId: string;
+  defaultLimits: { workspaceLimit: number; canvasPerWorkspaceLimit: number };
+  userLimitsMap: Record<string, { workspaceLimit: number | null; canvasPerWorkspaceLimit: number | null }>;
+}
 
-export function AdminActions({ signupDisabled: initialSignupDisabled, users: initialUsers, currentUserId }: AdminActionsProps) {
+export function AdminActions({ signupDisabled: initialSignupDisabled, users: initialUsers, currentUserId, defaultLimits, userLimitsMap: initialUserLimitsMap }: AdminActionsProps) {
   const router = useRouter();
   const [signupDisabled, setSignupDisabled] = useState(initialSignupDisabled);
   const [users, setUsers] = useState(initialUsers);
@@ -21,6 +27,12 @@ export function AdminActions({ signupDisabled: initialSignupDisabled, users: ini
   const [savingEdit, setSavingEdit] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<UserRow | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  const [editingLimitsUser, setEditingLimitsUser] = useState<string | null>(null);
+  const [limitWs, setLimitWs] = useState("");
+  const [limitCv, setLimitCv] = useState("");
+  const [savingLimits, setSavingLimits] = useState(false);
+  const [userLimitsMap, setUserLimitsMap] = useState(initialUserLimitsMap);
 
   async function handleToggleSignup() {
     setTogglingSignup(true);
@@ -76,6 +88,48 @@ export function AdminActions({ signupDisabled: initialSignupDisabled, users: ini
       const data = await res.json();
       setError(data.error || "Failed to delete user");
     }
+  }
+
+  function startEditLimits(userId: string) {
+    const userLimits = userLimitsMap[userId];
+    setEditingLimitsUser(userId);
+    setLimitWs(userLimits?.workspaceLimit != null ? String(userLimits.workspaceLimit) : "");
+    setLimitCv(userLimits?.canvasPerWorkspaceLimit != null ? String(userLimits.canvasPerWorkspaceLimit) : "");
+    setError(null);
+  }
+
+  async function saveLimits(userId: string) {
+    setSavingLimits(true);
+    setError(null);
+
+    const wsVal = limitWs.trim() === "" ? null : parseInt(limitWs, 10);
+    const cvVal = limitCv.trim() === "" ? null : parseInt(limitCv, 10);
+
+    if ((wsVal !== null && (isNaN(wsVal) || wsVal < 1)) || (cvVal !== null && (isNaN(cvVal) || cvVal < 1))) {
+      setError("Limits must be positive numbers or left empty for defaults");
+      setSavingLimits(false);
+      return;
+    }
+
+    const res = await fetch(`/api/admin/users/${userId}/limits`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ workspaceLimit: wsVal, canvasPerWorkspaceLimit: cvVal }),
+    });
+
+    if (res.ok) {
+      if (wsVal === null && cvVal === null) {
+        const newMap = { ...userLimitsMap };
+        delete newMap[userId];
+        setUserLimitsMap(newMap);
+      } else {
+        setUserLimitsMap(prev => ({ ...prev, [userId]: { workspaceLimit: wsVal, canvasPerWorkspaceLimit: cvVal } }));
+      }
+      setEditingLimitsUser(null);
+    } else {
+      setError("Failed to save limits");
+    }
+    setSavingLimits(false);
   }
 
   return (
@@ -143,6 +197,43 @@ export function AdminActions({ signupDisabled: initialSignupDisabled, users: ini
                     </button>
                   </div>
                 </div>
+              ) : editingLimitsUser === user.id ? (
+                <div className="space-y-3">
+                  <p className="text-xs font-medium text-[hsl(var(--foreground))]">Custom limits for {user.name}</p>
+                  <p className="text-[10px] text-[hsl(var(--muted-foreground))]">Leave empty to use defaults (Workspaces: {defaultLimits.workspaceLimit}, Canvases: {defaultLimits.canvasPerWorkspaceLimit})</p>
+                  <div className="flex gap-3">
+                    <div className="flex-1">
+                      <label className="block text-[10px] text-[hsl(var(--muted-foreground))] mb-1">Max workspaces</label>
+                      <input
+                        type="number"
+                        min="1"
+                        value={limitWs}
+                        onChange={(e) => setLimitWs(e.target.value)}
+                        placeholder={String(defaultLimits.workspaceLimit)}
+                        className="w-full px-3 py-1.5 text-sm rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--background))] text-[hsl(var(--foreground))] focus:outline-none focus:ring-2 focus:ring-[hsl(var(--ring))]"
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <label className="block text-[10px] text-[hsl(var(--muted-foreground))] mb-1">Max canvases/workspace</label>
+                      <input
+                        type="number"
+                        min="1"
+                        value={limitCv}
+                        onChange={(e) => setLimitCv(e.target.value)}
+                        placeholder={String(defaultLimits.canvasPerWorkspaceLimit)}
+                        className="w-full px-3 py-1.5 text-sm rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--background))] text-[hsl(var(--foreground))] focus:outline-none focus:ring-2 focus:ring-[hsl(var(--ring))]"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button onClick={() => saveLimits(user.id)} disabled={savingLimits} className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-[hsl(var(--foreground))] text-[hsl(var(--background))] hover:opacity-90 disabled:opacity-50 transition-opacity">
+                      <Check className="w-3 h-3" /> {savingLimits ? "Saving..." : "Save limits"}
+                    </button>
+                    <button onClick={() => setEditingLimitsUser(null)} className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-[hsl(var(--border))] text-[hsl(var(--foreground))] hover:bg-[hsl(var(--accent))] transition-colors">
+                      <X className="w-3 h-3" /> Cancel
+                    </button>
+                  </div>
+                </div>
               ) : (
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
@@ -157,12 +248,20 @@ export function AdminActions({ signupDisabled: initialSignupDisabled, users: ini
                             <Shield className="w-3 h-3" /> Admin
                           </span>
                         )}
+                        {userLimitsMap[user.id] && (
+                          <span className="inline-flex items-center gap-1 text-[10px] font-medium bg-[hsl(var(--muted))] text-[hsl(var(--muted-foreground))] px-1.5 py-0.5 rounded-md">
+                            <Gauge className="w-2.5 h-2.5" /> Custom limits
+                          </span>
+                        )}
                       </div>
                       <p className="text-xs text-[hsl(var(--muted-foreground))]">{user.email}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
                     <p className="text-xs text-[hsl(var(--muted-foreground))] mr-2">Joined {formatDate(user.createdAt)}</p>
+                    <button onClick={() => startEditLimits(user.id)} className="flex items-center justify-center w-8 h-8 rounded-lg border border-[hsl(var(--border))] text-[hsl(var(--muted-foreground))] hover:bg-[hsl(var(--accent))] hover:text-[hsl(var(--foreground))] transition-colors" title="Edit limits">
+                      <Gauge className="w-3.5 h-3.5" />
+                    </button>
                     <button onClick={() => startEdit(user)} className="flex items-center justify-center w-8 h-8 rounded-lg border border-[hsl(var(--border))] text-[hsl(var(--muted-foreground))] hover:bg-[hsl(var(--accent))] hover:text-[hsl(var(--foreground))] transition-colors" title="Edit user">
                       <Pencil className="w-3.5 h-3.5" />
                     </button>

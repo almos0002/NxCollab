@@ -64,7 +64,8 @@ This is a **Next.js project** running in a pnpm workspace on Replit. The app run
 - `canvas_versions` - Auto-saved version history (up to 50 per canvas, skips duplicates)
 - `workspaces` includes `deleted_at` column for soft delete
 - `activity_logs` - Audit log for workspace activity
-- `app_settings` - Key-value app configuration (signup_disabled, site_name, site_favicon, site_logo)
+- `app_settings` - Key-value app configuration (signup_disabled, site_name, site_favicon, site_logo, default_workspace_limit, default_canvas_per_workspace_limit)
+- `user_limits` - Per-user custom resource limits (workspace_limit, canvas_per_workspace_limit)
 
 ## Running Locally
 
@@ -120,6 +121,8 @@ npm run dev
 - Delete users (with confirmation, cannot delete self)
 - View all registered users
 - Branding settings: site name, favicon URL, logo URL (reflected in browser tab, sidebar)
+- Default resource limits: max workspaces per user (default 5), max canvases per workspace (default 10)
+- Per-user custom limit overrides (from user management table)
 
 ### Workspace Member Management
 - Workspace owners and admins can change member roles (admin/member/viewer)
@@ -144,9 +147,17 @@ npm run dev
 - Reusable components: `components/shared/confirm-dialog.tsx`, `components/shared/resource-form-dialog.tsx`
 - Delete confirmations use reusable ConfirmDialog (admin-actions, members-list, canvases-list, workspace detail)
 
-### Search, Pagination & View Modes
-- Search bar on workspaces page, workspace detail (canvases), and dashboard (recent canvases)
-- Pagination with page navigation (12 items per page for workspaces/canvases, 8 for dashboard)
+### Resource Limits
+- Default limits: 5 workspaces per user, 10 canvases per workspace (configurable by admin)
+- Per-user custom limits override defaults (managed from admin user table)
+- Limits enforced on workspace creation (`POST /api/workspaces`) and canvas creation (`POST /api/workspaces/[id]/canvases`)
+- Helper functions in `lib/limits.ts`: `getUserLimits()`, `checkWorkspaceLimit()`, `checkCanvasLimit()`
+
+### Search, Pagination, Sorting & Filtering
+- Search bar on workspaces page, workspace detail (canvases), dashboard (recent canvases), and recent page
+- Sorting on workspaces (name A-Z/Z-A, newest/oldest) and canvases (recently/oldest updated, name A-Z/Z-A)
+- Role-based filtering on workspaces page (all/owner/admin/member/viewer)
+- Pagination with page navigation (6 items per page for workspaces/canvases, 8 for dashboard, 10 for recent page)
 - Grid/list view toggle with localStorage persistence
 - Reusable components: `components/shared/search-bar.tsx`, `pagination.tsx`, `view-toggle.tsx`, `confirm-dialog.tsx`, `resource-form-dialog.tsx`
 
@@ -196,6 +207,8 @@ All API routes are in `app/api/`:
 - `POST /api/admin/users/[id]/delete` - Delete user (admin only)
 - `POST /api/admin/settings/signup` - Toggle signup (admin only)
 - `GET/POST /api/admin/settings/branding` - Get/set branding (admin only)
+- `GET/POST /api/admin/settings/limits` - Get/set default resource limits (admin only)
+- `GET/POST /api/admin/users/[id]/limits` - Get/set per-user resource limits (admin only)
 - `PATCH /api/user/profile` - Update user profile
 
 ## UI Design

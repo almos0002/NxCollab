@@ -6,6 +6,7 @@ import { getUserWorkspaceRole, canEdit } from "@/lib/workspace";
 import { generateId } from "@/lib/utils";
 import { notifyWorkspaceMembers } from "@/lib/notifications";
 import { eq, isNull, and } from "drizzle-orm";
+import { checkCanvasLimit } from "@/lib/limits";
 
 interface Params { params: Promise<{ id: string }> }
 
@@ -19,6 +20,14 @@ export async function POST(req: NextRequest, { params }: Params) {
 
   const role = await getUserWorkspaceRole(session.user.id, workspaceId);
   if (!role || !canEdit(role)) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
+  const limitCheck = await checkCanvasLimit(workspaceId);
+  if (!limitCheck.allowed) {
+    return NextResponse.json(
+      { error: `Canvas limit reached for this workspace (${limitCheck.current}/${limitCheck.limit}). Contact an admin to increase your limit.` },
+      { status: 403 }
+    );
+  }
 
   const { name, description } = await req.json();
   if (!name?.trim()) return NextResponse.json({ error: "Name is required" }, { status: 400 });
