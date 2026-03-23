@@ -55,6 +55,7 @@ export function InboxClient({ initialNotifications, initialTrashedNotifications 
   const [markingAll, setMarkingAll] = useState(false);
   const [permanentDeleteTarget, setPermanentDeleteTarget] = useState<TrashedNotification | null>(null);
   const [restoreTarget, setRestoreTarget] = useState<TrashedNotification | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<Notification | null>(null);
 
   const filtered = filter === "unread" ? notifications.filter(n => !n.isRead) : filter === "all" ? notifications : [];
   const unreadCount = notifications.filter(n => !n.isRead).length;
@@ -73,13 +74,13 @@ export function InboxClient({ initialNotifications, initialTrashedNotifications 
     dispatchUnreadChange();
   }
 
-  async function deleteNotification(id: string) {
-    const notif = notifications.find(n => n.id === id);
-    if (!notif) return;
-    const wasUnread = !notif.isRead;
-    await fetch(`/api/notifications/${id}`, { method: "DELETE" });
-    setNotifications(prev => prev.filter(n => n.id !== id));
-    setTrashedNotifications(prev => [{ ...notif, deletedAt: new Date().toISOString() }, ...prev]);
+  async function handleDeleteNotification() {
+    if (!deleteTarget) return;
+    const wasUnread = !deleteTarget.isRead;
+    await fetch(`/api/notifications/${deleteTarget.id}`, { method: "DELETE" });
+    setNotifications(prev => prev.filter(n => n.id !== deleteTarget.id));
+    setTrashedNotifications(prev => [{ ...deleteTarget, deletedAt: new Date().toISOString() }, ...prev]);
+    setDeleteTarget(null);
     if (wasUnread) dispatchUnreadChange();
   }
 
@@ -262,7 +263,7 @@ export function InboxClient({ initialNotifications, initialTrashedNotifications 
                         </button>
                       )}
                       <button
-                        onClick={() => deleteNotification(notification.id)}
+                        onClick={() => setDeleteTarget(notification)}
                         className="w-7 h-7 rounded-md flex items-center justify-center text-[hsl(var(--muted-foreground))] hover:bg-[hsl(var(--destructive)/0.1)] hover:text-[hsl(var(--destructive))] transition-colors"
                         title="Delete"
                       >
@@ -277,6 +278,15 @@ export function InboxClient({ initialNotifications, initialTrashedNotifications 
         </div>
       )}
 
+      <ConfirmDialog
+        open={!!deleteTarget}
+        onClose={() => setDeleteTarget(null)}
+        onConfirm={handleDeleteNotification}
+        title="Move to trash?"
+        description={`"${deleteTarget?.title}" will be moved to trash. You can restore it later.`}
+        confirmLabel="Move to trash"
+        variant="danger"
+      />
       <ConfirmDialog
         open={!!restoreTarget}
         onClose={() => setRestoreTarget(null)}
