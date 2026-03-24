@@ -89,7 +89,7 @@ export const CollaborativeCanvas = forwardRef<CanvasHandle, CollaborativeCanvasP
       elements,
       appState: { gridSize: appState.gridSize }
     });
-    if (content === lastSavedContentRef.current) return;
+    if (content === lastSavedContentRef.current && !createVersion) return;
     setSaving(true);
     onSavingChange?.(true);
     try {

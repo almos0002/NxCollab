@@ -56,17 +56,26 @@ export async function PATCH(req: NextRequest, { params }: Params) {
   const now = new Date();
 
   if (content !== undefined) {
-    if (createVersion && canvas[0].content && canvas[0].content !== "{}") {
-      const hasRealChanges = elementsChanged(canvas[0].content, content);
+    if (createVersion) {
+      const oldContent = canvas[0].content;
+      const oldIsEmpty = !oldContent || oldContent === "{}" || oldContent === '{"elements":[],"appState":{}}';
+      const snapshotContent = oldIsEmpty ? content : oldContent;
+      const hasRealChanges = oldIsEmpty
+        ? (() => { try { const p = JSON.parse(content); return Array.isArray(p.elements) && p.elements.length > 0; } catch { return false; } })()
+        : elementsChanged(oldContent!, content);
+
       if (hasRealChanges) {
         const versions = await db.select().from(canvasVersionsTable).where(eq(canvasVersionsTable.canvasId, id)).orderBy(canvasVersionsTable.version);
         const lastVersion = versions[versions.length - 1];
         const nextVersion = (lastVersion?.version ?? 0) + 1;
 
-        await db.insert(canvasVersionsTable).values({ id: generateId(), canvasId: id, version: nextVersion, content: canvas[0].content, createdBy: session.user.id, createdAt: now });
-        if (versions.length >= 50) {
-          const oldest = versions[0];
-          await db.delete(canvasVersionsTable).where(eq(canvasVersionsTable.id, oldest.id));
+        const isDuplicate = lastVersion && lastVersion.content === snapshotContent;
+        if (!isDuplicate) {
+          await db.insert(canvasVersionsTable).values({ id: generateId(), canvasId: id, version: nextVersion, content: snapshotContent, createdBy: session.user.id, createdAt: now });
+          if (versions.length >= 50) {
+            const oldest = versions[0];
+            await db.delete(canvasVersionsTable).where(eq(canvasVersionsTable.id, oldest.id));
+          }
         }
       }
     }

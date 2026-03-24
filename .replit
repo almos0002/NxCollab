@@ -51,6 +51,10 @@ timeoutMs = 20000
 [userenv.shared]
 BETTER_AUTH_URL = "https://4f3af1ce-2c5e-4ba2-bd4d-42877b8920b6-00-16vd2fhgirm9p.spock.replit.dev"
 NEON_DATABASE_URL = "postgresql://neondb_owner:npg_SHi3ROqMx9aj@ep-blue-term-ak1ybbfo-pooler.c-3.us-west-2.aws.neon.tech/neondb?sslmode=require"
+GIT_AUTHOR_NAME = "almos0002"
+GIT_AUTHOR_EMAIL = "almos0002@gmail.com"
+GIT_COMMITTER_NAME = "almos0002"
+GIT_COMMITTER_EMAIL = "almos0002@gmail.com"
 
 [nix]
 channel = "stable-25_05"
