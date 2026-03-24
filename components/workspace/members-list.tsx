@@ -88,7 +88,7 @@ export function MembersList({ members: initialMembers, workspaceId, currentUserR
               <div>
                 <div className="flex items-center gap-1.5">
                   <span className="text-xs text-[hsl(var(--foreground))] font-medium">{m.userName}</span>
-                  {m.userId === ownerId && <Crown className="w-3 h-3 text-[hsl(var(--warning))]" title="Owner" />}
+                  {m.userId === ownerId && <Crown className="w-3 h-3 text-[hsl(var(--warning))]" aria-label="Owner" />}
                 </div>
                 <span className="text-[10px] text-[hsl(var(--muted-foreground))]">{m.userEmail}</span>
               </div>

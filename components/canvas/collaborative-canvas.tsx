@@ -115,7 +115,7 @@ export const CollaborativeCanvas = forwardRef<CanvasHandle, CollaborativeCanvasP
     }
   }, [isEditable, saveCanvas, userId, userName]);
 
-  const handleLibraryChange = useCallback(async (items: any[]) => {
+  const handleLibraryChange = useCallback(async (items: readonly any[]) => {
     if (!isEditable) return;
     try {
       await fetch(`/api/canvases/${canvasId}`, {
