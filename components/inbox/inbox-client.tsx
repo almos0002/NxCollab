@@ -117,7 +117,7 @@ export function InboxClient({ initialNotifications, initialTrashedNotifications 
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
         <div className="flex items-center gap-2">
           <button
             onClick={() => setFilter("all")}
@@ -180,7 +180,7 @@ export function InboxClient({ initialNotifications, initialTrashedNotifications 
                         <p className="text-xs text-[hsl(var(--muted-foreground))] mt-0.5 line-clamp-2 opacity-70">{notification.message}</p>
                         <p className="text-[10px] text-[hsl(var(--muted-foreground))] mt-1.5 opacity-70">Deleted {formatDate(notification.deletedAt)}</p>
                       </div>
-                      <div className="flex items-center gap-1 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="flex items-center gap-1 shrink-0 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
                         <button
                           onClick={() => setRestoreTarget(notification)}
                           className="flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-md border border-[hsl(var(--border))] text-[hsl(var(--foreground))] hover:bg-[hsl(var(--accent))] transition-colors"
@@ -243,7 +243,7 @@ export function InboxClient({ initialNotifications, initialTrashedNotifications 
                       <p className="text-xs text-[hsl(var(--muted-foreground))] mt-0.5 line-clamp-2">{notification.message}</p>
                       <p className="text-[10px] text-[hsl(var(--muted-foreground))] mt-1.5 opacity-70">{formatDate(notification.createdAt)}</p>
                     </div>
-                    <div className="flex items-center gap-1 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="flex items-center gap-1 shrink-0 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
                       {notification.link && (
                         <button
                           onClick={() => handleClick(notification)}

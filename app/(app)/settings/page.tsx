@@ -16,9 +16,9 @@ export default async function SettingsPage() {
   if (!user[0]) redirect("/auth/sign-in");
 
   return (
-    <div className="p-8 max-w-5xl mx-auto">
+    <div className="p-4 sm:p-8 max-w-5xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-[hsl(var(--foreground))] tracking-tight">Settings</h1>
+        <h1 className="text-xl sm:text-2xl font-bold text-[hsl(var(--foreground))] tracking-tight">Settings</h1>
         <p className="text-sm text-[hsl(var(--muted-foreground))] mt-1">Manage your account settings</p>
       </div>
       <SettingsForm user={{ id: user[0].id, name: user[0].name, email: user[0].email }} />

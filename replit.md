@@ -221,3 +221,4 @@ All API routes are in `app/api/`:
 - Dynamic branding across all pages (homepage, auth, page titles) via `lib/branding.ts` helper
 - Root layout uses Next.js title template (`%s — SiteName`) for consistent page titles
 - Split-panel auth pages with branded illustration panel
+- Fully mobile-responsive: all pages use `p-4 sm:p-8` padding, stat grids stack on mobile (`grid-cols-1 sm:grid-cols-3`), dashboard columns stack (`grid-cols-1 sm:grid-cols-2`), action buttons always visible on mobile (`sm:opacity-0 sm:group-hover:opacity-100`), toolbars wrap (`flex-wrap`), sidebar shows as off-canvas drawer with hamburger menu on mobile

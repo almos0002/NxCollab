@@ -172,7 +172,7 @@ export function AdminActions({ signupDisabled: initialSignupDisabled, users: ini
             <div key={user.id} className="px-6 py-4 hover:bg-[hsl(var(--accent)/0.3)] transition-colors">
               {editingUser === user.id ? (
                 <div className="space-y-3">
-                  <div className="flex gap-3">
+                  <div className="flex flex-col sm:flex-row gap-3">
                     <input
                       type="text"
                       value={editName}
@@ -235,14 +235,14 @@ export function AdminActions({ signupDisabled: initialSignupDisabled, users: ini
                   </div>
                 </div>
               ) : (
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-full bg-[hsl(var(--muted))] flex items-center justify-center text-sm font-semibold text-[hsl(var(--muted-foreground))]">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-9 h-9 rounded-full bg-[hsl(var(--muted))] flex items-center justify-center text-sm font-semibold text-[hsl(var(--muted-foreground))] shrink-0">
                       {user.name[0]?.toUpperCase()}
                     </div>
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <p className="text-sm font-medium text-[hsl(var(--foreground))]">{user.name}</p>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <p className="text-sm font-medium text-[hsl(var(--foreground))] truncate">{user.name}</p>
                         {user.isAdmin && (
                           <span className="inline-flex items-center gap-1 text-xs font-medium bg-[hsl(var(--warning)/0.1)] text-[hsl(var(--warning))] px-1.5 py-0.5 rounded-md">
                             <Shield className="w-3 h-3" /> Admin
@@ -254,11 +254,11 @@ export function AdminActions({ signupDisabled: initialSignupDisabled, users: ini
                           </span>
                         )}
                       </div>
-                      <p className="text-xs text-[hsl(var(--muted-foreground))]">{user.email}</p>
+                      <p className="text-xs text-[hsl(var(--muted-foreground))] truncate">{user.email}</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <p className="text-xs text-[hsl(var(--muted-foreground))] mr-2">Joined {formatDate(user.createdAt)}</p>
+                  <div className="flex items-center gap-2 flex-wrap shrink-0">
+                    <p className="text-xs text-[hsl(var(--muted-foreground))] mr-1 hidden sm:block">Joined {formatDate(user.createdAt)}</p>
                     <button onClick={() => startEditLimits(user.id)} className="flex items-center justify-center w-8 h-8 rounded-lg border border-[hsl(var(--border))] text-[hsl(var(--muted-foreground))] hover:bg-[hsl(var(--accent))] hover:text-[hsl(var(--foreground))] transition-colors" title="Edit limits">
                       <Gauge className="w-3.5 h-3.5" />
                     </button>

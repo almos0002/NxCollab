@@ -36,7 +36,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       <Suspense fallback={<SidebarSkeleton collapsed={collapsed} />}>
         <SidebarData userId={session.user.id} initialCollapsed={collapsed} />
       </Suspense>
-      <main className="flex-1 overflow-y-auto bg-[hsl(var(--background))]">{children}</main>
+      <main className="flex-1 overflow-y-auto bg-[hsl(var(--background))] min-w-0">{children}</main>
     </div>
   );
 }

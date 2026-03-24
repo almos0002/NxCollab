@@ -162,7 +162,7 @@ export function CanvasesList({ canvases: initialCanvases, workspaceId, userRole,
 
   return (
     <div>
-      <div className="flex items-center gap-3 mb-4">
+      <div className="flex flex-wrap items-center gap-3 mb-4">
         <div className="flex-1">
           <SearchBar value={search} onChange={setSearch} placeholder="Search canvases..." />
         </div>
@@ -198,7 +198,7 @@ export function CanvasesList({ canvases: initialCanvases, workspaceId, userRole,
           <p className="text-sm text-[hsl(var(--muted-foreground))]">No canvases match "{search}"</p>
         </div>
       ) : view === "grid" ? (
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {paginated.map(canvas => (
             <div key={canvas.id} className="relative group">
               <Link href={`/canvas/${canvas.id}`} className="block rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-4 hover:border-[hsl(var(--ring)/0.2)] transition-all">
@@ -209,7 +209,7 @@ export function CanvasesList({ canvases: initialCanvases, workspaceId, userRole,
                 <p className="text-xs text-[hsl(var(--muted-foreground))] mt-0.5">{formatDate(canvas.updatedAt)}</p>
               </Link>
               {canEdit && (
-                <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="absolute top-2 right-2 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
                   <ActionMenu canvas={canvas} />
                 </div>
               )}

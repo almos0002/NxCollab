@@ -38,13 +38,13 @@ export default async function DashboardPage() {
   ];
 
   return (
-    <div className="p-8 max-w-5xl mx-auto animate-fade-in">
+    <div className="p-4 sm:p-8 max-w-5xl mx-auto animate-fade-in">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-[hsl(var(--foreground))] tracking-tight">Dashboard</h1>
+        <h1 className="text-xl sm:text-2xl font-bold text-[hsl(var(--foreground))] tracking-tight">Dashboard</h1>
         <p className="text-sm text-[hsl(var(--muted-foreground))] mt-1">Welcome back, {session.user.name}</p>
       </div>
 
-      <div className="grid grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
         {stats.map(({ label, value, icon: Icon }) => (
           <div key={label} className="rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-5">
             <div className="flex items-center justify-between mb-4">
@@ -58,7 +58,7 @@ export default async function DashboardPage() {
         ))}
       </div>
 
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         <div>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-sm font-semibold text-[hsl(var(--foreground))]">Recent Canvases</h2>

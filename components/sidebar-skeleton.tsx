@@ -17,7 +17,7 @@ export function SidebarSkeleton({ collapsed = false }: SidebarSkeletonProps) {
   return (
     <aside
       className={cn(
-        "flex flex-col min-h-screen border-r border-[hsl(var(--border))] bg-[hsl(var(--card))] shrink-0 overflow-hidden",
+        "flex-col min-h-screen border-r border-[hsl(var(--border))] bg-[hsl(var(--card))] shrink-0 overflow-hidden hidden md:flex",
         collapsed ? "w-[68px]" : "w-[260px]"
       )}
     >

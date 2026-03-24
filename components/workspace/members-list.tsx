@@ -129,7 +129,7 @@ export function MembersList({ members: initialMembers, workspaceId, currentUserR
               {canManage && m.userId !== ownerId && (
                 <button
                   onClick={() => setRemoveTarget(m)}
-                  className="flex items-center justify-center w-6 h-6 rounded-md text-[hsl(var(--muted-foreground))] opacity-0 group-hover:opacity-100 hover:bg-[hsl(var(--destructive)/0.1)] hover:text-[hsl(var(--destructive))] transition-all"
+                  className="flex items-center justify-center w-6 h-6 rounded-md text-[hsl(var(--muted-foreground))] sm:opacity-0 sm:group-hover:opacity-100 hover:bg-[hsl(var(--destructive)/0.1)] hover:text-[hsl(var(--destructive))] transition-all"
                   title="Remove member"
                 >
                   <Trash2 className="w-3 h-3" />

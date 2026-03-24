@@ -7,7 +7,7 @@ import { useTheme } from "./theme-provider";
 import { signOut } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useCallback } from "react";
-import { LayoutDashboard, Layers, Clock, Settings, Shield, LogOut, Sun, Moon, Monitor, ChevronRight, PanelLeftClose, PanelLeft, Inbox, ChevronsUpDown } from "lucide-react";
+import { LayoutDashboard, Layers, Clock, Settings, Shield, LogOut, Sun, Moon, Monitor, ChevronRight, PanelLeftClose, PanelLeft, Inbox, ChevronsUpDown, Menu, X } from "lucide-react";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
 
 interface SidebarProps {
@@ -35,6 +35,7 @@ export function Sidebar({ user, siteLogo, siteName, initialCollapsed = false }: 
   const { theme, setTheme } = useTheme();
   const router = useRouter();
   const [collapsed, setCollapsed] = useState(initialCollapsed);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
 
   const fetchUnread = useCallback(async () => {
@@ -57,6 +58,10 @@ export function Sidebar({ user, siteLogo, siteName, initialCollapsed = false }: 
       window.removeEventListener("notification-change", handleChange);
     };
   }, [fetchUnread]);
+
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
 
   function toggleCollapsed() {
     const next = !collapsed;
@@ -92,142 +97,195 @@ export function Sidebar({ user, siteLogo, siteName, initialCollapsed = false }: 
     );
   }
 
-  return (
-    <TooltipProvider>
-      <aside
-        className={cn(
-          "flex flex-col min-h-screen border-r border-[hsl(var(--border))] bg-[hsl(var(--card))] shrink-0 overflow-hidden transition-all duration-200",
-          collapsed ? "w-[68px]" : "w-[260px]"
-        )}
-      >
-        <div className={cn("border-b border-[hsl(var(--border))] h-[49px] flex items-center", collapsed ? "px-2" : "px-3")}>
-          <SidebarTooltip label={`${user.name}\n${user.email}`}>
-            <Link
-              href="/settings"
-              className={cn(
-                "flex items-center w-full",
-                collapsed ? "justify-center py-2" : "gap-2.5 px-2 py-2"
+  const sidebarContent = (
+    <aside
+      className={cn(
+        "flex flex-col min-h-screen border-r border-[hsl(var(--border))] bg-[hsl(var(--card))] shrink-0 overflow-hidden transition-all duration-200",
+        "max-md:w-[260px]",
+        collapsed ? "md:w-[68px]" : "md:w-[260px]"
+      )}
+    >
+      <div className={cn("border-b border-[hsl(var(--border))] h-[49px] flex items-center", collapsed ? "md:px-2 max-md:px-3" : "px-3")}>
+        <SidebarTooltip label={`${user.name}\n${user.email}`}>
+          <Link
+            href="/settings"
+            className={cn(
+              "flex items-center w-full",
+              collapsed ? "md:justify-center md:py-2 max-md:gap-2.5 max-md:px-2 max-md:py-2" : "gap-2.5 px-2 py-2"
+            )}
+          >
+            <div className="relative shrink-0">
+              {user.image ? (
+                <img src={user.image} alt={user.name} className="w-8 h-8 rounded-lg object-cover" />
+              ) : (
+                <div className="w-8 h-8 rounded-lg bg-[hsl(var(--foreground))] flex items-center justify-center">
+                  <span className="text-[10px] font-bold text-[hsl(var(--background))]">{initials}</span>
+                </div>
               )}
-            >
-              <div className="relative shrink-0">
-                {user.image ? (
-                  <img src={user.image} alt={user.name} className="w-8 h-8 rounded-lg object-cover" />
-                ) : (
-                  <div className="w-8 h-8 rounded-lg bg-[hsl(var(--foreground))] flex items-center justify-center">
-                    <span className="text-[10px] font-bold text-[hsl(var(--background))]">{initials}</span>
-                  </div>
-                )}
-                {siteLogo && (
-                  <img
-                    src={siteLogo}
-                    alt={siteName || "Logo"}
-                    className="absolute -bottom-1 -right-1 w-4 h-4 object-contain ring-2 ring-[hsl(var(--card))] bg-[hsl(var(--background))]"
-                  />
-                )}
-              </div>
-              {!collapsed && (
-                <>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-[hsl(var(--foreground))] truncate leading-tight">{user.name}</p>
-                    <p className="text-[11px] text-[hsl(var(--muted-foreground))] truncate leading-tight mt-0.5">{siteName || user.email}</p>
-                  </div>
-                  <ChevronsUpDown className="w-3.5 h-3.5 text-[hsl(var(--muted-foreground))] shrink-0 opacity-50" />
-                </>
+              {siteLogo && (
+                <img
+                  src={siteLogo}
+                  alt={siteName || "Logo"}
+                  className="absolute -bottom-1 -right-1 w-4 h-4 object-contain ring-2 ring-[hsl(var(--card))] bg-[hsl(var(--background))]"
+                />
               )}
-            </Link>
-          </SidebarTooltip>
-        </div>
+            </div>
+            {(!collapsed || mobileOpen) && (
+              <>
+                <div className="flex-1 min-w-0 max-md:block hidden md:hidden">
+                  <p className="text-sm font-semibold text-[hsl(var(--foreground))] truncate leading-tight">{user.name}</p>
+                  <p className="text-[11px] text-[hsl(var(--muted-foreground))] truncate leading-tight mt-0.5">{siteName || user.email}</p>
+                </div>
+                <ChevronsUpDown className="w-3.5 h-3.5 text-[hsl(var(--muted-foreground))] shrink-0 opacity-50 max-md:block hidden md:hidden" />
+              </>
+            )}
+            {!collapsed && (
+              <>
+                <div className="flex-1 min-w-0 hidden md:block">
+                  <p className="text-sm font-semibold text-[hsl(var(--foreground))] truncate leading-tight">{user.name}</p>
+                  <p className="text-[11px] text-[hsl(var(--muted-foreground))] truncate leading-tight mt-0.5">{siteName || user.email}</p>
+                </div>
+                <ChevronsUpDown className="w-3.5 h-3.5 text-[hsl(var(--muted-foreground))] shrink-0 opacity-50 hidden md:block" />
+              </>
+            )}
+          </Link>
+        </SidebarTooltip>
+      </div>
 
-        <nav className={cn("flex-1 py-3 space-y-0.5 overflow-y-auto", collapsed ? "px-2" : "px-3")}>
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const active = pathname.startsWith(item.href);
-            return (
-              <SidebarTooltip key={item.href} label={item.href === "/inbox" && unreadCount > 0 ? `${item.label} (${unreadCount})` : item.label}>
-                <Link
-                  href={item.href}
-                  className={cn(
-                    "group flex items-center rounded-lg text-sm transition-all",
-                    collapsed ? "justify-center px-0 py-2.5" : "gap-3 px-3 py-2.5",
-                    active
-                      ? "bg-[hsl(var(--accent))] text-[hsl(var(--foreground))] font-medium"
-                      : "text-[hsl(var(--muted-foreground))] hover:bg-[hsl(var(--accent)/0.6)] hover:text-[hsl(var(--foreground))]"
-                  )}
-                >
-                  <div className="relative shrink-0">
-                    <Icon className="w-[18px] h-[18px]" />
-                    {item.href === "/inbox" && unreadCount > 0 && collapsed && (
-                      <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-[hsl(var(--foreground))] text-[hsl(var(--background))] text-[10px] font-bold flex items-center justify-center ring-2 ring-[hsl(var(--card))]">{unreadCount > 9 ? "9+" : unreadCount}</span>
-                    )}
-                  </div>
-                  {!collapsed && <span className="flex-1">{item.label}</span>}
-                  {!collapsed && item.href === "/inbox" && unreadCount > 0 && (
-                    <span className="min-w-[20px] h-5 px-1.5 rounded-md bg-[hsl(var(--foreground))] text-[hsl(var(--background))] text-[11px] font-bold flex items-center justify-center">{unreadCount > 99 ? "99+" : unreadCount}</span>
-                  )}
-                  {!collapsed && active && item.href !== "/inbox" && <ChevronRight className="w-3.5 h-3.5 opacity-40" />}
-                </Link>
-              </SidebarTooltip>
-            );
-          })}
-          {user.isAdmin && (
-            <SidebarTooltip label="Admin">
+      <nav className={cn("flex-1 py-3 space-y-0.5 overflow-y-auto", collapsed ? "md:px-2 max-md:px-3" : "px-3")}>
+        {navItems.map((item) => {
+          const Icon = item.icon;
+          const active = pathname.startsWith(item.href);
+          const isCollapsedDesktop = collapsed;
+          return (
+            <SidebarTooltip key={item.href} label={item.href === "/inbox" && unreadCount > 0 ? `${item.label} (${unreadCount})` : item.label}>
               <Link
-                href="/admin"
+                href={item.href}
                 className={cn(
                   "group flex items-center rounded-lg text-sm transition-all",
-                  collapsed ? "justify-center px-0 py-2.5" : "gap-3 px-3 py-2.5",
-                  pathname.startsWith("/admin")
+                  isCollapsedDesktop ? "md:justify-center md:px-0 md:py-2.5 max-md:gap-3 max-md:px-3 max-md:py-2.5" : "gap-3 px-3 py-2.5",
+                  active
                     ? "bg-[hsl(var(--accent))] text-[hsl(var(--foreground))] font-medium"
                     : "text-[hsl(var(--muted-foreground))] hover:bg-[hsl(var(--accent)/0.6)] hover:text-[hsl(var(--foreground))]"
                 )}
               >
-                <Shield className="w-[18px] h-[18px] shrink-0" />
-                {!collapsed && <span className="flex-1">Admin</span>}
-                {!collapsed && pathname.startsWith("/admin") && <ChevronRight className="w-3.5 h-3.5 opacity-40" />}
+                <div className="relative shrink-0">
+                  <Icon className="w-[18px] h-[18px]" />
+                  {item.href === "/inbox" && unreadCount > 0 && isCollapsedDesktop && (
+                    <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-[hsl(var(--foreground))] text-[hsl(var(--background))] text-[10px] font-bold flex items-center justify-center ring-2 ring-[hsl(var(--card))] hidden md:flex">{unreadCount > 9 ? "9+" : unreadCount}</span>
+                  )}
+                </div>
+                {!isCollapsedDesktop && <span className="flex-1 hidden md:inline">{item.label}</span>}
+                <span className="flex-1 md:hidden">{item.label}</span>
+                {!isCollapsedDesktop && item.href === "/inbox" && unreadCount > 0 && (
+                  <span className="min-w-[20px] h-5 px-1.5 rounded-md bg-[hsl(var(--foreground))] text-[hsl(var(--background))] text-[11px] font-bold hidden md:flex items-center justify-center">{unreadCount > 99 ? "99+" : unreadCount}</span>
+                )}
+                {item.href === "/inbox" && unreadCount > 0 && (
+                  <span className="min-w-[20px] h-5 px-1.5 rounded-md bg-[hsl(var(--foreground))] text-[hsl(var(--background))] text-[11px] font-bold flex md:hidden items-center justify-center">{unreadCount > 99 ? "99+" : unreadCount}</span>
+                )}
+                {!isCollapsedDesktop && active && item.href !== "/inbox" && <ChevronRight className="w-3.5 h-3.5 opacity-40 hidden md:block" />}
+                {active && item.href !== "/inbox" && <ChevronRight className="w-3.5 h-3.5 opacity-40 md:hidden" />}
               </Link>
             </SidebarTooltip>
-          )}
-        </nav>
+          );
+        })}
+        {user.isAdmin && (
+          <SidebarTooltip label="Admin">
+            <Link
+              href="/admin"
+              className={cn(
+                "group flex items-center rounded-lg text-sm transition-all",
+                collapsed ? "md:justify-center md:px-0 md:py-2.5 max-md:gap-3 max-md:px-3 max-md:py-2.5" : "gap-3 px-3 py-2.5",
+                pathname.startsWith("/admin")
+                  ? "bg-[hsl(var(--accent))] text-[hsl(var(--foreground))] font-medium"
+                  : "text-[hsl(var(--muted-foreground))] hover:bg-[hsl(var(--accent)/0.6)] hover:text-[hsl(var(--foreground))]"
+              )}
+            >
+              <Shield className="w-[18px] h-[18px] shrink-0" />
+              {!collapsed && <span className="flex-1 hidden md:inline">Admin</span>}
+              <span className="flex-1 md:hidden">Admin</span>
+              {!collapsed && pathname.startsWith("/admin") && <ChevronRight className="w-3.5 h-3.5 opacity-40 hidden md:block" />}
+              {pathname.startsWith("/admin") && <ChevronRight className="w-3.5 h-3.5 opacity-40 md:hidden" />}
+            </Link>
+          </SidebarTooltip>
+        )}
+      </nav>
 
-        <div className={cn("border-t border-[hsl(var(--border))] space-y-0.5", collapsed ? "px-2 py-3" : "px-3 py-3")}>
-          <SidebarTooltip label={`${themeLabel} mode`}>
+      <div className={cn("border-t border-[hsl(var(--border))] space-y-0.5", collapsed ? "md:px-2 max-md:px-3 py-3" : "px-3 py-3")}>
+        <SidebarTooltip label={`${themeLabel} mode`}>
+          <button
+            onClick={() => setTheme(nextTheme)}
+            className={cn(
+              "flex items-center w-full rounded-lg text-sm text-[hsl(var(--muted-foreground))] hover:bg-[hsl(var(--accent)/0.6)] hover:text-[hsl(var(--foreground))] transition-all",
+              collapsed ? "md:justify-center md:px-0 md:py-2.5 max-md:gap-3 max-md:px-3 max-md:py-2.5" : "gap-3 px-3 py-2.5"
+            )}
+          >
+            <ThemeIcon className="w-[18px] h-[18px] shrink-0" />
+            {!collapsed && <span className="hidden md:inline">{themeLabel} mode</span>}
+            <span className="md:hidden">{themeLabel} mode</span>
+          </button>
+        </SidebarTooltip>
+        <SidebarTooltip label="Sign out">
+          <button
+            onClick={handleSignOut}
+            className={cn(
+              "flex items-center w-full rounded-lg text-sm text-[hsl(var(--muted-foreground))] hover:bg-[hsl(var(--accent)/0.6)] hover:text-[hsl(var(--foreground))] transition-all",
+              collapsed ? "md:justify-center md:px-0 md:py-2.5 max-md:gap-3 max-md:px-3 max-md:py-2.5" : "gap-3 px-3 py-2.5"
+            )}
+          >
+            <LogOut className="w-[18px] h-[18px] shrink-0" />
+            {!collapsed && <span className="hidden md:inline">Sign out</span>}
+            <span className="md:hidden">Sign out</span>
+          </button>
+        </SidebarTooltip>
+        <SidebarTooltip label={collapsed ? "Expand sidebar" : "Collapse sidebar"}>
+          <button
+            onClick={toggleCollapsed}
+            className={cn(
+              "items-center w-full rounded-lg text-sm text-[hsl(var(--muted-foreground))] hover:bg-[hsl(var(--accent)/0.6)] hover:text-[hsl(var(--foreground))] transition-all hidden md:flex",
+              collapsed ? "justify-center px-0 py-2.5" : "gap-3 px-3 py-2.5"
+            )}
+          >
+            {collapsed ? <PanelLeft className="w-[18px] h-[18px] shrink-0" /> : <PanelLeftClose className="w-[18px] h-[18px] shrink-0" />}
+            {!collapsed && <span>Collapse</span>}
+          </button>
+        </SidebarTooltip>
+      </div>
+    </aside>
+  );
+
+  return (
+    <TooltipProvider>
+      <div className="hidden md:block">
+        {sidebarContent}
+      </div>
+
+      <button
+        onClick={() => setMobileOpen(true)}
+        className="md:hidden fixed top-3 left-3 z-50 w-10 h-10 rounded-lg bg-[hsl(var(--card))] border border-[hsl(var(--border))] flex items-center justify-center shadow-sm"
+        aria-label="Open menu"
+      >
+        <Menu className="w-5 h-5 text-[hsl(var(--foreground))]" />
+      </button>
+
+      {mobileOpen && (
+        <>
+          <div
+            className="md:hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm"
+            onClick={() => setMobileOpen(false)}
+          />
+          <div className="md:hidden fixed inset-y-0 left-0 z-50 w-[280px] animate-slide-in-left">
             <button
-              onClick={() => setTheme(nextTheme)}
-              className={cn(
-                "flex items-center w-full rounded-lg text-sm text-[hsl(var(--muted-foreground))] hover:bg-[hsl(var(--accent)/0.6)] hover:text-[hsl(var(--foreground))] transition-all",
-                collapsed ? "justify-center px-0 py-2.5" : "gap-3 px-3 py-2.5"
-              )}
+              onClick={() => setMobileOpen(false)}
+              className="absolute top-3 right-3 w-8 h-8 rounded-lg bg-[hsl(var(--accent))] flex items-center justify-center z-10"
+              aria-label="Close menu"
             >
-              <ThemeIcon className="w-[18px] h-[18px] shrink-0" />
-              {!collapsed && <span>{themeLabel} mode</span>}
+              <X className="w-4 h-4 text-[hsl(var(--foreground))]" />
             </button>
-          </SidebarTooltip>
-          <SidebarTooltip label="Sign out">
-            <button
-              onClick={handleSignOut}
-              className={cn(
-                "flex items-center w-full rounded-lg text-sm text-[hsl(var(--muted-foreground))] hover:bg-[hsl(var(--accent)/0.6)] hover:text-[hsl(var(--foreground))] transition-all",
-                collapsed ? "justify-center px-0 py-2.5" : "gap-3 px-3 py-2.5"
-              )}
-            >
-              <LogOut className="w-[18px] h-[18px] shrink-0" />
-              {!collapsed && <span>Sign out</span>}
-            </button>
-          </SidebarTooltip>
-          <SidebarTooltip label={collapsed ? "Expand sidebar" : "Collapse sidebar"}>
-            <button
-              onClick={toggleCollapsed}
-              className={cn(
-                "flex items-center w-full rounded-lg text-sm text-[hsl(var(--muted-foreground))] hover:bg-[hsl(var(--accent)/0.6)] hover:text-[hsl(var(--foreground))] transition-all",
-                collapsed ? "justify-center px-0 py-2.5" : "gap-3 px-3 py-2.5"
-              )}
-            >
-              {collapsed ? <PanelLeft className="w-[18px] h-[18px] shrink-0" /> : <PanelLeftClose className="w-[18px] h-[18px] shrink-0" />}
-              {!collapsed && <span>Collapse</span>}
-            </button>
-          </SidebarTooltip>
-        </div>
-      </aside>
+            {sidebarContent}
+          </div>
+        </>
+      )}
     </TooltipProvider>
   );
 }

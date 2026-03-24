@@ -18,7 +18,7 @@ export default async function NewCanvasPage({ params }: Props) {
   if (!role || !canEdit(role)) notFound();
 
   return (
-    <div className="p-8 max-w-xl mx-auto animate-fade-in">
+    <div className="p-4 sm:p-8 max-w-xl mx-auto animate-fade-in">
       <div className="mb-8">
         <div className="flex items-center gap-2 text-xs text-[hsl(var(--muted-foreground))] mb-2">
           <Link href="/workspaces" className="hover:text-[hsl(var(--foreground))] transition-colors">Workspaces</Link>

@@ -110,7 +110,7 @@ export function WorkspacesList({ workspaces }: WorkspacesListProps) {
 
   return (
     <div>
-      <div className="flex items-center gap-3 mb-5">
+      <div className="flex flex-wrap items-center gap-3 mb-5">
         <div className="flex-1">
           <SearchBar value={search} onChange={setSearch} placeholder="Search workspaces..." />
         </div>
