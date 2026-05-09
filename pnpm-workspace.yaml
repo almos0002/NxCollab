@@ -1,3 +1,6 @@
 packages:
   - "."
   - "artifacts/*"
+allowBuilds:
+  esbuild: false
+  sharp: false
