@@ -4,7 +4,6 @@ import { db } from "@/lib/db";
 import { ideasTable } from "@/lib/db";
 import { eq, desc } from "drizzle-orm";
 import { IdeaBank } from "@/components/dashboard/idea-bank";
-import { Lightbulb } from "lucide-react";
 
 export const metadata: Metadata = { title: "Idea Bank" };
 
@@ -35,20 +34,12 @@ export default async function IdeaBankPage() {
   }));
 
   return (
-    <div className="p-4 sm:p-8 max-w-3xl mx-auto animate-fade-in">
-      <div className="mb-8 flex items-center gap-3">
-        <div className="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
-          <Lightbulb className="w-5 h-5 text-amber-600 dark:text-amber-400" />
-        </div>
-        <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-[hsl(var(--foreground))] tracking-tight">Idea Bank</h1>
-          <p className="text-sm text-[hsl(var(--muted-foreground))] mt-0.5">Capture and track your ideas</p>
-        </div>
+    <div className="p-4 sm:p-8 max-w-5xl mx-auto animate-fade-in">
+      <div className="mb-6">
+        <h1 className="text-xl sm:text-2xl font-bold text-[hsl(var(--foreground))] tracking-tight">Idea Bank</h1>
+        <p className="text-sm text-[hsl(var(--muted-foreground))] mt-1">Capture and track your ideas</p>
       </div>
-
-      <div className="rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-5">
-        <IdeaBank initialIdeas={initialIdeas} />
-      </div>
+      <IdeaBank initialIdeas={initialIdeas} />
     </div>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Lightbulb, Plus, Trash2, Pencil, Check, X, ChevronDown } from "lucide-react";
+import { Plus, Trash2, Pencil, Check, X, ChevronDown, Lightbulb } from "lucide-react";
 
 type Status = "idea" | "in_progress" | "done";
 type Color = "gray" | "violet" | "blue" | "green" | "yellow" | "rose";
@@ -137,7 +137,7 @@ function IdeaCard({
   }
 
   return (
-    <div className="group relative flex gap-3 rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-4 hover:border-[hsl(var(--ring)/0.2)] transition-all">
+    <div className="group relative flex gap-3 rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-4 hover:border-[hsl(var(--ring)/0.25)] transition-colors">
       <div className={`w-1 flex-shrink-0 rounded-full self-stretch ${COLOR_MAP[idea.color as Color] ?? "bg-zinc-400"}`} />
       <div className="flex-1 min-w-0">
         {editing ? (
@@ -184,7 +184,7 @@ function IdeaCard({
                 </button>
                 <button
                   onClick={handleDelete}
-                  className="w-6 h-6 rounded-md flex items-center justify-center hover:bg-rose-100 dark:hover:bg-rose-900/30 text-[hsl(var(--muted-foreground))] hover:text-rose-600 transition-colors"
+                  className="w-6 h-6 rounded-md flex items-center justify-center hover:bg-[hsl(var(--destructive)/0.1)] text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--destructive))] transition-colors"
                   title="Delete"
                 >
                   <Trash2 className="w-3 h-3" />
@@ -250,7 +250,7 @@ function AddIdeaForm({ onAdd }: { onAdd: (idea: Idea) => void }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="rounded-xl border border-[hsl(var(--ring)/0.3)] bg-[hsl(var(--card))] p-4 space-y-3">
+    <form onSubmit={handleSubmit} className="rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-4 space-y-3">
       <input
         ref={inputRef}
         value={title}
@@ -274,7 +274,7 @@ function AddIdeaForm({ onAdd }: { onAdd: (idea: Idea) => void }) {
               key={c}
               type="button"
               onClick={() => setColor(c)}
-              className={`w-4 h-4 rounded-full ${COLOR_MAP[c]} transition-transform ${color === c ? "ring-2 ring-offset-2 ring-[hsl(var(--ring))] ring-offset-[hsl(var(--card))] scale-110" : "opacity-60 hover:opacity-100 hover:scale-110"}`}
+              className={`w-4 h-4 rounded-full ${COLOR_MAP[c]} transition-transform ${color === c ? "ring-2 ring-offset-2 ring-[hsl(var(--ring))] ring-offset-[hsl(var(--card))] scale-110" : "opacity-50 hover:opacity-80 hover:scale-110"}`}
               title={c}
             />
           ))}
@@ -303,9 +303,11 @@ function AddIdeaForm({ onAdd }: { onAdd: (idea: Idea) => void }) {
 export function IdeaBank({ initialIdeas }: { initialIdeas: Idea[] }) {
   const [ideas, setIdeas] = useState<Idea[]>(initialIdeas);
   const [filter, setFilter] = useState<"all" | Status>("all");
+  const [showAdd, setShowAdd] = useState(false);
 
   function handleAdd(idea: Idea) {
     setIdeas(prev => [idea, ...prev]);
+    setShowAdd(false);
   }
 
   function handleDelete(id: string) {
@@ -334,58 +336,66 @@ export function IdeaBank({ initialIdeas }: { initialIdeas: Idea[] }) {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-5">
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
-            <Lightbulb className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
-          </div>
-          <h2 className="text-sm font-semibold text-[hsl(var(--foreground))]">Idea Bank</h2>
-          {ideas.length > 0 && (
-            <span className="text-xs text-[hsl(var(--muted-foreground))] tabular-nums">{ideas.length}</span>
-          )}
+          {filterTabs.map(t => (
+            <button
+              key={t.key}
+              onClick={() => setFilter(t.key)}
+              className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors ${
+                filter === t.key
+                  ? "bg-[hsl(var(--foreground))] text-[hsl(var(--background))]"
+                  : "text-[hsl(var(--muted-foreground))] hover:bg-[hsl(var(--accent))]"
+              }`}
+            >
+              {t.label}
+              {t.count > 0 && (
+                <span className={`ml-1.5 tabular-nums ${filter === t.key ? "opacity-70" : "opacity-50"}`}>
+                  {t.count}
+                </span>
+              )}
+            </button>
+          ))}
         </div>
-
-        {ideas.length > 0 && (
-          <div className="flex items-center gap-0.5 rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--muted))] p-0.5">
-            {filterTabs.map(t => (
-              <button
-                key={t.key}
-                onClick={() => setFilter(t.key)}
-                className={`px-2.5 py-1 rounded-md text-xs font-medium transition-colors ${
-                  filter === t.key
-                    ? "bg-[hsl(var(--card))] text-[hsl(var(--foreground))] shadow-sm"
-                    : "text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))]"
-                }`}
-              >
-                {t.label}
-                {t.count > 0 && <span className="ml-1 opacity-60">{t.count}</span>}
-              </button>
-            ))}
-          </div>
-        )}
+        <button
+          onClick={() => setShowAdd(true)}
+          className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg bg-[hsl(var(--foreground))] text-[hsl(var(--background))] hover:opacity-90 transition-opacity"
+        >
+          <Plus className="w-4 h-4" /> New idea
+        </button>
       </div>
 
-      <div className="space-y-2 mb-3">
-        {filtered.length === 0 && ideas.length > 0 ? (
-          <div className="rounded-xl border border-dashed border-[hsl(var(--border))] py-6 text-center">
-            <p className="text-xs text-[hsl(var(--muted-foreground))]">No {filter === "in_progress" ? "in-progress" : filter} ideas yet</p>
+      {showAdd && (
+        <div className="mb-4">
+          <AddIdeaForm onAdd={handleAdd} />
+          <button
+            onClick={() => setShowAdd(false)}
+            className="mt-2 text-xs text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] transition-colors"
+          >
+            Cancel
+          </button>
+        </div>
+      )}
+
+      {filtered.length === 0 && ideas.length > 0 ? (
+        <div className="rounded-xl border border-dashed border-[hsl(var(--border))] py-10 text-center">
+          <p className="text-sm text-[hsl(var(--muted-foreground))]">No {filter === "in_progress" ? "in-progress" : filter} ideas yet</p>
+        </div>
+      ) : filtered.length === 0 ? (
+        <div className="rounded-xl border border-dashed border-[hsl(var(--border))] py-16 text-center">
+          <div className="w-12 h-12 rounded-xl bg-[hsl(var(--muted))] flex items-center justify-center mx-auto mb-4">
+            <Lightbulb className="w-6 h-6 text-[hsl(var(--muted-foreground))]" />
           </div>
-        ) : filtered.length === 0 ? (
-          <div className="rounded-xl border border-dashed border-[hsl(var(--border))] py-8 text-center">
-            <div className="w-10 h-10 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center mx-auto mb-3">
-              <Lightbulb className="w-5 h-5 text-amber-500 dark:text-amber-400" />
-            </div>
-            <p className="text-sm text-[hsl(var(--muted-foreground))] mb-1">No ideas yet</p>
-            <p className="text-xs text-[hsl(var(--muted-foreground))] opacity-60">Capture your ideas before they slip away</p>
-          </div>
-        ) : (
-          filtered.map(idea => (
+          <h3 className="text-sm font-semibold text-[hsl(var(--foreground))] mb-1.5">No ideas yet</h3>
+          <p className="text-sm text-[hsl(var(--muted-foreground))]">Capture your ideas before they slip away</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {filtered.map(idea => (
             <IdeaCard key={idea.id} idea={idea} onDelete={handleDelete} onUpdate={handleUpdate} />
-          ))
-        )}
-      </div>
-
-      <AddIdeaForm onAdd={handleAdd} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
