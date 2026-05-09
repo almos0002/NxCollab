@@ -4,21 +4,20 @@ import { getServerSession } from "@/lib/session";
 export const metadata: Metadata = { title: "Dashboard" };
 import { db } from "@/lib/db";
 import { workspacesTable, workspaceMembersTable, canvasesTable, ideasTable } from "@/lib/db";
-import { eq, desc, inArray, and, isNull } from "drizzle-orm";
+import { eq, desc, inArray, and, isNull, count } from "drizzle-orm";
 import Link from "next/link";
-import { Plus, Layers, FileText, Activity, ArrowRight } from "lucide-react";
+import { Plus, Layers, FileText, Activity, ArrowRight, Lightbulb } from "lucide-react";
 import { RecentCanvases } from "@/components/dashboard/recent-canvases";
-import { IdeaBank } from "@/components/dashboard/idea-bank";
 
 export default async function DashboardPage() {
   const session = await getServerSession();
   if (!session?.user) return null;
   const userId = session.user.id;
 
-  const [ownedWorkspaces, memberEntries, ideasRows] = await Promise.all([
+  const [ownedWorkspaces, memberEntries, ideasCount] = await Promise.all([
     db.select().from(workspacesTable).where(and(eq(workspacesTable.ownerId, userId), isNull(workspacesTable.deletedAt))),
     db.select({ workspaceId: workspaceMembersTable.workspaceId }).from(workspaceMembersTable).where(eq(workspaceMembersTable.userId, userId)),
-    db.select().from(ideasTable).where(eq(ideasTable.userId, userId)).orderBy(desc(ideasTable.createdAt)),
+    db.select({ value: count() }).from(ideasTable).where(eq(ideasTable.userId, userId)),
   ]);
 
   const allWsIds = [...new Set([...ownedWorkspaces.map(w => w.id), ...memberEntries.map(m => m.workspaceId)])];
@@ -33,16 +32,8 @@ export default async function DashboardPage() {
     recentCanvases = rows.map(r => ({ id: r.id, name: r.name, workspaceName: r.workspaceName, updatedAt: r.updatedAt.toISOString() }));
   }
 
-  const initialIdeas = ideasRows.map(i => ({
-    id: i.id,
-    title: i.title,
-    description: i.description,
-    status: i.status as "idea" | "in_progress" | "done",
-    color: i.color,
-    createdAt: i.createdAt.toISOString(),
-  }));
-
   const totalWorkspaces = allWsIds.length;
+  const totalIdeas = ideasCount[0]?.value ?? 0;
 
   const stats = [
     { label: "Workspaces", value: totalWorkspaces, icon: Layers },
@@ -114,10 +105,24 @@ export default async function DashboardPage() {
         </div>
       </div>
 
-      {/* Idea Bank — full width */}
-      <div className="rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-5">
-        <IdeaBank initialIdeas={initialIdeas} />
-      </div>
+      {/* Idea Bank teaser */}
+      <Link
+        href="/ideas"
+        className="group flex items-center justify-between rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-5 hover:border-amber-300 dark:hover:border-amber-700 transition-all"
+      >
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
+            <Lightbulb className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+          </div>
+          <div>
+            <p className="text-sm font-semibold text-[hsl(var(--foreground))]">Idea Bank</p>
+            <p className="text-xs text-[hsl(var(--muted-foreground))]">
+              {totalIdeas === 0 ? "Capture your ideas before they slip away" : `${totalIdeas} idea${totalIdeas === 1 ? "" : "s"} saved`}
+            </p>
+          </div>
+        </div>
+        <ArrowRight className="w-4 h-4 text-[hsl(var(--muted-foreground))] opacity-0 group-hover:opacity-100 transition-opacity" />
+      </Link>
     </div>
   );
 }
