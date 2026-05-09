@@ -232,3 +232,57 @@
 .stagger-3 { animation: stagger-in 0.5s ease-out 0.25s both; }
 .stagger-4 { animation: stagger-in 0.5s ease-out 0.35s both; }
 .stagger-5 { animation: stagger-in 0.5s ease-out 0.45s both; }
+
+/* ── Landing page adaptive color tokens ────────────────── */
+:root {
+  --lp-bg1: #ffffff;
+  --lp-bg2: #f5f4f1;
+  --lp-ink: #0b0b0b;
+  --lp-ink2: #666666;
+  --lp-ink3: #999999;
+  --lp-line: #e8e8e4;
+  --lp-serif: #888888;
+  --lp-nav-bg: rgba(255,255,255,0.92);
+  --lp-nav-line: #e8e8e4;
+  --lp-badge-bg: #f5f4f1;
+  --lp-badge-line: #e0e0dc;
+  --lp-btn: #0b0b0b;
+  --lp-btn-fg: #ffffff;
+  --lp-btn2-line: #ddddd8;
+  --lp-btn2-fg: #555555;
+  --lp-card: #fafaf9;
+  --lp-card-line: #e8e8e4;
+  --lp-card-ink: #0b0b0b;
+  --lp-icon: #f0f0ed;
+  --lp-icon-line: #e8e8e4;
+  --lp-ghost: rgba(11,11,11,0.05);
+  --lp-num: #ececea;
+  --lp-dot: #dededd;
+  --lp-radial: radial-gradient(ellipse at 25% 40%, rgba(0,0,0,0.012) 0%, transparent 60%);
+}
+.dark {
+  --lp-bg1: #0b0b0b;
+  --lp-bg2: #0e0e0d;
+  --lp-ink: #f2f2f0;
+  --lp-ink2: #666666;
+  --lp-ink3: #444444;
+  --lp-line: #1f1f1e;
+  --lp-serif: #555555;
+  --lp-nav-bg: rgba(11,11,11,0.92);
+  --lp-nav-line: #1f1f1e;
+  --lp-badge-bg: #161614;
+  --lp-badge-line: #2a2a28;
+  --lp-btn: #ffffff;
+  --lp-btn-fg: #0b0b0b;
+  --lp-btn2-line: #2a2a28;
+  --lp-btn2-fg: #888888;
+  --lp-card: #111110;
+  --lp-card-line: #1f1f1e;
+  --lp-card-ink: #f2f2f0;
+  --lp-icon: #1a1a18;
+  --lp-icon-line: #2a2a28;
+  --lp-ghost: rgba(255,255,255,0.04);
+  --lp-num: #1a1a18;
+  --lp-dot: #2a2a28;
+  --lp-radial: radial-gradient(ellipse at 25% 40%, rgba(255,255,255,0.025) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(255,255,255,0.015) 0%, transparent 50%);
+}
