@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { Plus, Trash2, Pencil, ChevronDown, X, Lightbulb } from "lucide-react";
+import { formatDate } from "@/lib/utils";
 
 type Status = "idea" | "in_progress" | "done";
 type Color = "gray" | "violet" | "blue" | "green" | "yellow" | "rose";
@@ -15,16 +16,28 @@ interface Idea {
   createdAt: string;
 }
 
-const STATUS_CONFIG: Record<Status, { label: string; dot: string }> = {
-  idea:        { label: "Idea",        dot: "bg-[hsl(var(--muted-foreground))]" },
-  in_progress: { label: "In progress", dot: "bg-amber-400" },
-  done:        { label: "Done",        dot: "bg-emerald-500" },
+const STATUS_CONFIG: Record<Status, { label: string; className: string }> = {
+  idea:        { label: "Idea",        className: "bg-[hsl(var(--muted))] text-[hsl(var(--muted-foreground))]" },
+  in_progress: { label: "In progress", className: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400" },
+  done:        { label: "Done",        className: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400" },
 };
 
-const STATUS_BADGE: Record<Status, string> = {
-  idea:        "bg-[hsl(var(--muted))] text-[hsl(var(--muted-foreground))]",
-  in_progress: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
-  done:        "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400",
+const COLOR_ICON_BG: Record<Color, string> = {
+  gray:   "bg-zinc-100 dark:bg-zinc-800",
+  violet: "bg-violet-100 dark:bg-violet-900/40",
+  blue:   "bg-blue-100 dark:bg-blue-900/40",
+  green:  "bg-emerald-100 dark:bg-emerald-900/40",
+  yellow: "bg-amber-100 dark:bg-amber-900/40",
+  rose:   "bg-rose-100 dark:bg-rose-900/40",
+};
+
+const COLOR_ICON_FG: Record<Color, string> = {
+  gray:   "text-zinc-500 dark:text-zinc-400",
+  violet: "text-violet-600 dark:text-violet-400",
+  blue:   "text-blue-600 dark:text-blue-400",
+  green:  "text-emerald-600 dark:text-emerald-400",
+  yellow: "text-amber-600 dark:text-amber-400",
+  rose:   "text-rose-600 dark:text-rose-400",
 };
 
 const COLOR_DOT: Record<Color, string> = {
@@ -34,15 +47,6 @@ const COLOR_DOT: Record<Color, string> = {
   green:  "bg-emerald-500",
   yellow: "bg-amber-400",
   rose:   "bg-rose-500",
-};
-
-const COLOR_BAR: Record<Color, string> = {
-  gray:   "bg-zinc-300 dark:bg-zinc-600",
-  violet: "bg-violet-400",
-  blue:   "bg-blue-400",
-  green:  "bg-emerald-400",
-  yellow: "bg-amber-300",
-  rose:   "bg-rose-400",
 };
 
 const COLORS: Color[] = ["gray", "violet", "blue", "green", "yellow", "rose"];
@@ -59,7 +63,7 @@ function ColorPicker({ value, onChange }: { value: Color; onChange: (c: Color) =
           className={`w-5 h-5 rounded-full ${COLOR_DOT[c]} transition-all ${
             value === c
               ? "ring-2 ring-offset-2 ring-[hsl(var(--ring))] ring-offset-[hsl(var(--background))] scale-110"
-              : "opacity-50 hover:opacity-90 hover:scale-110"
+              : "opacity-40 hover:opacity-80 hover:scale-110"
           }`}
           title={c}
         />
@@ -85,23 +89,21 @@ function StatusDropdown({ value, onChange }: { value: Status; onChange: (s: Stat
       <button
         type="button"
         onClick={() => setOpen(o => !o)}
-        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${STATUS_BADGE[value]} cursor-pointer`}
+        className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium ${STATUS_CONFIG[value].className} cursor-pointer`}
       >
-        <span className={`w-1.5 h-1.5 rounded-full ${STATUS_CONFIG[value].dot}`} />
         {STATUS_CONFIG[value].label}
         <ChevronDown className="w-3 h-3 opacity-50" />
       </button>
       {open && (
-        <div className="absolute top-full left-0 mt-1.5 z-30 rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--popover))] shadow-lg py-1.5 min-w-[150px]">
+        <div className="absolute top-full left-0 mt-1.5 z-30 rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--popover))] shadow-lg py-1.5 min-w-[140px]">
           {STATUSES.map(s => (
             <button
               key={s}
               type="button"
               onClick={() => { onChange(s); setOpen(false); }}
-              className="w-full text-left px-3 py-2 text-xs flex items-center gap-2.5 hover:bg-[hsl(var(--accent))] transition-colors"
+              className="w-full text-left px-3 py-2 text-xs flex items-center gap-2 hover:bg-[hsl(var(--accent))] transition-colors"
             >
-              <span className={`w-1.5 h-1.5 rounded-full ${STATUS_CONFIG[s].dot}`} />
-              <span className={`font-medium ${value === s ? "text-[hsl(var(--foreground))]" : "text-[hsl(var(--muted-foreground))]"}`}>
+              <span className={`inline-flex px-2 py-0.5 rounded-md font-medium ${STATUS_CONFIG[s].className} ${value === s ? "opacity-100" : "opacity-70"}`}>
                 {STATUS_CONFIG[s].label}
               </span>
             </button>
@@ -283,33 +285,38 @@ function IdeaCard({
 
   return (
     <>
-      <div className="group flex flex-col rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] overflow-hidden hover:border-[hsl(var(--ring)/0.25)] hover:shadow-sm transition-all">
-        <div className={`h-1 w-full ${COLOR_BAR[idea.color]}`} />
-        <div className="flex flex-col gap-2 p-4">
-          <div className="flex items-start justify-between gap-2">
-            <p className="text-sm font-semibold text-[hsl(var(--foreground))] leading-snug flex-1">{idea.title}</p>
-            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
-              <button
-                onClick={() => setEditOpen(true)}
-                className="w-7 h-7 rounded-md flex items-center justify-center hover:bg-[hsl(var(--accent))] text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] transition-colors"
-                title="Edit"
-              >
-                <Pencil className="w-3.5 h-3.5" />
-              </button>
-              <button
-                onClick={handleDelete}
-                className="w-7 h-7 rounded-md flex items-center justify-center hover:bg-[hsl(var(--destructive)/0.1)] text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--destructive))] transition-colors"
-                title="Delete"
-              >
-                <Trash2 className="w-3.5 h-3.5" />
-              </button>
-            </div>
+      <div className="group rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-5 hover:border-[hsl(var(--ring)/0.2)] transition-all">
+        <div className="flex items-start justify-between mb-4">
+          <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${COLOR_ICON_BG[idea.color]}`}>
+            <Lightbulb className={`w-5 h-5 ${COLOR_ICON_FG[idea.color]}`} />
           </div>
-          {idea.description && (
-            <p className="text-xs text-[hsl(var(--muted-foreground))] leading-relaxed line-clamp-2">{idea.description}</p>
-          )}
-          <div className="mt-1">
-            <StatusDropdown value={idea.status} onChange={handleStatusChange} />
+          <StatusDropdown value={idea.status} onChange={handleStatusChange} />
+        </div>
+
+        <h3 className="font-medium text-[hsl(var(--foreground))] mb-1 leading-snug">{idea.title}</h3>
+        {idea.description && (
+          <p className="text-xs text-[hsl(var(--muted-foreground))] leading-relaxed line-clamp-2 mb-3">
+            {idea.description}
+          </p>
+        )}
+
+        <div className="flex items-center justify-between pt-3 border-t border-[hsl(var(--border))]">
+          <p className="text-xs text-[hsl(var(--muted-foreground))]">{formatDate(idea.createdAt)}</p>
+          <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+            <button
+              onClick={() => setEditOpen(true)}
+              className="w-7 h-7 rounded-md flex items-center justify-center hover:bg-[hsl(var(--accent))] text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] transition-colors"
+              title="Edit"
+            >
+              <Pencil className="w-3.5 h-3.5" />
+            </button>
+            <button
+              onClick={handleDelete}
+              className="w-7 h-7 rounded-md flex items-center justify-center hover:bg-[hsl(var(--destructive)/0.1)] text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--destructive))] transition-colors"
+              title="Delete"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+            </button>
           </div>
         </div>
       </div>
@@ -410,16 +417,16 @@ export function IdeaBank({ initialIdeas }: { initialIdeas: Idea[] }) {
             <Lightbulb className="w-6 h-6 text-[hsl(var(--muted-foreground))]" />
           </div>
           <h3 className="text-sm font-semibold text-[hsl(var(--foreground))] mb-1.5">No ideas yet</h3>
-          <p className="text-sm text-[hsl(var(--muted-foreground))]">Capture your ideas before they slip away</p>
+          <p className="text-sm text-[hsl(var(--muted-foreground))] mb-5">Capture your ideas before they slip away</p>
           <button
             onClick={() => setCreateOpen(true)}
-            className="mt-4 inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg border border-[hsl(var(--border))] text-[hsl(var(--foreground))] hover:bg-[hsl(var(--accent))] transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg border border-[hsl(var(--border))] text-[hsl(var(--foreground))] hover:bg-[hsl(var(--accent))] transition-colors"
           >
             <Plus className="w-4 h-4" /> Add your first idea
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {filtered.map(idea => (
             <IdeaCard key={idea.id} idea={idea} onDelete={handleDelete} onUpdate={handleUpdate} />
           ))}
