@@ -3,19 +3,23 @@ import { getServerSession } from "@/lib/session";
 
 export const metadata: Metadata = { title: "Dashboard" };
 import { db } from "@/lib/db";
-import { workspacesTable, workspaceMembersTable, canvasesTable } from "@/lib/db";
-import { eq, desc, or, inArray, and, isNull } from "drizzle-orm";
+import { workspacesTable, workspaceMembersTable, canvasesTable, ideasTable } from "@/lib/db";
+import { eq, desc, inArray, and, isNull } from "drizzle-orm";
 import Link from "next/link";
 import { Plus, Layers, FileText, Activity, ArrowRight } from "lucide-react";
 import { RecentCanvases } from "@/components/dashboard/recent-canvases";
+import { IdeaBank } from "@/components/dashboard/idea-bank";
 
 export default async function DashboardPage() {
   const session = await getServerSession();
   if (!session?.user) return null;
   const userId = session.user.id;
 
-  const ownedWorkspaces = await db.select().from(workspacesTable).where(and(eq(workspacesTable.ownerId, userId), isNull(workspacesTable.deletedAt)));
-  const memberEntries = await db.select({ workspaceId: workspaceMembersTable.workspaceId }).from(workspaceMembersTable).where(eq(workspaceMembersTable.userId, userId));
+  const [ownedWorkspaces, memberEntries, ideasRows] = await Promise.all([
+    db.select().from(workspacesTable).where(and(eq(workspacesTable.ownerId, userId), isNull(workspacesTable.deletedAt))),
+    db.select({ workspaceId: workspaceMembersTable.workspaceId }).from(workspaceMembersTable).where(eq(workspaceMembersTable.userId, userId)),
+    db.select().from(ideasTable).where(eq(ideasTable.userId, userId)).orderBy(desc(ideasTable.createdAt)),
+  ]);
 
   const allWsIds = [...new Set([...ownedWorkspaces.map(w => w.id), ...memberEntries.map(m => m.workspaceId)])];
 
@@ -28,6 +32,15 @@ export default async function DashboardPage() {
       .where(and(inArray(canvasesTable.workspaceId, allWsIds), isNull(canvasesTable.deletedAt))).orderBy(desc(canvasesTable.updatedAt)).limit(50);
     recentCanvases = rows.map(r => ({ id: r.id, name: r.name, workspaceName: r.workspaceName, updatedAt: r.updatedAt.toISOString() }));
   }
+
+  const initialIdeas = ideasRows.map(i => ({
+    id: i.id,
+    title: i.title,
+    description: i.description,
+    status: i.status as "idea" | "in_progress" | "done",
+    color: i.color,
+    createdAt: i.createdAt.toISOString(),
+  }));
 
   const totalWorkspaces = allWsIds.length;
 
@@ -58,7 +71,7 @@ export default async function DashboardPage() {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
         <div>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-sm font-semibold text-[hsl(var(--foreground))]">Recent Canvases</h2>
@@ -99,6 +112,11 @@ export default async function DashboardPage() {
             ))}
           </div>
         </div>
+      </div>
+
+      {/* Idea Bank — full width */}
+      <div className="rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-5">
+        <IdeaBank initialIdeas={initialIdeas} />
       </div>
     </div>
   );
