@@ -183,3 +183,52 @@
 .animate-slide-in-left {
   animation: slide-in-left 0.2s ease-out;
 }
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 40s linear infinite;
+  will-change: transform;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33% { transform: translateY(-6px) rotate(0.5deg); }
+  66% { transform: translateY(-3px) rotate(-0.3deg); }
+}
+
+.animate-float {
+  animation: float 7s ease-in-out infinite;
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-float-slow {
+  animation: float-slow 9s ease-in-out infinite;
+}
+
+@keyframes cursor-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.animate-cursor {
+  animation: cursor-blink 1.2s ease-in-out infinite;
+}
+
+@keyframes stagger-in {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.stagger-1 { animation: stagger-in 0.5s ease-out 0.05s both; }
+.stagger-2 { animation: stagger-in 0.5s ease-out 0.15s both; }
+.stagger-3 { animation: stagger-in 0.5s ease-out 0.25s both; }
+.stagger-4 { animation: stagger-in 0.5s ease-out 0.35s both; }
+.stagger-5 { animation: stagger-in 0.5s ease-out 0.45s both; }
