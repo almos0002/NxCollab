@@ -259,15 +259,33 @@
   --lp-num: #ececea;
   --lp-dot: #dededd;
   --lp-radial: radial-gradient(ellipse at 25% 40%, rgba(0,0,0,0.012) 0%, transparent 60%);
+  /* Hero canvas surface */
+  --lp-hero-bg: #f0efec;
+  --lp-hero-border: #dddbd7;
+  --lp-hero-card: #ffffff;
+  --lp-hero-card-border: #e4e2de;
+  --lp-hero-dark-card: #1e1e1c;
+  --lp-hero-dark-border: #2e2e2c;
+  --lp-hero-dark-text: #a5b4fc;
+  --lp-hero-dark-sub: #5a5a58;
+  --lp-hero-dot: #cccac6;
+  --lp-hero-line: #d0ceca;
+  --lp-hero-toolbar: rgba(242,241,238,0.97);
+  --lp-hero-toolbar-border: #dddbd7;
+  --lp-hero-pill-bg: #f5f4f1;
+  --lp-hero-pill-border: #dddbd7;
+  --lp-hero-pill-text: #777;
+  --lp-hero-inactive: #c0bebb;
+  --lp-hero-path: #cccac6;
 }
 .dark {
   --lp-bg1: #0b0b0b;
   --lp-bg2: #0e0e0d;
   --lp-ink: #f2f2f0;
-  --lp-ink2: #666666;
-  --lp-ink3: #444444;
+  --lp-ink2: #8a8a87;
+  --lp-ink3: #5a5a57;
   --lp-line: #1f1f1e;
-  --lp-serif: #555555;
+  --lp-serif: #6e6e6b;
   --lp-nav-bg: rgba(11,11,11,0.92);
   --lp-nav-line: #1f1f1e;
   --lp-badge-bg: #161614;
@@ -275,14 +293,32 @@
   --lp-btn: #ffffff;
   --lp-btn-fg: #0b0b0b;
   --lp-btn2-line: #2a2a28;
-  --lp-btn2-fg: #888888;
+  --lp-btn2-fg: #8a8a87;
   --lp-card: #111110;
   --lp-card-line: #1f1f1e;
   --lp-card-ink: #f2f2f0;
   --lp-icon: #1a1a18;
   --lp-icon-line: #2a2a28;
-  --lp-ghost: rgba(255,255,255,0.04);
-  --lp-num: #1a1a18;
+  --lp-ghost: rgba(255,255,255,0.05);
+  --lp-num: #2a2a27;
   --lp-dot: #2a2a28;
   --lp-radial: radial-gradient(ellipse at 25% 40%, rgba(255,255,255,0.025) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(255,255,255,0.015) 0%, transparent 50%);
+  /* Hero canvas surface */
+  --lp-hero-bg: #0f0f0e;
+  --lp-hero-border: #222220;
+  --lp-hero-card: #1c1c1a;
+  --lp-hero-card-border: #2e2e2c;
+  --lp-hero-dark-card: #1c1c1a;
+  --lp-hero-dark-border: #2e2e2c;
+  --lp-hero-dark-text: #a5b4fc;
+  --lp-hero-dark-sub: #4a4a48;
+  --lp-hero-dot: #3a3a38;
+  --lp-hero-line: #333330;
+  --lp-hero-toolbar: rgba(10,10,10,0.95);
+  --lp-hero-toolbar-border: #1e1e1c;
+  --lp-hero-pill-bg: #111110;
+  --lp-hero-pill-border: #2a2a28;
+  --lp-hero-pill-text: #888;
+  --lp-hero-inactive: #3a3a38;
+  --lp-hero-path: #3a3a38;
 }
