@@ -131,6 +131,9 @@ importers:
       pg:
         specifier: ^8.20.0
         version: 8.20.0
+      pnpm:
+        specifier: ^11.0.9
+        version: 11.0.9
       react:
         specifier: ^19.1.0
         version: 19.1.0
@@ -2916,6 +2919,11 @@ packages:
 
   png-chunks-extract@1.0.0:
     resolution: {integrity: sha512-ZiVwF5EJ0DNZyzAqld8BP1qyJBaGOFaq9zl579qfbkcmOwWLLO4I9L8i2O4j3HkI6/35i0nKG2n+dZplxiT89Q==}
+
+  pnpm@11.0.9:
+    resolution: {integrity: sha512-NM6C5ngCM8+crYaFApqPgdLgYZbFqbrZiHn3QklAxoF8TkUk+304uFU87tSLl1i4668avTYAwjLEyM9zZghvOA==}
+    engines: {node: '>=22.13'}
+    hasBin: true
 
   points-on-curve@0.2.0:
     resolution: {integrity: sha512-0mYKnYYe9ZcqMCWhUjItv/oHjvgEsfKvnUTg8sAtnHr3GVy7rGkXCb6d5cSyqrWqL4k81b9CPg3urd+T7aop3A==}
@@ -5759,6 +5767,8 @@ snapshots:
   png-chunks-extract@1.0.0:
     dependencies:
       crc-32: 0.3.0
+
+  pnpm@11.0.9: {}
 
   points-on-curve@0.2.0: {}
 
