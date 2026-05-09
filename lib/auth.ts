@@ -7,7 +7,7 @@ import {
   accountsTable,
   verificationsTable,
 } from "@/lib/db";
-import { eq, sql } from "drizzle-orm";
+import { sql } from "drizzle-orm";
 
 const baseURL = process.env.BETTER_AUTH_URL
   || (process.env.REPLIT_DEV_DOMAIN ? `https://${process.env.REPLIT_DEV_DOMAIN}` : null)
