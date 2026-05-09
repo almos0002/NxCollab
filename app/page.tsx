@@ -770,45 +770,45 @@ export default async function LandingPage() {
           <div className="max-w-6xl mx-auto px-6" style={{ paddingTop: "96px", paddingBottom: "96px" }}>
             <div
               className="relative rounded-2xl overflow-hidden text-center px-8 py-20 sm:px-20"
-              style={{ background: "#0b0b0b" }}
+              style={{ background: "var(--lp-card)", border: "1px solid var(--lp-card-line)" }}
             >
               <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-                <svg className="w-full h-full" style={{ opacity: 0.06 }}>
+                <svg className="w-full h-full" style={{ opacity: 1 }}>
                   <defs>
                     <pattern id="cta-dots" width="30" height="30" patternUnits="userSpaceOnUse">
-                      <circle cx="1" cy="1" r="1" fill="white" />
+                      <circle cx="1" cy="1" r="1" fill="var(--lp-dot)" />
                     </pattern>
                   </defs>
                   <rect width="100%" height="100%" fill="url(#cta-dots)" />
                 </svg>
-                <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at center, rgba(99,102,241,0.08) 0%, transparent 70%)" }} />
+                <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at center, rgba(99,102,241,0.06) 0%, transparent 70%)" }} />
               </div>
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none" style={{ width: "600px", height: "600px", border: "1px solid rgba(255,255,255,0.04)" }} />
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none" style={{ width: "400px", height: "400px", border: "1px solid rgba(255,255,255,0.04)" }} />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none" style={{ width: "600px", height: "600px", border: "1px solid var(--lp-card-line)" }} />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none" style={{ width: "400px", height: "400px", border: "1px solid var(--lp-card-line)" }} />
 
               <div className="relative z-10">
-                <p className="text-xs font-semibold uppercase tracking-widest mb-5" style={{ color: "#555" }}>
+                <p className="text-xs font-semibold uppercase tracking-widest mb-5" style={{ color: "var(--lp-ink3)" }}>
                   Free to get started
                 </p>
                 <h2
                   className="font-bold mb-5 leading-tight"
-                  style={{ fontSize: "clamp(28px, 4vw, 54px)", letterSpacing: "-0.03em", color: "#f2f2f0" }}
+                  style={{ fontSize: "clamp(28px, 4vw, 54px)", letterSpacing: "-0.03em", color: "var(--lp-ink)" }}
                 >
                   Ready to think{" "}
-                  <span style={{ fontFamily: SERIF, fontStyle: "italic", color: "#666" }}>
+                  <span style={{ fontFamily: SERIF, fontStyle: "italic", color: "var(--lp-serif)" }}>
                     and draw
                   </span>
                   <br />
                   together?
                 </h2>
-                <p className="text-sm leading-relaxed mb-10 mx-auto" style={{ color: "#666", maxWidth: "360px" }}>
+                <p className="text-sm leading-relaxed mb-10 mx-auto" style={{ color: "var(--lp-ink2)", maxWidth: "360px" }}>
                   Create your free account and start building on an infinite canvas with your team today.
                 </p>
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
                   <Link
                     href="/auth/sign-up"
                     className="inline-flex items-center gap-2.5 px-8 py-4 text-sm font-semibold rounded-xl transition-opacity hover:opacity-90"
-                    style={{ background: "#ffffff", color: "#0b0b0b" }}
+                    style={{ background: "var(--lp-btn)", color: "var(--lp-btn-fg)" }}
                   >
                     Create free account
                     <ArrowRight className="w-4 h-4" />
@@ -816,7 +816,7 @@ export default async function LandingPage() {
                   <Link
                     href="/auth/sign-in"
                     className="inline-flex items-center gap-2 px-8 py-4 text-sm font-medium rounded-xl transition-opacity hover:opacity-70"
-                    style={{ border: "1px solid #2a2a28", color: "#777" }}
+                    style={{ border: "1px solid var(--lp-btn2-line)", color: "var(--lp-btn2-fg)" }}
                   >
                     Sign in
                   </Link>
