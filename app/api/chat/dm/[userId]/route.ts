@@ -5,7 +5,6 @@ import { db, chatParticipantsTable, chatThreadsTable, usersTable } from "@/lib/d
 import { getDmKey } from "@/lib/chat/access";
 import { generateId } from "@/lib/utils";
 
-export const runtime = "nodejs";
 
 interface Params {
   params: Promise<{ userId: string }>;

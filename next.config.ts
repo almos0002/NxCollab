@@ -3,6 +3,7 @@ import type { NextConfig } from "next";
 const replitDevDomain = process.env.REPLIT_DEV_DOMAIN;
 
 const nextConfig: NextConfig = {
+  cacheComponents: true,
   serverExternalPackages: ["pg", "better-auth"],
   transpilePackages: ["@excalidraw/excalidraw"],
   allowedDevOrigins: [

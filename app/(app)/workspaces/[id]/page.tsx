@@ -20,13 +20,21 @@ export default async function WorkspacePage({ params }: Props) {
   const session = await getServerSession();
   if (!session?.user) redirect("/auth/sign-in");
 
-  const workspace = await db.select().from(workspacesTable).where(and(eq(workspacesTable.id, id), isNull(workspacesTable.deletedAt))).limit(1);
+  const workspace = await db
+    .select({ id: workspacesTable.id, name: workspacesTable.name, description: workspacesTable.description, ownerId: workspacesTable.ownerId })
+    .from(workspacesTable)
+    .where(and(eq(workspacesTable.id, id), isNull(workspacesTable.deletedAt)))
+    .limit(1);
   if (!workspace[0]) notFound();
 
   const role = await getUserWorkspaceRole(session.user.id, id);
   if (!role) notFound();
 
-  const canvases = await db.select().from(canvasesTable).where(and(eq(canvasesTable.workspaceId, id), isNull(canvasesTable.deletedAt))).orderBy(desc(canvasesTable.updatedAt));
+  const canvases = await db
+    .select({ id: canvasesTable.id, name: canvasesTable.name, description: canvasesTable.description, updatedAt: canvasesTable.updatedAt })
+    .from(canvasesTable)
+    .where(and(eq(canvasesTable.workspaceId, id), isNull(canvasesTable.deletedAt)))
+    .orderBy(desc(canvasesTable.updatedAt));
   const members = await db.select({
     id: workspaceMembersTable.id, role: workspaceMembersTable.role, joinedAt: workspaceMembersTable.joinedAt,
     userId: usersTable.id, userName: usersTable.name, userEmail: usersTable.email,
@@ -37,7 +45,11 @@ export default async function WorkspacePage({ params }: Props) {
   }).from(activityLogsTable).leftJoin(usersTable, eq(activityLogsTable.userId, usersTable.id))
     .where(eq(activityLogsTable.workspaceId, id)).orderBy(desc(activityLogsTable.createdAt)).limit(10);
 
-  const trashedCanvases = await db.select().from(canvasesTable).where(and(eq(canvasesTable.workspaceId, id), isNotNull(canvasesTable.deletedAt))).orderBy(desc(canvasesTable.deletedAt));
+  const trashedCanvases = await db
+    .select({ id: canvasesTable.id, name: canvasesTable.name, description: canvasesTable.description, deletedAt: canvasesTable.deletedAt })
+    .from(canvasesTable)
+    .where(and(eq(canvasesTable.workspaceId, id), isNotNull(canvasesTable.deletedAt)))
+    .orderBy(desc(canvasesTable.deletedAt));
 
   const ws = workspace[0];
 

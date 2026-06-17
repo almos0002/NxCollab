@@ -12,21 +12,28 @@ export default async function WorkspacesPage() {
   if (!session?.user) return null;
   const userId = session.user.id;
 
-  const ownedWorkspaces = await db.select().from(workspacesTable).where(and(eq(workspacesTable.ownerId, userId), isNull(workspacesTable.deletedAt)));
-  const memberWorkspaces = await db.select({
-    id: workspacesTable.id, name: workspacesTable.name, slug: workspacesTable.slug,
-    description: workspacesTable.description, ownerId: workspacesTable.ownerId,
-    createdAt: workspacesTable.createdAt, updatedAt: workspacesTable.updatedAt,
-    deletedAt: workspacesTable.deletedAt,
-    role: workspaceMembersTable.role,
-  }).from(workspaceMembersTable).innerJoin(workspacesTable, eq(workspaceMembersTable.workspaceId, workspacesTable.id)).where(and(eq(workspaceMembersTable.userId, userId), isNull(workspacesTable.deletedAt)));
+  const [ownedWorkspaces, memberWorkspaces, trashedWorkspaces] = await Promise.all([
+    db.select({
+      id: workspacesTable.id, name: workspacesTable.name,
+      description: workspacesTable.description, createdAt: workspacesTable.createdAt,
+    }).from(workspacesTable).where(and(eq(workspacesTable.ownerId, userId), isNull(workspacesTable.deletedAt))),
+    db.select({
+      id: workspacesTable.id, name: workspacesTable.name,
+      description: workspacesTable.description, createdAt: workspacesTable.createdAt,
+      role: workspaceMembersTable.role,
+    }).from(workspaceMembersTable).innerJoin(workspacesTable, eq(workspaceMembersTable.workspaceId, workspacesTable.id)).where(and(eq(workspaceMembersTable.userId, userId), isNull(workspacesTable.deletedAt))),
+    db.select({
+      id: workspacesTable.id, name: workspacesTable.name,
+      description: workspacesTable.description, deletedAt: workspacesTable.deletedAt,
+      createdAt: workspacesTable.createdAt,
+    }).from(workspacesTable).where(and(eq(workspacesTable.ownerId, userId), isNotNull(workspacesTable.deletedAt))),
+  ]);
 
   const allWorkspaces = [
     ...ownedWorkspaces.map(w => ({ id: w.id, name: w.name, description: w.description, role: "owner", createdAt: w.createdAt.toISOString() })),
     ...memberWorkspaces.map(w => ({ id: w.id, name: w.name, description: w.description, role: w.role, createdAt: w.createdAt.toISOString() })),
   ];
 
-  const trashedWorkspaces = await db.select().from(workspacesTable).where(and(eq(workspacesTable.ownerId, userId), isNotNull(workspacesTable.deletedAt)));
 
   return (
     <WorkspacesPageClient

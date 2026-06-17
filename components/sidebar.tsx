@@ -8,7 +8,6 @@ import { signOut } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useCallback } from "react";
 import { LayoutDashboard, Layers, Clock, Settings, Shield, LogOut, Sun, Moon, Monitor, ChevronRight, PanelLeftClose, PanelLeft, Inbox, ChevronsUpDown, Menu, X, Lightbulb, MessageCircle } from "lucide-react";
-import { Realtime } from "ably";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
 import { ablyChannels } from "@/lib/ably/channels";
 
@@ -58,15 +57,25 @@ export function Sidebar({ user, siteLogo, siteName, initialCollapsed = false }: 
     const handleChange = () => fetchChatUnread();
     window.addEventListener("chat-unread-change", handleChange);
 
-    const realtime = new Realtime({ authUrl: "/api/ably/token", clientId: user.id });
-    const channel = realtime.channels.get(ablyChannels.userNotifications(user.id));
-    channel.subscribe("chat.unread", handleChange).catch(() => undefined);
+    let closed = false;
+    let realtime: { close: () => void } | null = null;
+    let channel: { subscribe: (event: string, listener: () => void) => Promise<unknown>; unsubscribe: (event: string, listener: () => void) => void } | null = null;
+
+    import("ably").then(({ Realtime }) => {
+      if (closed) return;
+      const rt = new Realtime({ authUrl: "/api/ably/token", clientId: user.id });
+      const userChannel = rt.channels.get(ablyChannels.userNotifications(user.id));
+      realtime = rt;
+      channel = userChannel;
+      userChannel.subscribe("chat.unread", handleChange).catch(() => undefined);
+    }).catch(() => undefined);
 
     return () => {
+      closed = true;
       clearInterval(interval);
       window.removeEventListener("chat-unread-change", handleChange);
-      channel.unsubscribe("chat.unread", handleChange);
-      realtime.close();
+      channel?.unsubscribe("chat.unread", handleChange);
+      realtime?.close();
     };
   }, [fetchChatUnread, user.id]);
 

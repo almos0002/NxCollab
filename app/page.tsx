@@ -1,865 +1,442 @@
 import Link from "next/link";
+import { Suspense } from "react";
 import { getServerSession } from "@/lib/session";
 import { redirect } from "next/navigation";
 import { getBranding } from "@/lib/branding";
-import { Layers, Users, Lock, History, Zap, ArrowRight, Shield } from "lucide-react";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
 
 export async function generateMetadata() {
   const { siteName } = await getBranding();
   return { title: { absolute: `${siteName} — Collaborative Workspace` } };
 }
 
-const SERIF = "'Instrument Serif', Georgia, serif";
-
-function HeroVisual() {
+/* ─────────────────────────────────────────────────────────────
+   Brand mark — a small drafted square
+   ───────────────────────────────────────────────────────────── */
+function Mark({ size = 26 }: { size?: number }) {
   return (
-    <div className="relative w-full" style={{ minHeight: "480px" }}>
-      {/* Main canvas surface */}
-      <div
-        className="relative rounded-2xl overflow-hidden"
-        style={{
-          background: "var(--lp-hero-bg)",
-          border: "1px solid var(--lp-hero-border)",
-          boxShadow: "0 24px 60px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.06)",
-          minHeight: "460px",
-        }}
-      >
-        {/* Subtle dot grid */}
-        <svg className="absolute inset-0 w-full h-full pointer-events-none" aria-hidden="true" style={{ opacity: 0.8 }}>
-          <defs>
-            <pattern id="hero-dots" width="28" height="28" patternUnits="userSpaceOnUse">
-              <circle cx="1" cy="1" r="0.7" fill="var(--lp-hero-dot)" />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#hero-dots)" />
-        </svg>
-
-        {/* Ambient glow spots */}
-        <div className="absolute pointer-events-none" style={{ top: "20%", left: "55%", width: "220px", height: "220px", borderRadius: "50%", background: "radial-gradient(circle, rgba(99,102,241,0.07) 0%, transparent 70%)", transform: "translate(-50%,-50%)" }} />
-        <div className="absolute pointer-events-none" style={{ top: "70%", left: "30%", width: "160px", height: "160px", borderRadius: "50%", background: "radial-gradient(circle, rgba(236,72,153,0.05) 0%, transparent 70%)", transform: "translate(-50%,-50%)" }} />
-
-        {/* ── Floating sticky note ── */}
-        <div
-          className="absolute animate-float"
-          style={{ top: "52px", left: "44px", animationDelay: "0s", animationDuration: "8s" }}
-        >
-          <div
-            style={{
-              width: "140px",
-              background: "#fef3c7",
-              borderRadius: "6px",
-              padding: "12px 14px",
-              boxShadow: "0 4px 16px rgba(0,0,0,0.12), 0 1px 3px rgba(0,0,0,0.08)",
-              transform: "rotate(-2.5deg)",
-            }}
-          >
-            <div style={{ fontSize: "9px", fontWeight: 700, color: "#92400e", marginBottom: "6px", textTransform: "uppercase", letterSpacing: "0.06em" }}>Ideas</div>
-            <div style={{ fontSize: "10px", color: "#78350f", lineHeight: 1.5 }}>
-              Redesign onboarding flow<br />
-              Add dark mode toggle<br />
-              Ship v2 by Friday
-            </div>
-          </div>
-        </div>
-
-        {/* ── Connector lines SVG ── */}
-        <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 520 460" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <path d="M184 110 Q 240 80 260 130" stroke="var(--lp-hero-line)" strokeWidth="1.5" strokeDasharray="5 4" />
-          <path d="M330 185 Q 370 200 370 240" stroke="var(--lp-hero-line)" strokeWidth="1.5" strokeDasharray="5 4" />
-          <path d="M150 300 Q 250 280 310 320" stroke="var(--lp-hero-line)" strokeWidth="1" strokeDasharray="4 5" />
-        </svg>
-
-        {/* ── Component card ── */}
-        <div
-          className="absolute animate-float"
-          style={{ top: "105px", left: "220px", animationDelay: "1.5s", animationDuration: "10s" }}
-        >
-          <div style={{
-            width: "148px",
-            padding: "14px 16px",
-            background: "var(--lp-hero-card)",
-            border: "1.5px solid var(--lp-hero-card-border)",
-            borderRadius: "10px",
-            boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
-          }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "8px" }}>
-              <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#6366f1" }} />
-              <span style={{ fontSize: "10px", fontWeight: 600, color: "var(--lp-hero-dark-text)" }}>Component</span>
-            </div>
-            <div style={{ fontSize: "9px", color: "var(--lp-hero-dark-sub)", lineHeight: 1.6 }}>
-              Button · Input<br />Modal · Table
-            </div>
-          </div>
-        </div>
-
-        {/* ── Hexagonal accent ── */}
-        <div
-          className="absolute animate-float"
-          style={{ top: "88px", right: "68px", animationDelay: "0.8s", animationDuration: "11s" }}
-        >
-          <svg width="64" height="64" viewBox="0 0 64 64" fill="none" aria-hidden="true">
-            <polygon points="32,4 56,18 56,46 32,60 8,46 8,18" stroke="#ec4899" strokeWidth="1.5" fill="rgba(236,72,153,0.08)" />
-            <polygon points="32,14 46,22 46,38 32,46 18,38 18,22" stroke="#ec4899" strokeWidth="0.8" fill="rgba(236,72,153,0.04)" strokeDasharray="3 2" />
-          </svg>
-        </div>
-
-        {/* ── Circle with rings ── */}
-        <div
-          className="absolute animate-float"
-          style={{ top: "220px", left: "48px", animationDelay: "2s", animationDuration: "9s" }}
-        >
-          <svg width="72" height="72" viewBox="0 0 72 72" fill="none" aria-hidden="true">
-            <circle cx="36" cy="36" r="28" stroke="#6366f1" strokeWidth="1.5" fill="rgba(99,102,241,0.07)" />
-            <circle cx="36" cy="36" r="18" stroke="#6366f1" strokeWidth="0.8" fill="rgba(99,102,241,0.04)" strokeDasharray="4 3" />
-            <circle cx="36" cy="36" r="5" fill="#6366f1" fillOpacity="0.6" />
-          </svg>
-        </div>
-
-        {/* ── Palette card ── */}
-        <div
-          className="absolute animate-float"
-          style={{ top: "210px", left: "148px", animationDelay: "0.4s", animationDuration: "12s" }}
-        >
-          <div style={{
-            width: "156px",
-            padding: "12px 14px",
-            background: "var(--lp-hero-card)",
-            border: "1px solid var(--lp-hero-card-border)",
-            borderRadius: "10px",
-            boxShadow: "0 8px 28px rgba(0,0,0,0.08)",
-          }}>
-            <div style={{ fontSize: "9px", fontWeight: 600, color: "var(--lp-ink3)", marginBottom: "8px", textTransform: "uppercase", letterSpacing: "0.08em" }}>Palette</div>
-            <div style={{ display: "flex", gap: "5px" }}>
-              {["#6366f1", "#ec4899", "#f59e0b", "#10b981", "#3b82f6"].map((c) => (
-                <div key={c} style={{ width: "22px", height: "22px", borderRadius: "5px", background: c }} />
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* ── Freehand path ── */}
-        <svg className="absolute pointer-events-none" style={{ top: "300px", left: "60px", overflow: "visible" }} width="220" height="80" viewBox="0 0 220 80" fill="none" aria-hidden="true">
-          <path
-            d="M10 60 C 40 20, 80 70, 110 40 S 180 10, 210 45"
-            stroke="var(--lp-hero-path)"
-            strokeWidth="2"
-            strokeLinecap="round"
-            fill="none"
-          />
-          <circle cx="210" cy="45" r="4" fill="#6366f1" fillOpacity="0.6" />
-        </svg>
-
-        {/* ── Version pill ── */}
-        <div
-          className="absolute animate-float"
-          style={{ top: "320px", right: "52px", animationDelay: "3s", animationDuration: "8.5s" }}
-        >
-          <div style={{
-            padding: "8px 14px",
-            background: "var(--lp-hero-pill-bg)",
-            border: "1px solid var(--lp-hero-pill-border)",
-            borderRadius: "99px",
-            display: "flex",
-            alignItems: "center",
-            gap: "8px",
-            boxShadow: "0 2px 10px rgba(0,0,0,0.06)",
-          }}>
-            <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#10b981" }} />
-            <span style={{ fontSize: "10px", color: "var(--lp-hero-pill-text)", fontWeight: 500 }}>Auto-saved · v42</span>
-          </div>
-        </div>
-
-        {/* ── User cursor A ── */}
-        <div className="absolute animate-float" style={{ top: "160px", right: "90px", animationDelay: "1s", animationDuration: "7s" }}>
-          <svg width="18" height="22" viewBox="0 0 18 22" fill="none" aria-hidden="true">
-            <path d="M0 0 L0 18 L4.5 13.5 L8 22 L11 20 L7.5 12 L14 12 Z" fill="#6366f1" stroke="white" strokeWidth="1" />
-          </svg>
-          <div style={{ marginTop: "2px", padding: "3px 8px", background: "#6366f1", borderRadius: "4px", fontSize: "9px", fontWeight: 600, color: "white", whiteSpace: "nowrap" }}>
-            Sofia
-          </div>
-        </div>
-
-        {/* ── User cursor B ── */}
-        <div className="absolute animate-float" style={{ bottom: "100px", left: "200px", animationDelay: "2.4s", animationDuration: "9.5s" }}>
-          <svg width="18" height="22" viewBox="0 0 18 22" fill="none" aria-hidden="true">
-            <path d="M0 0 L0 18 L4.5 13.5 L8 22 L11 20 L7.5 12 L14 12 Z" fill="#ec4899" stroke="white" strokeWidth="1" />
-          </svg>
-          <div style={{ marginTop: "2px", padding: "3px 8px", background: "#ec4899", borderRadius: "4px", fontSize: "9px", fontWeight: 600, color: "white", whiteSpace: "nowrap" }}>
-            Marcus
-          </div>
-        </div>
-
-        {/* ── Bottom toolbar strip ── */}
-        <div
-          className="absolute bottom-0 left-0 right-0 flex items-center gap-1.5 px-4"
-          style={{
-            height: "44px",
-            background: "var(--lp-hero-toolbar)",
-            borderTop: "1px solid var(--lp-hero-toolbar-border)",
-            backdropFilter: "blur(8px)",
-          }}
-        >
-          {[
-            { label: "✦", active: true },
-            { label: "□", active: false },
-            { label: "○", active: false },
-            { label: "◇", active: false },
-            { label: "T", active: false },
-            { label: "↗", active: false },
-          ].map((t, i) => (
-            <div
-              key={i}
-              style={{
-                width: "28px",
-                height: "28px",
-                borderRadius: "6px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: "12px",
-                background: t.active ? "#6366f1" : "transparent",
-                color: t.active ? "white" : "var(--lp-hero-inactive)",
-              }}
-            >
-              {t.label}
-            </div>
-          ))}
-          <div style={{ flex: 1 }} />
-          <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-            <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#10b981" }} />
-            <span style={{ fontSize: "9px", color: "var(--lp-hero-pill-text)", fontWeight: 500 }}>2 online</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Floating card outside — bottom-left offset */}
-      <div
-        className="absolute animate-float"
-        style={{ bottom: "54px", left: "-24px", animationDelay: "1.8s", animationDuration: "10s" }}
-      >
-        <div style={{
-          padding: "10px 14px",
-          background: "var(--lp-hero-card)",
-          border: "1px solid var(--lp-hero-card-border)",
-          borderRadius: "10px",
-          boxShadow: "0 8px 24px rgba(0,0,0,0.1)",
-          display: "flex",
-          alignItems: "center",
-          gap: "8px",
-        }}>
-          <div style={{ width: "28px", height: "28px", borderRadius: "6px", background: "var(--lp-icon)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--lp-card-ink)" strokeWidth="2.5" strokeLinecap="round"><polyline points="20 6 9 17 4 12"/></svg>
-          </div>
-          <div>
-            <div style={{ fontSize: "10px", fontWeight: 600, color: "var(--lp-card-ink)" }}>All changes saved</div>
-            <div style={{ fontSize: "9px", color: "var(--lp-ink3)" }}>2 seconds ago</div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <svg width={size} height={size} viewBox="0 0 26 26" fill="none" aria-hidden="true">
+      <rect x="1" y="1" width="24" height="24" rx="5" stroke="var(--ui-text)" strokeWidth="1.5" />
+      <path d="M7 17 L13 7 L19 17" stroke="var(--ui-primary)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+      <line x1="9.5" y1="13" x2="16.5" y2="13" stroke="var(--ui-text)" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
   );
 }
 
-export default async function LandingPage() {
+/* Hand-drawn red-pen underline that draws itself in */
+function PenUnderline() {
+  return (
+    <svg
+      className="absolute left-[-2%] w-[104%] pointer-events-none"
+      style={{ bottom: "-0.28em", height: "0.42em" }}
+      viewBox="0 0 300 20"
+      preserveAspectRatio="none"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M4 13 C 52 6, 96 16, 150 10 C 208 4, 246 17, 296 8"
+        stroke="var(--ui-primary)"
+        strokeWidth="4"
+        strokeLinecap="round"
+        vectorEffect="non-scaling-stroke"
+      />
+    </svg>
+  );
+}
+
+/* Hand-drawn strike-through — crosses a word out like an editor's redline */
+function PenStrike() {
+  return (
+    <svg
+      className="absolute left-[-3%] w-[106%] pointer-events-none"
+      style={{ top: "46%", height: "0.5em" }}
+      viewBox="0 0 300 20"
+      preserveAspectRatio="none"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M3 11 C 60 7, 110 14, 168 9 C 220 5, 256 13, 297 10"
+        stroke="var(--ui-primary)"
+        strokeWidth="3.5"
+        strokeLinecap="round"
+        vectorEffect="non-scaling-stroke"
+      />
+    </svg>
+  );
+}
+
+/* Corner registration tick (`+`) — a draftsman's crop mark */
+function Tick({ className = "" }: { className?: string }) {
+  return (
+    <span
+      className={`ui-mono absolute select-none ${className}`}
+      style={{ fontSize: "13px", lineHeight: 1, color: "var(--ui-border-strong)" }}
+      aria-hidden="true"
+    >
+      +
+    </span>
+  );
+}
+
+async function AuthRedirect() {
   const session = await getServerSession();
   if (session?.user) redirect("/dashboard");
+  return null;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Landing page — "the drafting sheet"
+   ───────────────────────────────────────────────────────────── */
+export default async function LandingPage() {
   const { siteName, siteLogo } = await getBranding();
 
-  return (
-    <div className="min-h-screen" style={{ background: "var(--lp-bg1)" }}>
+  const capabilities = [
+    {
+      n: "01",
+      title: "An infinite canvas",
+      tag: "Excalidraw",
+      body:
+        "A boundless drawing surface. Zoom out to the whole system, in to a single arrow. Nothing pushes you to tidy up before you're ready.",
+    },
+    {
+      n: "02",
+      title: "Everyone, live",
+      tag: "Real-time",
+      body:
+        "Cursors, selections and edits land the instant they happen. You always know who is touching what — no refresh, no merge conflicts.",
+    },
+    {
+      n: "03",
+      title: "Encrypted end to end",
+      tag: "AES-GCM",
+      body:
+        "Boards are sealed with AES-GCM. The server only ever holds ciphertext; the key stays with your team. Privacy by construction, not policy.",
+    },
+    {
+      n: "04",
+      title: "Nothing is ever lost",
+      tag: "50 versions",
+      body:
+        "Every save is a snapshot. Walk back through the last fifty and restore any one of them with a single click. Mistakes are reversible here.",
+    },
+    {
+      n: "05",
+      title: "Rooms to work in",
+      tag: "Workspaces",
+      body:
+        "Group boards by team or project, invite the right people, and keep the noise out. One tidy home for everything in flight.",
+    },
+    {
+      n: "06",
+      title: "Exactly enough access",
+      tag: "Roles",
+      body:
+        "Owner, admin, member, viewer. Hand out precisely as much power as you mean to — and take it back just as easily.",
+    },
+  ];
 
-      {/* ── Nav ──────────────────────────────────────────────────────── */}
+  const steps = [
+    { n: "01", t: "Open a workspace", d: "Name it, describe it, done. Thirty seconds at most." },
+    { n: "02", t: "Pull people in", d: "Share one link or send a direct invite. They pick a role and they're on the board." },
+    { n: "03", t: "Start drawing", d: "Everyone on the same canvas, right now. Every stroke is saved as you go." },
+  ];
+
+  return (
+    <div className="ui-root min-h-screen" style={{ background: "var(--ui-bg)", color: "var(--ui-text)" }}>
+      <Suspense fallback={null}>
+        <AuthRedirect />
+      </Suspense>
+      {/* ── Header ───────────────────────────────────────────── */}
       <header
         className="fixed top-0 left-0 right-0 z-50"
         style={{
-          background: "var(--lp-nav-bg)",
-          backdropFilter: "blur(16px)",
-          WebkitBackdropFilter: "blur(16px)",
-          borderBottom: "1px solid var(--lp-nav-line)",
+          height: "58px",
+          background: "color-mix(in srgb, var(--ui-bg) 85%, transparent)",
+          backdropFilter: "blur(10px)",
+          WebkitBackdropFilter: "blur(10px)",
+          borderBottom: "1px solid var(--ui-border)",
         }}
       >
-        <div className="max-w-6xl mx-auto flex items-center justify-between px-6" style={{ height: "60px" }}>
-          <div className="flex items-center gap-2.5">
-            {siteLogo ? (
-              <img src={siteLogo} alt={siteName} className="w-8 h-8 object-contain" />
-            ) : (
-              <div
-                className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-                style={{ background: "var(--lp-btn)" }}
-              >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                  <rect x="3" y="3" width="7" height="7" rx="1.5" fill="var(--lp-btn-fg)" />
-                  <rect x="14" y="3" width="7" height="7" rx="1.5" fill="var(--lp-btn-fg)" />
-                  <rect x="3" y="14" width="7" height="7" rx="1.5" fill="var(--lp-btn-fg)" />
-                  <rect x="14" y="14" width="7" height="7" rx="1.5" fill="var(--lp-btn-fg)" />
-                </svg>
-              </div>
-            )}
-            <span className="font-semibold text-sm tracking-tight" style={{ color: "var(--lp-ink)" }}>
+        <div className="max-w-6xl mx-auto h-full flex items-center justify-between px-6 sm:px-10">
+          <Link href="/" className="flex items-center gap-2.5">
+            {siteLogo ? <img src={siteLogo} alt={siteName} className="w-6 h-6 object-contain" /> : <Mark size={24} />}
+            <span className="ui-serif" style={{ fontSize: "19px", fontWeight: 600, letterSpacing: "-0.01em" }}>
               {siteName}
             </span>
-          </div>
+          </Link>
 
-          <nav className="hidden md:flex items-center gap-6">
-            {[{ href: "#features", label: "Features" }, { href: "#how-it-works", label: "How it works" }].map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                className="text-sm transition-colors hover:opacity-70"
-                style={{ color: "var(--lp-ink2)" }}
-              >
-                {item.label}
-              </a>
-            ))}
+          <nav className="hidden md:flex items-center gap-7 ui-mono" style={{ fontSize: "11px", letterSpacing: "0.08em" }}>
+            <a href="#capabilities" className="ui-btn-ghost uppercase">Capabilities</a>
+            <a href="#process" className="ui-btn-ghost uppercase">How it works</a>
           </nav>
 
-          <div className="flex items-center gap-2">
-            <Link
-              href="/auth/sign-in"
-              className="px-4 py-2 text-sm font-medium rounded-lg transition-opacity hover:opacity-70"
-              style={{ color: "var(--lp-ink2)" }}
-            >
+          <div className="flex items-center gap-5">
+            <Link href="/auth/sign-in" className="ui-btn-ghost ui-mono uppercase hidden sm:inline" style={{ fontSize: "11px", letterSpacing: "0.08em" }}>
               Sign in
             </Link>
             <Link
               href="/auth/sign-up"
-              className="px-4 py-2 text-sm font-semibold rounded-lg transition-opacity hover:opacity-85"
-              style={{ background: "var(--lp-btn)", color: "var(--lp-btn-fg)" }}
+              className="ui-btn-primary ui-mono inline-flex items-center gap-2 uppercase"
+              style={{ fontSize: "11px", letterSpacing: "0.08em", fontWeight: 700, padding: "9px 16px", borderRadius: "var(--ui-r-control)" }}
             >
               Get started
+              <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
         </div>
       </header>
 
-      <main>
-        {/* ── Hero ─────────────────────────────────────────────────────── */}
-        <section
-          className="relative overflow-hidden"
-          style={{ background: "var(--lp-bg1)", paddingTop: "120px", paddingBottom: "96px" }}
+      <main style={{ paddingTop: "58px" }}>
+        {/* The sheet — ledger margin rules run the full height */}
+        <div
+          className="max-w-6xl mx-auto"
+          style={{ borderLeft: "1px solid var(--ui-border)", borderRight: "1px solid var(--ui-border)" }}
         >
-          {/* Radial texture overlay */}
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{ backgroundImage: "var(--lp-radial)" }}
-          />
+          {/* ── Hero ───────────────────────────────────────────── */}
+          <section className="relative px-6 sm:px-10" style={{ paddingTop: "84px", paddingBottom: "76px", borderBottom: "1px solid var(--ui-border)" }}>
+            <Tick className="left-2.5 top-2.5" />
+            <Tick className="right-2.5 top-2.5" />
 
-          {/* Grid */}
-          <svg
-            className="absolute inset-0 w-full h-full pointer-events-none"
-            style={{ color: "var(--lp-dot)", opacity: 0.6 }}
-            aria-hidden="true"
-          >
-            <defs>
-              <pattern id="hero-grid" width="48" height="48" patternUnits="userSpaceOnUse">
-                <path d="M 48 0 L 0 0 0 48" fill="none" stroke="currentColor" strokeWidth="0.4" />
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#hero-grid)" />
-          </svg>
+            <div className="relative text-center">
+              {/* kicker */}
+              <p className="ui-mono uppercase" style={{ fontSize: "11px", letterSpacing: "0.18em", color: "var(--ui-text-2)" }}>
+                <span style={{ color: "var(--ui-primary)" }}>◦</span>&nbsp; A collaborative canvas for teams who think out loud
+              </p>
 
-          <div className="relative max-w-6xl mx-auto px-6">
-            <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+              {/* headline */}
+              <h1
+                className="ui-serif mx-auto"
+                style={{ marginTop: "26px", fontSize: "clamp(40px, 7vw, 82px)", fontWeight: 500, lineHeight: 1.02, letterSpacing: "-0.025em", maxWidth: "16ch" }}
+              >
+                A shared canvas for teams who{" "}
+                <span className="relative whitespace-nowrap italic" style={{ fontWeight: 500 }}>
+                  think by drawing
+                  <PenUnderline />
+                </span>
+                .
+              </h1>
 
-              {/* Left: Copy */}
-              <div className="flex-1 max-w-xl stagger-1">
-                {/* Badge */}
-                <div
-                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium mb-8"
-                  style={{
-                    border: "1px solid var(--lp-badge-line)",
-                    color: "var(--lp-ink2)",
-                    background: "var(--lp-badge-bg)",
-                  }}
-                >
-                  <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "#4ade80" }} />
-                  Collaborative canvas for modern teams
-                </div>
-
-                {/* Headline */}
-                <h1 className="mb-6 leading-none" style={{ letterSpacing: "-0.03em" }}>
-                  <span
-                    className="block font-bold"
-                    style={{
-                      fontSize: "clamp(40px, 5.5vw, 72px)",
-                      lineHeight: 1.05,
-                      color: "var(--lp-ink)",
-                    }}
-                  >
-                    Think together,
-                  </span>
-                  <span
-                    className="block"
-                    style={{
-                      fontFamily: SERIF,
-                      fontStyle: "italic",
-                      fontSize: "clamp(42px, 6vw, 76px)",
-                      lineHeight: 1.05,
-                      color: "var(--lp-serif)",
-                    }}
-                  >
-                    draw together.
-                  </span>
-                </h1>
-
-                <p
-                  className="mb-10 leading-relaxed"
-                  style={{ color: "var(--lp-ink2)", fontSize: "16px", maxWidth: "400px" }}
-                >
-                  A shared space to sketch ideas, plan projects, and build visual
-                  artifacts — together, in real-time. Encrypted and version-controlled.
-                </p>
-
-                {/* CTAs */}
-                <div className="flex flex-wrap items-center gap-3 mb-12">
-                  <Link
-                    href="/auth/sign-up"
-                    className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold rounded-xl transition-opacity hover:opacity-85"
-                    style={{ background: "var(--lp-btn)", color: "var(--lp-btn-fg)" }}
-                  >
-                    Start for free
-                    <ArrowRight className="w-4 h-4" />
-                  </Link>
-                  <Link
-                    href="/auth/sign-in"
-                    className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium rounded-xl transition-opacity hover:opacity-70"
-                    style={{
-                      border: "1px solid var(--lp-btn2-line)",
-                      color: "var(--lp-btn2-fg)",
-                    }}
-                  >
-                    Sign in
-                  </Link>
-                </div>
-
-                {/* Stats */}
-                <div
-                  className="flex items-center gap-8 pt-8"
-                  style={{ borderTop: "1px solid var(--lp-line)" }}
-                >
-                  {[
-                    { val: "∞", label: "Canvas size" },
-                    { val: "50×", label: "Version history" },
-                    { val: "4", label: "Permission roles" },
-                  ].map((s) => (
-                    <div key={s.label}>
-                      <div className="text-2xl font-bold mb-0.5" style={{ color: "var(--lp-ink)", fontVariantNumeric: "tabular-nums" }}>
-                        {s.val}
-                      </div>
-                      <div className="text-xs" style={{ color: "var(--lp-ink3)" }}>{s.label}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Right: Creative visual */}
-              <div className="flex-1 w-full max-w-lg lg:max-w-none stagger-2">
-                <HeroVisual />
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ── Features ──────────────────────────────────────────────── */}
-        <section
-          id="features"
-          className="max-w-6xl mx-auto px-6"
-          style={{ paddingTop: "96px", paddingBottom: "96px" }}
-        >
-          {/* Header */}
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-16">
-            <div>
+              {/* subhead */}
               <p
-                className="text-xs font-semibold uppercase tracking-widest mb-3"
-                style={{ color: "var(--lp-ink3)" }}
+                className="mx-auto"
+                style={{ marginTop: "30px", fontSize: "clamp(15px, 1.5vw, 18px)", lineHeight: 1.6, color: "var(--ui-text-2)", maxWidth: "52ch" }}
               >
-                Features
+                Infinite space to sketch ideas, map systems and shape decisions together — live, with
+                everyone in the room. Encrypted, versioned, and entirely yours.
               </p>
-              <h2
-                className="font-bold leading-tight"
-                style={{
-                  fontSize: "clamp(28px, 3.5vw, 44px)",
-                  letterSpacing: "-0.03em",
-                  color: "var(--lp-ink)",
-                }}
-              >
-                Built for serious
-                <br />
-                <span style={{ fontFamily: SERIF, fontStyle: "italic", color: "var(--lp-serif)" }}>
-                  creative teams.
-                </span>
-              </h2>
-            </div>
-            <p className="text-sm leading-relaxed max-w-xs" style={{ color: "var(--lp-ink2)" }}>
-              Everything you need to ideate, collaborate, and ship visual work —
-              no other tools required.
-            </p>
-          </div>
 
-          {/* Bento grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-
-            {/* ── 01 Infinite Canvas — adaptive ── */}
-            <div
-              className="lg:col-span-2 rounded-2xl p-8 relative overflow-hidden"
-              style={{ background: "var(--lp-card)", border: "1px solid var(--lp-card-line)", minHeight: "240px" }}
-            >
-              <div className="absolute right-6 bottom-0 font-black select-none" style={{ fontSize: "120px", lineHeight: 1, color: "var(--lp-ghost)" }}>
-                01
-              </div>
-              <div className="relative z-10 w-10 h-10 rounded-xl flex items-center justify-center mb-5" style={{ background: "var(--lp-icon)", border: "1px solid var(--lp-icon-line)" }}>
-                <Layers className="w-5 h-5" style={{ color: "var(--lp-card-ink)" }} />
-              </div>
-              <h3 className="relative z-10 font-bold mb-2" style={{ color: "var(--lp-card-ink)", fontSize: "18px" }}>
-                Infinite Canvas
-              </h3>
-              <p className="relative z-10 text-sm leading-relaxed max-w-sm" style={{ color: "var(--lp-ink2)" }}>
-                Draw, sketch, and diagram on a boundless whiteboard powered by
-                Excalidraw. No limits, no boundaries — just your imagination.
-              </p>
-              <div className="relative z-10 mt-6 rounded-lg overflow-hidden" style={{ background: "var(--lp-icon)", border: "1px solid var(--lp-icon-line)", height: "60px" }}>
-                <svg className="w-full h-full" viewBox="0 0 400 60" fill="none" aria-hidden="true">
-                  <defs>
-                    <marker id="sm-arr" markerWidth="6" markerHeight="5" refX="6" refY="2.5" orient="auto">
-                      <polygon points="0 0, 6 2.5, 0 5" fill="var(--lp-card-line)" />
-                    </marker>
-                  </defs>
-                  <rect x="12" y="14" width="80" height="32" rx="5" stroke="var(--lp-card-line)" strokeWidth="1" />
-                  <text x="52" y="34" textAnchor="middle" fontSize="8" fill="var(--lp-ink3)" fontFamily="system-ui">Idea</text>
-                  <path d="M92 30 L118 30" stroke="var(--lp-card-line)" strokeWidth="1" markerEnd="url(#sm-arr)" />
-                  <rect x="118" y="14" width="80" height="32" rx="5" stroke="var(--lp-card-line)" strokeWidth="1" />
-                  <text x="158" y="34" textAnchor="middle" fontSize="8" fill="var(--lp-ink3)" fontFamily="system-ui">Design</text>
-                  <path d="M198 30 L224 30" stroke="var(--lp-card-line)" strokeWidth="1" markerEnd="url(#sm-arr)" />
-                  <rect x="224" y="14" width="80" height="32" rx="5" stroke="var(--lp-btn)" strokeWidth="1.5" fill="var(--lp-ghost)" />
-                  <text x="264" y="34" textAnchor="middle" fontSize="8" fill="var(--lp-ink2)" fontFamily="system-ui">Build</text>
-                  <path d="M304 30 L330 30" stroke="var(--lp-card-line)" strokeWidth="1" markerEnd="url(#sm-arr)" />
-                  <rect x="330" y="14" width="60" height="32" rx="5" stroke="var(--lp-card-line)" strokeWidth="1" />
-                  <text x="360" y="34" textAnchor="middle" fontSize="8" fill="var(--lp-ink3)" fontFamily="system-ui">Ship</text>
-                </svg>
-              </div>
-            </div>
-
-            {/* ── 02 Collaboration — adaptive ── */}
-            <div
-              className="rounded-2xl p-8 relative overflow-hidden"
-              style={{ background: "var(--lp-card)", border: "1px solid var(--lp-card-line)", minHeight: "240px" }}
-            >
-              <div className="absolute right-4 bottom-0 font-black select-none" style={{ fontSize: "120px", lineHeight: 1, color: "var(--lp-ghost)" }}>
-                02
-              </div>
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-5" style={{ background: "var(--lp-icon)", border: "1px solid var(--lp-icon-line)" }}>
-                <Users className="w-5 h-5" style={{ color: "var(--lp-card-ink)" }} />
-              </div>
-              <h3 className="font-bold mb-2" style={{ color: "var(--lp-card-ink)", fontSize: "18px" }}>
-                Real-time Collaboration
-              </h3>
-              <p className="text-sm leading-relaxed mb-6" style={{ color: "var(--lp-ink2)" }}>
-                Work with your team live — see cursors and edits as they happen, all in sync.
-              </p>
-              <div className="flex items-center gap-2">
-                <div className="flex">
-                  {["A", "M", "J", "S"].map((l, i) => (
-                    <div
-                      key={i}
-                      className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white"
-                      style={{
-                        background: ["#6366f1", "#ec4899", "#10b981", "#f59e0b"][i],
-                        border: "2px solid var(--lp-card)",
-                        marginLeft: i > 0 ? "-8px" : "0",
-                      }}
-                    >
-                      {l}
-                    </div>
-                  ))}
-                </div>
-                <span className="text-xs ml-2" style={{ color: "var(--lp-ink2)" }}>4 collaborators online</span>
-              </div>
-            </div>
-
-            {/* ── 03 Encryption — adaptive ── */}
-            <div
-              className="rounded-2xl p-8 relative overflow-hidden"
-              style={{ background: "var(--lp-card)", border: "1px solid var(--lp-card-line)", minHeight: "200px" }}
-            >
-              <div className="absolute right-4 bottom-0 font-black select-none" style={{ fontSize: "120px", lineHeight: 1, color: "var(--lp-ghost)" }}>
-                03
-              </div>
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-5" style={{ background: "var(--lp-icon)", border: "1px solid var(--lp-icon-line)" }}>
-                <Lock className="w-5 h-5" style={{ color: "var(--lp-card-ink)" }} />
-              </div>
-              <h3 className="font-bold mb-2" style={{ color: "var(--lp-card-ink)", fontSize: "16px" }}>
-                End-to-End Encryption
-              </h3>
-              <p className="text-sm leading-relaxed" style={{ color: "var(--lp-ink2)" }}>
-                AES-GCM encryption ensures only you and your team can ever access your canvas data.
-              </p>
-            </div>
-
-            {/* ── 04 Version History — adaptive, wide ── */}
-            <div
-              className="lg:col-span-2 rounded-2xl p-8 relative overflow-hidden"
-              style={{ background: "var(--lp-card)", border: "1px solid var(--lp-card-line)", minHeight: "200px" }}
-            >
-              <div className="absolute right-6 bottom-0 font-black select-none" style={{ fontSize: "120px", lineHeight: 1, color: "var(--lp-ghost)" }}>
-                04
-              </div>
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-5" style={{ background: "var(--lp-icon)", border: "1px solid var(--lp-icon-line)" }}>
-                <History className="w-5 h-5" style={{ color: "var(--lp-card-ink)" }} />
-              </div>
-              <h3 className="font-bold mb-2" style={{ color: "var(--lp-card-ink)", fontSize: "18px" }}>
-                Version History
-              </h3>
-              <p className="text-sm leading-relaxed mb-6 max-w-sm" style={{ color: "var(--lp-ink2)" }}>
-                Every save creates a snapshot. Restore any of the last 50 versions of your canvas with a single click.
-              </p>
-              <div className="flex items-center gap-2 flex-wrap">
-                {["v1", "v2", "v3", "v4", "v5", "v6", "...", "v50"].map((v, i) => (
-                  <div
-                    key={i}
-                    className="px-2.5 py-1 rounded-md text-xs font-mono font-medium"
-                    style={{
-                      background: i === 4 ? "var(--lp-btn)" : "var(--lp-icon)",
-                      color: i === 4 ? "var(--lp-btn-fg)" : "var(--lp-ink2)",
-                      border: `1px solid ${i === 4 ? "transparent" : "var(--lp-icon-line)"}`,
-                    }}
-                  >
-                    {v}
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* ── 05 Workspaces — adaptive ── */}
-            <div
-              className="rounded-2xl p-8 relative overflow-hidden"
-              style={{ background: "var(--lp-card)", border: "1px solid var(--lp-card-line)", minHeight: "200px" }}
-            >
-              <div className="absolute right-4 bottom-0 font-black select-none" style={{ fontSize: "120px", lineHeight: 1, color: "var(--lp-ghost)" }}>
-                05
-              </div>
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-5" style={{ background: "var(--lp-icon)", border: "1px solid var(--lp-icon-line)" }}>
-                <Zap className="w-5 h-5" style={{ color: "var(--lp-card-ink)" }} />
-              </div>
-              <h3 className="font-bold mb-2" style={{ color: "var(--lp-card-ink)", fontSize: "16px" }}>
-                Workspaces
-              </h3>
-              <p className="text-sm leading-relaxed" style={{ color: "var(--lp-ink2)" }}>
-                Organize canvases, invite members, and control access — all in one structured workspace.
-              </p>
-            </div>
-
-            {/* ── 06 Role-Based Access — adaptive ── */}
-            <div
-              className="lg:col-span-2 rounded-2xl p-8 relative overflow-hidden"
-              style={{ background: "var(--lp-card)", border: "1px solid var(--lp-card-line)", minHeight: "200px" }}
-            >
-              <div className="absolute right-6 bottom-0 font-black select-none" style={{ fontSize: "120px", lineHeight: 1, color: "var(--lp-ghost)" }}>
-                06
-              </div>
-              <div className="relative z-10 w-10 h-10 rounded-xl flex items-center justify-center mb-5" style={{ background: "var(--lp-icon)", border: "1px solid var(--lp-icon-line)" }}>
-                <Shield className="w-5 h-5" style={{ color: "var(--lp-card-ink)" }} />
-              </div>
-              <h3 className="relative z-10 font-bold mb-2" style={{ color: "var(--lp-card-ink)", fontSize: "18px" }}>
-                Role-Based Access
-              </h3>
-              <p className="relative z-10 text-sm leading-relaxed mb-6 max-w-sm" style={{ color: "var(--lp-ink2)" }}>
-                Fine-grained permissions give you precise control over who can view, edit, or manage your workspace.
-              </p>
-              <div className="relative z-10 flex flex-wrap gap-2">
-                {[
-                  { role: "Owner", desc: "Full control" },
-                  { role: "Admin", desc: "Manage members" },
-                  { role: "Member", desc: "Create & edit" },
-                  { role: "Viewer", desc: "View only" },
-                ].map((r) => (
-                  <div
-                    key={r.role}
-                    className="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs"
-                    style={{ background: "var(--lp-icon)", border: "1px solid var(--lp-icon-line)", color: "var(--lp-ink2)" }}
-                  >
-                    <span className="font-semibold" style={{ color: "var(--lp-card-ink)" }}>{r.role}</span>
-                    <span style={{ color: "var(--lp-icon-line)" }}>·</span>
-                    {r.desc}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ── How it works ──────────────────────────────────────────── */}
-        <section
-          id="how-it-works"
-          style={{
-            background: "var(--lp-bg2)",
-            borderTop: "1px solid var(--lp-line)",
-          }}
-        >
-          <div className="max-w-6xl mx-auto px-6" style={{ paddingTop: "96px", paddingBottom: "96px" }}>
-            <div className="text-center mb-20">
-              <p className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: "var(--lp-ink3)" }}>
-                How it works
-              </p>
-              <h2
-                className="font-bold leading-tight mb-5"
-                style={{ fontSize: "clamp(28px, 3.5vw, 48px)", letterSpacing: "-0.03em", color: "var(--lp-ink)" }}
-              >
-                Up and running{" "}
-                <span style={{ fontFamily: SERIF, fontStyle: "italic", color: "var(--lp-serif)" }}>
-                  in minutes.
-                </span>
-              </h2>
-              <p className="text-sm leading-relaxed max-w-xs mx-auto" style={{ color: "var(--lp-ink2)" }}>
-                No complex setup. Just three steps and your team is drawing together.
-              </p>
-            </div>
-
-            <div
-              className="grid grid-cols-1 sm:grid-cols-3 gap-px"
-              style={{ background: "var(--lp-line)" }}
-            >
-              {[
-                { num: "01", title: "Create a workspace", desc: "Set up a shared space for your team or project in seconds.", detail: "Name it, describe it, and you're ready to go." },
-                { num: "02", title: "Invite your team", desc: "Share a link or send direct invites.", detail: "Teammates join with one click and choose their role." },
-                { num: "03", title: "Start creating", desc: "Open an infinite canvas and draw together.", detail: "See each other's cursors live. Every change is saved automatically." },
-              ].map((step, i) => (
-                <div
-                  key={i}
-                  className="relative p-10"
-                  style={{ background: "var(--lp-bg2)" }}
+              {/* CTAs */}
+              <div className="flex flex-wrap items-center justify-center gap-x-7 gap-y-4" style={{ marginTop: "36px" }}>
+                <Link
+                  href="/auth/sign-up"
+                  className="ui-btn-primary ui-mono inline-flex items-center gap-2.5 uppercase"
+                  style={{ fontSize: "12px", letterSpacing: "0.1em", fontWeight: 700, padding: "15px 26px", borderRadius: "var(--ui-r-control)" }}
                 >
+                  Start a canvas — free
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+                <Link
+                  href="/auth/sign-in"
+                  className="ui-link ui-mono inline-flex items-center gap-1.5 uppercase"
+                  style={{ fontSize: "12px", letterSpacing: "0.08em", paddingBottom: "2px" }}
+                >
+                  Sign in
+                  <ArrowUpRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+
+              {/* technical legend */}
+              <div
+                className="ui-mono uppercase flex flex-wrap items-center justify-center gap-x-3.5 gap-y-2"
+                style={{ marginTop: "52px", fontSize: "11px", letterSpacing: "0.08em", color: "var(--ui-text-2)" }}
+              >
+                {["Infinite canvas", "50 versions back", "4 access roles", "AES-GCM encrypted"].map((t, i) => (
+                  <span key={t} className="inline-flex items-center gap-3.5">
+                    {i > 0 && <span style={{ color: "var(--ui-border-strong)" }}>/</span>}
+                    {t}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* ── Capabilities (3D perspective rack) ─────────────── */}
+          <section
+            id="capabilities"
+            className="relative overflow-hidden px-6 sm:px-10"
+            style={{ paddingTop: "62px", paddingBottom: "88px", borderBottom: "1px solid var(--ui-border)" }}
+          >
+            <div className="text-center mx-auto" style={{ maxWidth: "640px" }}>
+              <h2 className="ui-serif" style={{ fontSize: "clamp(28px, 3.4vw, 42px)", fontWeight: 500, lineHeight: 1.04, letterSpacing: "-0.025em" }}>
+                What lives on the sheet.
+              </h2>
+              <p className="mx-auto" style={{ marginTop: "16px", fontSize: "15px", lineHeight: 1.62, color: "var(--ui-text-2)", maxWidth: "46ch" }}>
+                A shared canvas that grows with your team&apos;s thinking — from the first loose
+                scribble to the decision everyone signs off on.
+              </p>
+            </div>
+
+            {/* asymmetric bento — first & last tiles span wide */}
+            <div className="ui-bento grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {capabilities.map((c, i) => {
+                // zigzag bento: wide tiles at 0,3,4 tile 3 cols perfectly with no gaps
+                const wide = i === 0 || i === 3 || i === 4;
+                return (
                   <div
-                    className="text-7xl font-black mb-8 leading-none select-none"
-                    style={{ fontFamily: SERIF, fontStyle: "italic", color: "var(--lp-num)" }}
+                    key={c.n}
+                    className={`ui-cap ${wide ? "lg:col-span-2" : ""}`}
                   >
-                    {step.num}
+                    {/* solid camera corners + red joint squares over the dashed frame */}
+                    <span className="ui-cap-corner tl" aria-hidden="true" />
+                    <span className="ui-cap-corner tr" aria-hidden="true" />
+                    <span className="ui-cap-corner bl" aria-hidden="true" />
+                    <span className="ui-cap-corner br" aria-hidden="true" />
+                    <span className="ui-serif ui-cap-ghost" aria-hidden="true">{c.n}</span>
+                    <div className="ui-cap-body">
+                      <span
+                        className="ui-mono uppercase block"
+                        style={{ fontSize: "11px", letterSpacing: "0.14em", color: "var(--ui-text-2)" }}
+                      >
+                        {c.tag}
+                      </span>
+                      <h3 className="ui-serif" style={{ marginTop: "14px", fontSize: "21px", fontWeight: 500, letterSpacing: "-0.015em" }}>
+                        {c.title}
+                      </h3>
+                      <p style={{ marginTop: "10px", fontSize: "14px", lineHeight: 1.6, color: "var(--ui-text-2)", maxWidth: "42ch" }}>
+                        {c.body}
+                      </p>
+                    </div>
                   </div>
-                  <h3 className="font-bold mb-3" style={{ color: "var(--lp-ink)", fontSize: "17px" }}>
-                    {step.title}
-                  </h3>
-                  <p className="text-sm mb-3 leading-relaxed" style={{ color: "var(--lp-ink2)" }}>
-                    {step.desc}
-                  </p>
-                  <p className="text-xs leading-relaxed" style={{ color: "var(--lp-ink3)" }}>
-                    {step.detail}
-                  </p>
+                );
+              })}
+            </div>
+          </section>
+
+          {/* ── Manifesto (editor's redline) ──────────────────── */}
+          <section className="relative px-6 sm:px-10 text-center" style={{ paddingTop: "92px", paddingBottom: "92px", borderBottom: "1px solid var(--ui-border)" }}>
+            <div className="mx-auto">
+              {/* redlined statement */}
+              <p
+                className="ui-serif mx-auto"
+                style={{ fontSize: "clamp(26px, 3.8vw, 46px)", fontWeight: 500, lineHeight: 1.2, letterSpacing: "-0.02em", maxWidth: "24ch" }}
+              >
+                Most tools want your thinking to arrive{" "}
+                <span className="relative inline-block">
+                  finished
+                  <PenStrike />
+                </span>
+                . This one is happy to watch it{" "}
+                <span className="relative inline-block italic" style={{ color: "var(--ui-primary)" }}>
+                  take shape
+                  <PenUnderline />
+                </span>
+                .
+              </p>
+            </div>
+          </section>
+
+          {/* ── Process (camera-focus frames) ─────────────────── */}
+          <section id="process" className="px-6 sm:px-10" style={{ paddingTop: "58px", paddingBottom: "60px", borderBottom: "1px solid var(--ui-border)" }}>
+            <div className="text-center" style={{ marginBottom: "36px" }}>
+              <h2 className="ui-serif" style={{ fontSize: "clamp(24px, 3vw, 34px)", fontWeight: 500, letterSpacing: "-0.02em" }}>
+                From nothing to drawing together
+              </h2>
+            </div>
+
+            <div className="grid sm:grid-cols-3 gap-y-6 sm:gap-0 items-stretch">
+              {steps.map((s, i) => (
+                <div key={s.n} className="relative flex items-stretch">
+                  {/* mini camera-focus node between cards (with icon) */}
+                  {i > 0 && (
+                    <span
+                      className="ui-conn absolute hidden sm:flex items-center justify-center z-10"
+                      style={{ left: "-16px", top: "50%", transform: "translateY(-50%)", width: "32px", height: "32px" }}
+                      aria-hidden="true"
+                    >
+                      <span className="ui-cfocus absolute" style={{ top: 0, left: 0 }}>⌜</span>
+                      <span className="ui-cfocus absolute" style={{ top: 0, right: 0 }}>⌝</span>
+                      <span className="ui-cfocus absolute" style={{ bottom: 0, left: 0 }}>⌞</span>
+                      <span className="ui-cfocus absolute" style={{ bottom: 0, right: 0 }}>⌟</span>
+                      <ArrowRight className="w-3.5 h-3.5" style={{ color: "var(--ui-text-2)" }} />
+                    </span>
+                  )}
+
+                  <div className="ui-frame relative h-full w-full mx-0 sm:mx-3 px-7 sm:px-8" style={{ paddingTop: "34px", paddingBottom: "36px" }}>
+                    {/* camera-focus corner brackets */}
+                    <span className="ui-focus absolute" style={{ top: "10px", left: "12px" }}>⌜</span>
+                    <span className="ui-focus absolute" style={{ top: "10px", right: "12px" }}>⌝</span>
+                    <span className="ui-focus absolute" style={{ bottom: "10px", left: "12px" }}>⌞</span>
+                    <span className="ui-focus absolute" style={{ bottom: "10px", right: "12px" }}>⌟</span>
+
+                    <div className="ui-mono uppercase" style={{ fontSize: "11px", letterSpacing: "0.14em", color: "var(--ui-primary)" }}>
+                      Step {s.n}
+                    </div>
+                    <h3 className="ui-serif" style={{ marginTop: "16px", fontSize: "22px", fontWeight: 500, letterSpacing: "-0.015em" }}>
+                      {s.t}
+                    </h3>
+                    <p style={{ marginTop: "10px", fontSize: "14.5px", lineHeight: 1.6, color: "var(--ui-text-2)" }}>{s.d}</p>
+                  </div>
                 </div>
               ))}
             </div>
+          </section>
 
-            <div className="flex justify-center mt-14">
+          {/* ── Closing call ──────────────────────────────────── */}
+          <section className="relative px-6 sm:px-10 text-center" style={{ paddingTop: "96px", paddingBottom: "100px" }}>
+            <Tick className="left-2.5 bottom-2.5" />
+            <Tick className="right-2.5 bottom-2.5" />
+
+            <h2
+              className="ui-serif mx-auto"
+              style={{ fontSize: "clamp(34px, 5.5vw, 64px)", fontWeight: 500, lineHeight: 1.05, letterSpacing: "-0.025em", maxWidth: "15ch" }}
+            >
+              Your team's next idea is{" "}
+              <span className="relative whitespace-nowrap italic">
+                probably a drawing
+                <PenUnderline />
+              </span>
+              .
+            </h2>
+            <p className="mx-auto" style={{ marginTop: "26px", fontSize: "16px", lineHeight: 1.6, color: "var(--ui-text-2)", maxWidth: "44ch" }}>
+              Make the canvas where it happens. Spin up a free workspace and start drawing in under a minute.
+            </p>
+
+            <div className="flex justify-center" style={{ marginTop: "36px" }}>
               <Link
                 href="/auth/sign-up"
-                className="inline-flex items-center gap-2 px-7 py-3.5 text-sm font-semibold rounded-xl transition-opacity hover:opacity-85"
-                style={{ background: "var(--lp-btn)", color: "var(--lp-btn-fg)" }}
+                className="ui-btn-primary ui-mono inline-flex items-center gap-2.5 uppercase"
+                style={{ fontSize: "12px", letterSpacing: "0.1em", fontWeight: 700, padding: "16px 30px", borderRadius: "var(--ui-r-control)" }}
               >
-                Get started for free
-                <ArrowRight className="w-4 h-4" />
+                Create your free workspace
+                <ArrowUpRight className="w-4 h-4" />
               </Link>
             </div>
-          </div>
-        </section>
 
-        {/* ── CTA ───────────────────────────────────────────────────── */}
-        <section
-          style={{
-            background: "var(--lp-bg1)",
-            borderTop: "1px solid var(--lp-line)",
-          }}
-        >
-          <div className="max-w-6xl mx-auto px-6" style={{ paddingTop: "96px", paddingBottom: "96px" }}>
-            <div
-              className="relative rounded-2xl overflow-hidden text-center px-8 py-20 sm:px-20"
-              style={{ background: "var(--lp-card)", border: "1px solid var(--lp-card-line)" }}
-            >
-              <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-                <svg className="w-full h-full" style={{ opacity: 1 }}>
-                  <defs>
-                    <pattern id="cta-dots" width="30" height="30" patternUnits="userSpaceOnUse">
-                      <circle cx="1" cy="1" r="1" fill="var(--lp-dot)" />
-                    </pattern>
-                  </defs>
-                  <rect width="100%" height="100%" fill="url(#cta-dots)" />
-                </svg>
-                <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at center, rgba(99,102,241,0.06) 0%, transparent 70%)" }} />
-              </div>
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none" style={{ width: "600px", height: "600px", border: "1px solid var(--lp-card-line)" }} />
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none" style={{ width: "400px", height: "400px", border: "1px solid var(--lp-card-line)" }} />
-
-              <div className="relative z-10">
-                <p className="text-xs font-semibold uppercase tracking-widest mb-5" style={{ color: "var(--lp-ink3)" }}>
-                  Free to get started
-                </p>
-                <h2
-                  className="font-bold mb-5 leading-tight"
-                  style={{ fontSize: "clamp(28px, 4vw, 54px)", letterSpacing: "-0.03em", color: "var(--lp-ink)" }}
-                >
-                  Ready to think{" "}
-                  <span style={{ fontFamily: SERIF, fontStyle: "italic", color: "var(--lp-serif)" }}>
-                    and draw
-                  </span>
-                  <br />
-                  together?
-                </h2>
-                <p className="text-sm leading-relaxed mb-10 mx-auto" style={{ color: "var(--lp-ink2)", maxWidth: "360px" }}>
-                  Create your free account and start building on an infinite canvas with your team today.
-                </p>
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-                  <Link
-                    href="/auth/sign-up"
-                    className="inline-flex items-center gap-2.5 px-8 py-4 text-sm font-semibold rounded-xl transition-opacity hover:opacity-90"
-                    style={{ background: "var(--lp-btn)", color: "var(--lp-btn-fg)" }}
-                  >
-                    Create free account
-                    <ArrowRight className="w-4 h-4" />
-                  </Link>
-                  <Link
-                    href="/auth/sign-in"
-                    className="inline-flex items-center gap-2 px-8 py-4 text-sm font-medium rounded-xl transition-opacity hover:opacity-70"
-                    style={{ border: "1px solid var(--lp-btn2-line)", color: "var(--lp-btn2-fg)" }}
-                  >
-                    Sign in
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+            <p className="ui-mono uppercase" style={{ marginTop: "26px", fontSize: "11px", letterSpacing: "0.1em", color: "var(--ui-text-2)" }}>
+              No card&nbsp; / &nbsp;Free workspace&nbsp; / &nbsp;End-to-end encrypted
+            </p>
+          </section>
+        </div>
       </main>
 
-      {/* ── Footer ────────────────────────────────────────────────── */}
-      <footer style={{ background: "var(--lp-bg2)", borderTop: "1px solid var(--lp-line)" }}>
-        <div
-          className="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4"
-          style={{ paddingTop: "28px", paddingBottom: "28px" }}
-        >
+      {/* ── Footer ───────────────────────────────────────────── */}
+      <footer style={{ borderTop: "1px solid var(--ui-border)", background: "var(--ui-bg)" }}>
+        <div className="max-w-6xl mx-auto px-6 sm:px-10 flex flex-col sm:flex-row items-center justify-between gap-4" style={{ paddingTop: "26px", paddingBottom: "26px" }}>
           <div className="flex items-center gap-2.5">
-            {siteLogo ? (
-              <img src={siteLogo} alt={siteName} className="w-6 h-6 object-contain" />
-            ) : (
-              <div
-                className="w-6 h-6 rounded-md flex items-center justify-center flex-shrink-0"
-                style={{ background: "var(--lp-ink)" }}
-              >
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
-                  <rect x="3" y="3" width="7" height="7" rx="1.5" fill="var(--lp-btn-fg)" />
-                  <rect x="14" y="3" width="7" height="7" rx="1.5" fill="var(--lp-btn-fg)" />
-                  <rect x="3" y="14" width="7" height="7" rx="1.5" fill="var(--lp-btn-fg)" />
-                  <rect x="14" y="14" width="7" height="7" rx="1.5" fill="var(--lp-btn-fg)" />
-                </svg>
-              </div>
-            )}
-            <span className="text-sm font-semibold" style={{ color: "var(--lp-ink)" }}>{siteName}</span>
+            {siteLogo ? <img src={siteLogo} alt={siteName} className="w-5 h-5 object-contain" /> : <Mark size={22} />}
+            <span className="ui-serif" style={{ fontSize: "16px", fontWeight: 600 }}>{siteName}</span>
           </div>
 
-          <div className="flex items-center gap-6 text-xs" style={{ color: "var(--lp-ink3)" }}>
-            <a href="#features" className="transition-opacity hover:opacity-70">Features</a>
-            <a href="#how-it-works" className="transition-opacity hover:opacity-70">How it works</a>
-            <Link href="/auth/sign-up" className="transition-opacity hover:opacity-70">Get started</Link>
+          <div className="ui-mono uppercase flex items-center gap-6" style={{ fontSize: "11px", letterSpacing: "0.08em" }}>
+            <a href="#capabilities" className="ui-btn-ghost">Capabilities</a>
+            <a href="#process" className="ui-btn-ghost">How it works</a>
+            <Link href="/auth/sign-up" className="ui-btn-ghost">Get started</Link>
           </div>
 
-          <p className="text-xs" style={{ color: "var(--lp-ink3)", opacity: 0.6 }}>
-            Collaborative workspace for teams
+          <p className="ui-mono uppercase" style={{ fontSize: "10.5px", letterSpacing: "0.1em", color: "var(--ui-text-2)" }}>
+            © 2026 — Sheet 01 / 01
           </p>
         </div>
       </footer>

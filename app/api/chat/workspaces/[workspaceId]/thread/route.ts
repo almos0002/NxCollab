@@ -11,7 +11,6 @@ import {
 import { getUserWorkspaceRole } from "@/lib/workspace";
 import { generateId } from "@/lib/utils";
 
-export const runtime = "nodejs";
 
 interface Params {
   params: Promise<{ workspaceId: string }>;

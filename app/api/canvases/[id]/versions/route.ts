@@ -12,7 +12,11 @@ export async function GET(req: NextRequest, { params }: Params) {
   const session = await getServerSession();
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const canvas = await db.select().from(canvasesTable).where(eq(canvasesTable.id, id)).limit(1);
+  const canvas = await db
+    .select({ workspaceId: canvasesTable.workspaceId })
+    .from(canvasesTable)
+    .where(eq(canvasesTable.id, id))
+    .limit(1);
   if (!canvas[0]) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
   const role = await getUserWorkspaceRole(session.user.id, canvas[0].workspaceId);

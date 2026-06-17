@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { asc } from "drizzle-orm";
+import { asc, ne } from "drizzle-orm";
 import { getServerSession } from "@/lib/session";
 import { db, usersTable } from "@/lib/db";
 import { MessagesPageClient } from "@/components/chat/messages-page-client";
@@ -19,6 +19,7 @@ export default async function MessagesPage() {
       image: usersTable.image,
     })
     .from(usersTable)
+    .where(ne(usersTable.id, session.user.id))
     .orderBy(asc(usersTable.name))
     .limit(200);
 
@@ -36,7 +37,7 @@ export default async function MessagesPage() {
           email: session.user.email,
           image: session.user.image,
         }}
-        users={users.filter((user) => user.id !== session.user.id)}
+        users={users}
       />
     </div>
   );

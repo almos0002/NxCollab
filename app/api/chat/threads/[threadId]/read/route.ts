@@ -6,7 +6,6 @@ import { ablyChannels } from "@/lib/ably/channels";
 import { publishAblyEvent } from "@/lib/ably/server";
 import { requireChatParticipant } from "@/lib/chat/access";
 
-export const runtime = "nodejs";
 
 interface Params {
   params: Promise<{ threadId: string }>;

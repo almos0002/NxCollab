@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { and, desc, eq, inArray, isNull, lt } from "drizzle-orm";
+import { and, desc, eq, isNull, lt } from "drizzle-orm";
 import { getServerSession } from "@/lib/session";
 import { db, chatMessagesTable, chatParticipantsTable, chatThreadsTable, usersTable } from "@/lib/db";
 import { ablyChannels } from "@/lib/ably/channels";
@@ -26,7 +26,6 @@ async function publishChatUnreadEvents(threadId: string, senderId: string, messa
   );
 }
 
-export const runtime = "nodejs";
 
 const DEFAULT_LIMIT = 50;
 const MAX_LIMIT = 100;
@@ -65,25 +64,39 @@ export async function GET(req: NextRequest, { params }: Params) {
   }
 
   const rows = await db
-    .select()
+    .select({
+      id: chatMessagesTable.id,
+      threadId: chatMessagesTable.threadId,
+      senderId: chatMessagesTable.senderId,
+      body: chatMessagesTable.body,
+      clientNonce: chatMessagesTable.clientNonce,
+      createdAt: chatMessagesTable.createdAt,
+      updatedAt: chatMessagesTable.updatedAt,
+      deletedAt: chatMessagesTable.deletedAt,
+      sender: {
+        id: usersTable.id,
+        name: usersTable.name,
+        email: usersTable.email,
+      },
+    })
     .from(chatMessagesTable)
+    .leftJoin(usersTable, eq(chatMessagesTable.senderId, usersTable.id))
     .where(and(...conditions))
     .orderBy(desc(chatMessagesTable.createdAt))
     .limit(limit + 1);
 
   const hasMore = rows.length > limit;
   const pageRows = rows.slice(0, limit).reverse();
-  const senderIds = Array.from(new Set(pageRows.map((message) => message.senderId).filter(Boolean))) as string[];
-  const senders = senderIds.length > 0
-    ? await db
-        .select({ id: usersTable.id, name: usersTable.name, email: usersTable.email })
-        .from(usersTable)
-        .where(inArray(usersTable.id, senderIds))
-    : [];
-  const senderMap = new Map(senders.map((sender) => [sender.id, sender]));
   const messages = pageRows.map((message) => ({
-    ...message,
-    sender: message.senderId ? senderMap.get(message.senderId) ?? null : null,
+    id: message.id,
+    threadId: message.threadId,
+    senderId: message.senderId,
+    body: message.body,
+    clientNonce: message.clientNonce,
+    createdAt: message.createdAt,
+    updatedAt: message.updatedAt,
+    deletedAt: message.deletedAt,
+    sender: message.sender?.id ? message.sender : null,
   }));
   const nextCursor = hasMore ? messages[0]?.createdAt.toISOString() ?? null : null;
 

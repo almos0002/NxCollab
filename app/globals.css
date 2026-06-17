@@ -233,92 +233,143 @@
 .stagger-4 { animation: stagger-in 0.5s ease-out 0.35s both; }
 .stagger-5 { animation: stagger-in 0.5s ease-out 0.45s both; }
 
-/* ── Landing page adaptive color tokens ────────────────── */
+/* ════════════════════════════════════════════════════════════
+   Universal Interface System — landing tokens (--ui-*)
+   Dark-native premium interface language. Light is a true peer.
+   ════════════════════════════════════════════════════════════ */
 :root {
-  --lp-bg1: #ffffff;
-  --lp-bg2: #f5f4f1;
-  --lp-ink: #0b0b0b;
-  --lp-ink2: #666666;
-  --lp-ink3: #999999;
-  --lp-line: #e8e8e4;
-  --lp-serif: #888888;
-  --lp-nav-bg: rgba(255,255,255,0.92);
-  --lp-nav-line: #e8e8e4;
-  --lp-badge-bg: #f5f4f1;
-  --lp-badge-line: #e0e0dc;
-  --lp-btn: #0b0b0b;
-  --lp-btn-fg: #ffffff;
-  --lp-btn2-line: #ddddd8;
-  --lp-btn2-fg: #555555;
-  --lp-card: #fafaf9;
-  --lp-card-line: #e8e8e4;
-  --lp-card-ink: #0b0b0b;
-  --lp-icon: #f0f0ed;
-  --lp-icon-line: #e8e8e4;
-  --lp-ghost: rgba(11,11,11,0.05);
-  --lp-num: #ececea;
-  --lp-dot: #dededd;
-  --lp-radial: radial-gradient(ellipse at 25% 40%, rgba(0,0,0,0.012) 0%, transparent 60%);
-  /* Hero canvas surface */
-  --lp-hero-bg: #f0efec;
-  --lp-hero-border: #dddbd7;
-  --lp-hero-card: #ffffff;
-  --lp-hero-card-border: #e4e2de;
-  --lp-hero-dark-card: #1e1e1c;
-  --lp-hero-dark-border: #2e2e2c;
-  --lp-hero-dark-text: #a5b4fc;
-  --lp-hero-dark-sub: #5a5a58;
-  --lp-hero-dot: #cccac6;
-  --lp-hero-line: #d0ceca;
-  --lp-hero-toolbar: rgba(242,241,238,0.97);
-  --lp-hero-toolbar-border: #dddbd7;
-  --lp-hero-pill-bg: #f5f4f1;
-  --lp-hero-pill-border: #dddbd7;
-  --lp-hero-pill-text: #777;
-  --lp-hero-inactive: #c0bebb;
-  --lp-hero-path: #cccac6;
+  /* Paper */
+  --ui-bg: #FBFAF6;
+  --ui-surface: #F3F1E8;
+  --ui-surface-muted: #EEEBE0;
+  --ui-surface-hover: #E8E4D6;
+  /* Ink */
+  --ui-text: #1A1611;
+  --ui-text-2: #6B6456;
+  /* Hairlines (ledger rules) */
+  --ui-border: #D9D3C2;
+  --ui-border-strong: #B8B09A;
+  /* Brand — editorial red pen */
+  --ui-primary: #E11D48;
+  --ui-primary-hover: #BE123C;
+  --ui-primary-contrast: #FFFFFF;
+  --ui-primary-soft: #FBE9EC;
+  --ui-primary-10: rgba(225, 29, 72, 0.10);
+  --ui-primary-25: rgba(225, 29, 72, 0.22);
+  /* Radius — restrained, near-rectangular */
+  --ui-r-card: 12px;
+  --ui-r-control: 8px;
+  --ui-r-chip: 6px;
+  /* Graph-paper texture */
+  --ui-grid-line: rgba(26, 22, 17, 0.05);
 }
 .dark {
-  --lp-bg1: #0b0b0b;
-  --lp-bg2: #0e0e0d;
-  --lp-ink: #f2f2f0;
-  --lp-ink2: #8a8a87;
-  --lp-ink3: #5a5a57;
-  --lp-line: #1f1f1e;
-  --lp-serif: #6e6e6b;
-  --lp-nav-bg: rgba(11,11,11,0.92);
-  --lp-nav-line: #1f1f1e;
-  --lp-badge-bg: #161614;
-  --lp-badge-line: #2a2a28;
-  --lp-btn: #ffffff;
-  --lp-btn-fg: #0b0b0b;
-  --lp-btn2-line: #2a2a28;
-  --lp-btn2-fg: #8a8a87;
-  --lp-card: #111110;
-  --lp-card-line: #1f1f1e;
-  --lp-card-ink: #f2f2f0;
-  --lp-icon: #1a1a18;
-  --lp-icon-line: #2a2a28;
-  --lp-ghost: rgba(255,255,255,0.05);
-  --lp-num: #2a2a27;
-  --lp-dot: #2a2a28;
-  --lp-radial: radial-gradient(ellipse at 25% 40%, rgba(255,255,255,0.025) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(255,255,255,0.015) 0%, transparent 50%);
-  /* Hero canvas surface */
-  --lp-hero-bg: #0f0f0e;
-  --lp-hero-border: #222220;
-  --lp-hero-card: #1c1c1a;
-  --lp-hero-card-border: #2e2e2c;
-  --lp-hero-dark-card: #1c1c1a;
-  --lp-hero-dark-border: #2e2e2c;
-  --lp-hero-dark-text: #a5b4fc;
-  --lp-hero-dark-sub: #4a4a48;
-  --lp-hero-dot: #3a3a38;
-  --lp-hero-line: #333330;
-  --lp-hero-toolbar: rgba(10,10,10,0.95);
-  --lp-hero-toolbar-border: #1e1e1c;
-  --lp-hero-pill-bg: #111110;
-  --lp-hero-pill-border: #2a2a28;
-  --lp-hero-pill-text: #888;
-  --lp-hero-inactive: #3a3a38;
-  --lp-hero-path: #3a3a38;
+  /* Blackboard */
+  --ui-bg: #0B0B0D;
+  --ui-surface: #141315;
+  --ui-surface-muted: #100F11;
+  --ui-surface-hover: #1B1A1D;
+  /* Chalk */
+  --ui-text: #F1EEE6;
+  --ui-text-2: #968F82;
+  --ui-border: #29282B;
+  --ui-border-strong: #3F3E42;
+  --ui-primary: #E11D48;
+  --ui-primary-hover: #F43F5E;
+  --ui-primary-contrast: #FFFFFF;
+  --ui-primary-soft: #2A1017;
+  --ui-primary-10: rgba(225, 29, 72, 0.16);
+  --ui-primary-25: rgba(225, 29, 72, 0.34);
+  --ui-grid-line: rgba(241, 238, 230, 0.05);
+}
+
+/* ── Drafting-sheet type + primitives (landing) ────────── */
+.ui-root  { font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+.ui-serif { font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+.ui-mono  { font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+
+/* Primary "stamp" button */
+.ui-btn-primary { background: var(--ui-primary); color: var(--ui-primary-contrast); transition: background-color .18s ease, transform .18s ease; }
+.ui-btn-primary:hover { background: var(--ui-primary-hover); }
+.ui-btn-primary:active { transform: translateY(1px); }
+
+/* Editorial underline link */
+.ui-link { color: var(--ui-text); box-shadow: inset 0 -1px 0 var(--ui-border-strong); transition: box-shadow .18s ease, color .18s ease; }
+.ui-link:hover { color: var(--ui-primary); box-shadow: inset 0 -1.5px 0 var(--ui-primary); }
+
+.ui-btn-ghost { color: var(--ui-text-2); transition: color .18s ease; }
+.ui-btn-ghost:hover { color: var(--ui-text); }
+
+/* Capability bento — dashed blueprint frame, corner registration squares */
+.ui-bento { margin-top: 52px; }
+.ui-cap {
+  position: relative;
+  background: var(--ui-bg);
+  border: 1px dashed var(--ui-border-strong);
+  padding: 28px 26px 30px;
+}
+/* registration squares straddling each corner — gray, soft red on hover */
+.ui-cap-corner {
+  position: absolute;
+  width: 8px; height: 8px;
+  background: var(--ui-border-strong);
+  pointer-events: none;
+  transition: background-color .3s ease;
+}
+.ui-cap:hover .ui-cap-corner { background: var(--ui-primary); }
+.ui-cap-corner.tl { top: -4px; left: -4px; }
+.ui-cap-corner.tr { top: -4px; right: -4px; }
+.ui-cap-corner.bl { bottom: -4px; left: -4px; }
+.ui-cap-corner.br { bottom: -4px; right: -4px; }
+/* oversized ghost numeral — faint, soft rose on hover (text stays readable) */
+.ui-cap-ghost {
+  position: absolute;
+  right: 16px;
+  bottom: 10px;
+  font-size: clamp(60px, 6.5vw, 92px);
+  line-height: 1;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.04em;
+  color: var(--ui-grid-line);
+  user-select: none;
+  pointer-events: none;
+  transition: color .3s ease;
+}
+.ui-cap:hover .ui-cap-ghost { color: var(--ui-primary-25); }
+.ui-cap-body { position: relative; z-index: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-cap-corner, .ui-cap-ghost { transition: none; }
+}
+
+/* Camera-focus frame (process steps) — static corners, no hover */
+.ui-focus { font-size: 22px; line-height: 1; color: var(--ui-border-strong); pointer-events: none; }
+
+/* Connector focus-node between process steps */
+.ui-conn { background: var(--ui-bg); border-radius: 999px; }
+.ui-cfocus { font-size: 11px; line-height: 1; color: var(--ui-border-strong); pointer-events: none; }
+
+/* Hand-drawn pen stroke draws itself in */
+@keyframes ui-draw { from { stroke-dashoffset: 320; } to { stroke-dashoffset: 0; } }
+.ui-pen { stroke-dasharray: 320; stroke-dashoffset: 320; animation: ui-draw 0.9s cubic-bezier(0.65, 0, 0.35, 1) 0.45s forwards; }
+@media (prefers-reduced-motion: reduce) { .ui-pen { stroke-dashoffset: 0; animation: none; } }
+
+/* Card hover lift + border highlight */
+.ui-lift { transition: transform .2s ease, border-color .2s ease, background-color .2s ease; }
+.ui-lift:hover { transform: translateY(-2px); border-color: var(--ui-border-strong); }
+
+/* Subtle content reveal */
+@keyframes ui-reveal { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+.ui-reveal { animation: ui-reveal .55s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.ui-d1 { animation-delay: .04s; }
+.ui-d2 { animation-delay: .10s; }
+.ui-d3 { animation-delay: .16s; }
+.ui-d4 { animation-delay: .22s; }
+.ui-d5 { animation-delay: .28s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-reveal { animation: none; }
+  .ui-lift { transition: none; }
+  .ui-btn-primary, .ui-btn-secondary, .ui-btn-ghost { transition: none; }
 }

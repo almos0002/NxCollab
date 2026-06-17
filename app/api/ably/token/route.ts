@@ -6,7 +6,6 @@ import { db, chatParticipantsTable } from "@/lib/db";
 import { ablyChannels } from "@/lib/ably/channels";
 import { getAblyRest } from "@/lib/ably/server";
 
-export const runtime = "nodejs";
 
 type Capability = Record<string, CapabilityOp[]>;
 

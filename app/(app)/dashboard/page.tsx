@@ -15,7 +15,10 @@ export default async function DashboardPage() {
   const userId = session.user.id;
 
   const [ownedWorkspaces, memberEntries, ideasCount] = await Promise.all([
-    db.select().from(workspacesTable).where(and(eq(workspacesTable.ownerId, userId), isNull(workspacesTable.deletedAt))),
+    db
+      .select({ id: workspacesTable.id, name: workspacesTable.name })
+      .from(workspacesTable)
+      .where(and(eq(workspacesTable.ownerId, userId), isNull(workspacesTable.deletedAt))),
     db.select({ workspaceId: workspaceMembersTable.workspaceId }).from(workspaceMembersTable).where(eq(workspaceMembersTable.userId, userId)),
     db.select({ value: count() }).from(ideasTable).where(eq(ideasTable.userId, userId)),
   ]);
@@ -28,7 +31,7 @@ export default async function DashboardPage() {
       id: canvasesTable.id, name: canvasesTable.name, workspaceId: canvasesTable.workspaceId,
       updatedAt: canvasesTable.updatedAt, workspaceName: workspacesTable.name,
     }).from(canvasesTable).innerJoin(workspacesTable, eq(canvasesTable.workspaceId, workspacesTable.id))
-      .where(and(inArray(canvasesTable.workspaceId, allWsIds), isNull(canvasesTable.deletedAt))).orderBy(desc(canvasesTable.updatedAt)).limit(50);
+      .where(and(inArray(canvasesTable.workspaceId, allWsIds), isNull(canvasesTable.deletedAt), isNull(workspacesTable.deletedAt))).orderBy(desc(canvasesTable.updatedAt)).limit(50);
     recentCanvases = rows.map(r => ({ id: r.id, name: r.name, workspaceName: r.workspaceName, updatedAt: r.updatedAt.toISOString() }));
   }
 

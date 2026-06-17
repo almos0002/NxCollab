@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "@/lib/session";
 import { db } from "@/lib/db";
 import { canvasesTable, canvasVersionsTable, activityLogsTable, workspacesTable } from "@/lib/db";
-import { eq, and, isNull } from "drizzle-orm";
+import { and, count, desc, eq, isNull } from "drizzle-orm";
 import { getUserWorkspaceRole, canEdit } from "@/lib/workspace";
 import { generateId } from "@/lib/utils";
 import { notifyWorkspaceMembers } from "@/lib/notifications";
@@ -45,7 +45,11 @@ export async function PATCH(req: NextRequest, { params }: Params) {
   const session = await getServerSession();
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const canvas = await db.select().from(canvasesTable).where(and(eq(canvasesTable.id, id), isNull(canvasesTable.deletedAt))).limit(1);
+  const canvas = await db
+    .select({ id: canvasesTable.id, name: canvasesTable.name, workspaceId: canvasesTable.workspaceId, content: canvasesTable.content })
+    .from(canvasesTable)
+    .where(and(eq(canvasesTable.id, id), isNull(canvasesTable.deletedAt)))
+    .limit(1);
   if (!canvas[0]) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
   const role = await getUserWorkspaceRole(session.user.id, canvas[0].workspaceId);
@@ -65,17 +69,32 @@ export async function PATCH(req: NextRequest, { params }: Params) {
         : elementsChanged(oldContent!, content);
 
       if (hasRealChanges) {
-        const versions = await db.select().from(canvasVersionsTable).where(eq(canvasVersionsTable.canvasId, id)).orderBy(canvasVersionsTable.version);
-        const lastVersion = versions[versions.length - 1];
+        const lastVersions = await db
+          .select({ id: canvasVersionsTable.id, version: canvasVersionsTable.version, content: canvasVersionsTable.content })
+          .from(canvasVersionsTable)
+          .where(eq(canvasVersionsTable.canvasId, id))
+          .orderBy(desc(canvasVersionsTable.version))
+          .limit(1);
+        const lastVersion = lastVersions[0];
         const nextVersion = (lastVersion?.version ?? 0) + 1;
 
         const isDuplicate = lastVersion && lastVersion.content === snapshotContent;
         if (!isDuplicate) {
           await db.insert(canvasVersionsTable).values({ id: generateId(), canvasId: id, version: nextVersion, content: snapshotContent, createdBy: session.user.id, createdAt: now });
-          if (versions.length >= 50) {
-            const oldest = versions[0];
-            await db.delete(canvasVersionsTable).where(eq(canvasVersionsTable.id, oldest.id));
-          }
+          const versionCount = await db
+            .select({ value: count() })
+            .from(canvasVersionsTable)
+            .where(eq(canvasVersionsTable.canvasId, id));
+          if ((versionCount[0]?.value ?? 0) > 50) {
+            const oldestVersions = await db
+              .select({ id: canvasVersionsTable.id })
+              .from(canvasVersionsTable)
+              .where(eq(canvasVersionsTable.canvasId, id))
+              .orderBy(canvasVersionsTable.version)
+              .limit(1);
+            const oldest = oldestVersions[0];
+            if (oldest) await db.delete(canvasVersionsTable).where(eq(canvasVersionsTable.id, oldest.id));
+        }
         }
       }
     }
@@ -103,7 +122,23 @@ export async function GET(req: NextRequest, { params }: Params) {
   const session = await getServerSession();
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const canvas = await db.select().from(canvasesTable).where(and(eq(canvasesTable.id, id), isNull(canvasesTable.deletedAt))).limit(1);
+  const canvas = await db
+    .select({
+      id: canvasesTable.id,
+      workspaceId: canvasesTable.workspaceId,
+      name: canvasesTable.name,
+      description: canvasesTable.description,
+      content: canvasesTable.content,
+      libraryData: canvasesTable.libraryData,
+      createdBy: canvasesTable.createdBy,
+      updatedBy: canvasesTable.updatedBy,
+      createdAt: canvasesTable.createdAt,
+      updatedAt: canvasesTable.updatedAt,
+      deletedAt: canvasesTable.deletedAt,
+    })
+    .from(canvasesTable)
+    .where(and(eq(canvasesTable.id, id), isNull(canvasesTable.deletedAt)))
+    .limit(1);
   if (!canvas[0]) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
   const role = await getUserWorkspaceRole(session.user.id, canvas[0].workspaceId);
@@ -117,7 +152,11 @@ export async function DELETE(req: NextRequest, { params }: Params) {
   const session = await getServerSession();
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const canvas = await db.select().from(canvasesTable).where(and(eq(canvasesTable.id, id), isNull(canvasesTable.deletedAt))).limit(1);
+  const canvas = await db
+    .select({ id: canvasesTable.id, name: canvasesTable.name, workspaceId: canvasesTable.workspaceId })
+    .from(canvasesTable)
+    .where(and(eq(canvasesTable.id, id), isNull(canvasesTable.deletedAt)))
+    .limit(1);
   if (!canvas[0]) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
   const role = await getUserWorkspaceRole(session.user.id, canvas[0].workspaceId);

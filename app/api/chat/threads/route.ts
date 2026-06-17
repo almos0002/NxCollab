@@ -3,7 +3,6 @@ import { desc, eq } from "drizzle-orm";
 import { getServerSession } from "@/lib/session";
 import { db, chatParticipantsTable, chatThreadsTable } from "@/lib/db";
 
-export const runtime = "nodejs";
 
 export async function GET() {
   const session = await getServerSession();

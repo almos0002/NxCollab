@@ -1,65 +1,47 @@
 import { NextResponse } from "next/server";
-import { and, count, eq, gt, isNull, ne } from "drizzle-orm";
+import { and, count, eq, gt, isNull, ne, sql } from "drizzle-orm";
+import { alias } from "drizzle-orm/pg-core";
 import { getServerSession } from "@/lib/session";
 import { db, chatMessagesTable, chatParticipantsTable, chatThreadsTable } from "@/lib/db";
 
-export const runtime = "nodejs";
 
 export async function GET() {
   const session = await getServerSession();
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const dmParticipants = await db
+  const otherParticipant = alias(chatParticipantsTable, "other_participant");
+
+  const counts = await db
     .select({
+      userId: otherParticipant.userId,
       threadId: chatParticipantsTable.threadId,
-      joinedAt: chatParticipantsTable.joinedAt,
-      lastReadAt: chatParticipantsTable.lastReadAt,
+      count: count(chatMessagesTable.id),
     })
     .from(chatParticipantsTable)
     .innerJoin(chatThreadsTable, eq(chatParticipantsTable.threadId, chatThreadsTable.id))
+    .innerJoin(
+      otherParticipant,
+      and(
+        eq(otherParticipant.threadId, chatParticipantsTable.threadId),
+        ne(otherParticipant.userId, session.user.id)
+      )
+    )
+    .leftJoin(
+      chatMessagesTable,
+      and(
+        eq(chatMessagesTable.threadId, chatParticipantsTable.threadId),
+        gt(chatMessagesTable.createdAt, sql<Date>`coalesce(${chatParticipantsTable.lastReadAt}, ${chatParticipantsTable.joinedAt})`),
+        ne(chatMessagesTable.senderId, session.user.id),
+        isNull(chatMessagesTable.deletedAt)
+      )
+    )
     .where(
       and(
         eq(chatParticipantsTable.userId, session.user.id),
         eq(chatThreadsTable.type, "dm")
       )
-    );
+    )
+    .groupBy(otherParticipant.userId, chatParticipantsTable.threadId);
 
-  const counts = await Promise.all(
-    dmParticipants.map(async (participant) => {
-      const otherParticipants = await db
-        .select({ userId: chatParticipantsTable.userId })
-        .from(chatParticipantsTable)
-        .where(
-          and(
-            eq(chatParticipantsTable.threadId, participant.threadId),
-            ne(chatParticipantsTable.userId, session.user.id)
-          )
-        )
-        .limit(1);
-
-      const otherUserId = otherParticipants[0]?.userId;
-      if (!otherUserId) return null;
-
-      const since = participant.lastReadAt ?? participant.joinedAt;
-      const result = await db
-        .select({ value: count() })
-        .from(chatMessagesTable)
-        .where(
-          and(
-            eq(chatMessagesTable.threadId, participant.threadId),
-            gt(chatMessagesTable.createdAt, since),
-            ne(chatMessagesTable.senderId, session.user.id),
-            isNull(chatMessagesTable.deletedAt)
-          )
-        );
-
-      return {
-        userId: otherUserId,
-        threadId: participant.threadId,
-        count: result[0]?.value ?? 0,
-      };
-    })
-  );
-
-  return NextResponse.json({ counts: counts.filter(Boolean) });
+  return NextResponse.json({ counts });
 }
