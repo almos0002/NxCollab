@@ -9,7 +9,7 @@ export async function GET() {
   const session = await getServerSession();
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const participants = await db
+  const dmParticipants = await db
     .select({
       threadId: chatParticipantsTable.threadId,
       joinedAt: chatParticipantsTable.joinedAt,
@@ -17,15 +17,29 @@ export async function GET() {
     })
     .from(chatParticipantsTable)
     .innerJoin(chatThreadsTable, eq(chatParticipantsTable.threadId, chatThreadsTable.id))
-    .where(and(
-      eq(chatParticipantsTable.userId, session.user.id),
-      eq(chatThreadsTable.type, "dm")
-    ));
-
-  if (participants.length === 0) return NextResponse.json({ count: 0 });
+    .where(
+      and(
+        eq(chatParticipantsTable.userId, session.user.id),
+        eq(chatThreadsTable.type, "dm")
+      )
+    );
 
   const counts = await Promise.all(
-    participants.map(async (participant) => {
+    dmParticipants.map(async (participant) => {
+      const otherParticipants = await db
+        .select({ userId: chatParticipantsTable.userId })
+        .from(chatParticipantsTable)
+        .where(
+          and(
+            eq(chatParticipantsTable.threadId, participant.threadId),
+            ne(chatParticipantsTable.userId, session.user.id)
+          )
+        )
+        .limit(1);
+
+      const otherUserId = otherParticipants[0]?.userId;
+      if (!otherUserId) return null;
+
       const since = participant.lastReadAt ?? participant.joinedAt;
       const result = await db
         .select({ value: count() })
@@ -39,9 +53,13 @@ export async function GET() {
           )
         );
 
-      return result[0]?.value ?? 0;
+      return {
+        userId: otherUserId,
+        threadId: participant.threadId,
+        count: result[0]?.value ?? 0,
+      };
     })
   );
 
-  return NextResponse.json({ count: counts.reduce((sum, value) => sum + value, 0) });
+  return NextResponse.json({ counts: counts.filter(Boolean) });
 }

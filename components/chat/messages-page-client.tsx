@@ -1,12 +1,14 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { MessageCircle, Search, UserRound } from "lucide-react";
+import { Realtime } from "ably";
 import { ChatPanel } from "@/components/chat/chat-panel";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
 import { parseJsonResponse } from "@/lib/http/parse-json-response";
+import { ablyChannels } from "@/lib/ably/channels";
 
 interface ChatUser {
   id: string;
@@ -26,6 +28,12 @@ interface DmResponse {
   error?: string;
 }
 
+interface DmUnreadCount {
+  userId: string;
+  threadId: string;
+  count: number;
+}
+
 function initials(name: string) {
   return name
     .split(" ")
@@ -41,6 +49,36 @@ export function MessagesPageClient({ currentUser, users }: MessagesPageClientPro
   const [threadId, setThreadId] = useState<string | null>(null);
   const [openingUserId, setOpeningUserId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [unreadCounts, setUnreadCounts] = useState<Record<string, number>>({});
+
+  const fetchUnreadCounts = useCallback(async () => {
+    try {
+      const res = await fetch("/api/chat/dm-unread-counts", { cache: "no-store" });
+      const data = await parseJsonResponse<{ counts?: DmUnreadCount[] }>(res);
+      if (!res.ok) return;
+      setUnreadCounts(Object.fromEntries((data.counts ?? []).map((item) => [item.userId, item.count])));
+    } catch {
+      // Unread counts are a progressive enhancement.
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchUnreadCounts();
+    const interval = window.setInterval(fetchUnreadCounts, 30000);
+    const handleChange = () => fetchUnreadCounts();
+    window.addEventListener("chat-unread-change", handleChange);
+
+    const realtime = new Realtime({ authUrl: "/api/ably/token", clientId: currentUser.id });
+    const channel = realtime.channels.get(ablyChannels.userNotifications(currentUser.id));
+    channel.subscribe("chat.unread", handleChange).catch(() => undefined);
+
+    return () => {
+      window.clearInterval(interval);
+      window.removeEventListener("chat-unread-change", handleChange);
+      channel.unsubscribe("chat.unread", handleChange);
+      realtime.close();
+    };
+  }, [currentUser.id, fetchUnreadCounts]);
 
   const filteredUsers = useMemo(() => {
     const normalized = query.trim().toLowerCase();
@@ -61,6 +99,8 @@ export function MessagesPageClient({ currentUser, users }: MessagesPageClientPro
       if (!data.thread?.id) throw new Error("DM chat is not ready. Run npm run db:push, then refresh.");
       setSelectedUser(data.user ?? user);
       setThreadId(data.thread.id);
+      setUnreadCounts((prev) => ({ ...prev, [user.id]: 0 }));
+      window.dispatchEvent(new Event("chat-unread-change"));
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to open DM");
     } finally {
@@ -108,6 +148,7 @@ export function MessagesPageClient({ currentUser, users }: MessagesPageClientPro
           ) : filteredUsers.map((user) => {
             const active = selectedUser?.id === user.id;
             const opening = openingUserId === user.id;
+            const unreadCount = unreadCounts[user.id] ?? 0;
 
             return (
               <button
@@ -131,6 +172,11 @@ export function MessagesPageClient({ currentUser, users }: MessagesPageClientPro
                   <p className="truncate text-xs text-[hsl(var(--muted-foreground))]">{user.email}</p>
                 </div>
                 {opening && <Spinner className="h-4 w-4 shrink-0 text-[hsl(var(--muted-foreground))]" />}
+                {unreadCount > 0 && !opening && (
+                  <span className="min-w-5 h-5 px-1.5 rounded-md bg-[hsl(var(--foreground))] text-[hsl(var(--background))] text-[11px] font-bold flex items-center justify-center">
+                    {unreadCount > 99 ? "99+" : unreadCount}
+                  </span>
+                )}
               </button>
             );
           })}
