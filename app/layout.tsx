@@ -1,4 +1,5 @@
 import "./globals.css";
+import Script from "next/script";
 import { ThemeProvider } from "@/components/theme-provider";
 import { getBranding } from "@/lib/branding";
 
@@ -33,7 +34,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <Script id="theme-init" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: themeScript }} />
         <link
           href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap"
           rel="stylesheet"

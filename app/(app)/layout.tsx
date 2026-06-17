@@ -16,7 +16,7 @@ async function SidebarData({ userId, initialCollapsed }: { userId: string; initi
 
   return (
     <Sidebar
-      user={{ name: userData?.name ?? "User", email: userData?.email ?? "", image: userData?.image ?? null, isAdmin: userData?.isAdmin ?? false }}
+      user={{ id: userId, name: userData?.name ?? "User", email: userData?.email ?? "", image: userData?.image ?? null, isAdmin: userData?.isAdmin ?? false }}
       siteLogo={siteLogo}
       siteName={siteName}
       initialCollapsed={initialCollapsed}

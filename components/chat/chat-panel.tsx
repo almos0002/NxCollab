@@ -124,6 +124,31 @@ function presenceToOnlineUsers(members: PresenceMessage[], currentUserId: string
   return Array.from(users.values());
 }
 
+function playMessageSound() {
+  try {
+    const AudioContextClass = window.AudioContext || (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+    if (!AudioContextClass) return;
+
+    const audioContext = new AudioContextClass();
+    const oscillator = audioContext.createOscillator();
+    const gain = audioContext.createGain();
+
+    oscillator.type = "sine";
+    oscillator.frequency.setValueAtTime(740, audioContext.currentTime);
+    oscillator.frequency.exponentialRampToValueAtTime(980, audioContext.currentTime + 0.08);
+    gain.gain.setValueAtTime(0.0001, audioContext.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.08, audioContext.currentTime + 0.015);
+    gain.gain.exponentialRampToValueAtTime(0.0001, audioContext.currentTime + 0.18);
+
+    oscillator.connect(gain);
+    gain.connect(audioContext.destination);
+    oscillator.start();
+    oscillator.stop(audioContext.currentTime + 0.2);
+  } catch {
+    // Browsers may block audio until the user has interacted with the page.
+  }
+}
+
 export function ChatPanel({
   threadId,
   currentUser,
@@ -235,6 +260,10 @@ export function ChatPanel({
       if (!payload?.message) return;
       const normalized = normalizeMessage(payload.message, payload.sender);
       setMessages((prev) => upsertMessage(prev, normalized));
+      if (normalized.senderId !== currentUser.id) {
+        playMessageSound();
+        window.dispatchEvent(new Event("chat-unread-change"));
+      }
     };
 
     const onReceiptUpdated = (message: InboundMessage) => {
@@ -367,9 +396,11 @@ export function ChatPanel({
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ messageId: lastMessage.id }),
-    }).catch(() => {
-      lastReadMessageIdRef.current = null;
-    });
+    })
+      .then(() => window.dispatchEvent(new Event("chat-unread-change")))
+      .catch(() => {
+        lastReadMessageIdRef.current = null;
+      });
   }, [messages, threadId]);
 
   async function handleSend(event?: FormEvent) {

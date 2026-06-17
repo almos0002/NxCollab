@@ -8,10 +8,12 @@ import { signOut } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useCallback } from "react";
 import { LayoutDashboard, Layers, Clock, Settings, Shield, LogOut, Sun, Moon, Monitor, ChevronRight, PanelLeftClose, PanelLeft, Inbox, ChevronsUpDown, Menu, X, Lightbulb, MessageCircle } from "lucide-react";
+import { Realtime } from "ably";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
+import { ablyChannels } from "@/lib/ably/channels";
 
 interface SidebarProps {
-  user: { name: string; email: string; image?: string | null; isAdmin?: boolean };
+  user: { id: string; name: string; email: string; image?: string | null; isAdmin?: boolean };
   siteLogo?: string;
   siteName?: string;
   initialCollapsed?: boolean;
@@ -38,28 +40,35 @@ export function Sidebar({ user, siteLogo, siteName, initialCollapsed = false }: 
   const router = useRouter();
   const [collapsed, setCollapsed] = useState(initialCollapsed);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [unreadCount, setUnreadCount] = useState(0);
+  const [chatUnreadCount, setChatUnreadCount] = useState(0);
 
-  const fetchUnread = useCallback(async () => {
+  const fetchChatUnread = useCallback(async () => {
     try {
-      const res = await fetch("/api/notifications/unread-count");
+      const res = await fetch("/api/chat/unread-count");
       if (res.ok) {
         const data = await res.json();
-        setUnreadCount(data.count ?? 0);
+        setChatUnreadCount(data.count ?? 0);
       }
     } catch {}
   }, []);
 
   useEffect(() => {
-    fetchUnread();
-    const interval = setInterval(fetchUnread, 30000);
-    const handleChange = () => fetchUnread();
-    window.addEventListener("notification-change", handleChange);
+    fetchChatUnread();
+    const interval = setInterval(fetchChatUnread, 30000);
+    const handleChange = () => fetchChatUnread();
+    window.addEventListener("chat-unread-change", handleChange);
+
+    const realtime = new Realtime({ authUrl: "/api/ably/token", clientId: user.id });
+    const channel = realtime.channels.get(ablyChannels.userNotifications(user.id));
+    channel.subscribe("chat.unread", handleChange).catch(() => undefined);
+
     return () => {
       clearInterval(interval);
-      window.removeEventListener("notification-change", handleChange);
+      window.removeEventListener("chat-unread-change", handleChange);
+      channel.unsubscribe("chat.unread", handleChange);
+      realtime.close();
     };
-  }, [fetchUnread]);
+  }, [fetchChatUnread, user.id]);
 
   useEffect(() => {
     setMobileOpen(false);
@@ -160,7 +169,7 @@ export function Sidebar({ user, siteLogo, siteName, initialCollapsed = false }: 
           const active = pathname.startsWith(item.href);
           const isCollapsedDesktop = collapsed;
           return (
-            <SidebarTooltip key={item.href} label={item.href === "/inbox" && unreadCount > 0 ? `${item.label} (${unreadCount})` : item.label}>
+            <SidebarTooltip key={item.href} label={item.href === "/messages" && chatUnreadCount > 0 ? `${item.label} (${chatUnreadCount})` : item.label}>
               <Link
                 href={item.href}
                 className={cn(
@@ -173,20 +182,20 @@ export function Sidebar({ user, siteLogo, siteName, initialCollapsed = false }: 
               >
                 <div className="relative shrink-0">
                   <Icon className="w-[18px] h-[18px]" />
-                  {item.href === "/inbox" && unreadCount > 0 && isCollapsedDesktop && (
-                    <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-[hsl(var(--foreground))] text-[hsl(var(--background))] text-[10px] font-bold flex items-center justify-center ring-2 ring-[hsl(var(--card))] hidden md:flex">{unreadCount > 9 ? "9+" : unreadCount}</span>
+                  {item.href === "/messages" && chatUnreadCount > 0 && isCollapsedDesktop && (
+                    <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-[hsl(var(--foreground))] text-[hsl(var(--background))] text-[10px] font-bold flex items-center justify-center ring-2 ring-[hsl(var(--card))] hidden md:flex">{chatUnreadCount > 9 ? "9+" : chatUnreadCount}</span>
                   )}
                 </div>
                 {!isCollapsedDesktop && <span className="flex-1 hidden md:inline">{item.label}</span>}
                 <span className="flex-1 md:hidden">{item.label}</span>
-                {!isCollapsedDesktop && item.href === "/inbox" && unreadCount > 0 && (
-                  <span className="min-w-[20px] h-5 px-1.5 rounded-md bg-[hsl(var(--foreground))] text-[hsl(var(--background))] text-[11px] font-bold hidden md:flex items-center justify-center">{unreadCount > 99 ? "99+" : unreadCount}</span>
+                {!isCollapsedDesktop && item.href === "/messages" && chatUnreadCount > 0 && (
+                  <span className="min-w-[20px] h-5 px-1.5 rounded-md bg-[hsl(var(--foreground))] text-[hsl(var(--background))] text-[11px] font-bold hidden md:flex items-center justify-center">{chatUnreadCount > 99 ? "99+" : chatUnreadCount}</span>
                 )}
-                {item.href === "/inbox" && unreadCount > 0 && (
-                  <span className="min-w-[20px] h-5 px-1.5 rounded-md bg-[hsl(var(--foreground))] text-[hsl(var(--background))] text-[11px] font-bold flex md:hidden items-center justify-center">{unreadCount > 99 ? "99+" : unreadCount}</span>
+                {item.href === "/messages" && chatUnreadCount > 0 && (
+                  <span className="min-w-[20px] h-5 px-1.5 rounded-md bg-[hsl(var(--foreground))] text-[hsl(var(--background))] text-[11px] font-bold flex md:hidden items-center justify-center">{chatUnreadCount > 99 ? "99+" : chatUnreadCount}</span>
                 )}
-                {!isCollapsedDesktop && active && item.href !== "/inbox" && <ChevronRight className="w-3.5 h-3.5 opacity-40 hidden md:block" />}
-                {active && item.href !== "/inbox" && <ChevronRight className="w-3.5 h-3.5 opacity-40 md:hidden" />}
+                {!isCollapsedDesktop && active && item.href !== "/messages" && <ChevronRight className="w-3.5 h-3.5 opacity-40 hidden md:block" />}
+                {active && item.href !== "/messages" && <ChevronRight className="w-3.5 h-3.5 opacity-40 md:hidden" />}
               </Link>
             </SidebarTooltip>
           );
