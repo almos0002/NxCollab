@@ -256,10 +256,10 @@
   --ui-primary-soft: #FBE9EC;
   --ui-primary-10: rgba(225, 29, 72, 0.10);
   --ui-primary-25: rgba(225, 29, 72, 0.22);
-  /* Radius — restrained, near-rectangular */
-  --ui-r-card: 12px;
-  --ui-r-control: 8px;
-  --ui-r-chip: 6px;
+  /* Radius — flat design, true square corners */
+  --ui-r-card: 0px;
+  --ui-r-control: 0px;
+  --ui-r-chip: 0px;
   /* Graph-paper texture */
   --ui-grid-line: rgba(26, 22, 17, 0.05);
 }
@@ -299,6 +299,70 @@
 
 .ui-btn-ghost { color: var(--ui-text-2); transition: color .18s ease; }
 .ui-btn-ghost:hover { color: var(--ui-text); }
+
+/* ── Auth form primitives (flat, drafting-sheet) ───────── */
+.ui-field {
+  width: 100%;
+  background: var(--ui-bg);
+  border: 1px solid var(--ui-border-strong);
+  border-radius: 0;
+  color: var(--ui-text);
+  font-size: 14px;
+  padding: 12px 14px;
+  transition: border-color .18s ease, box-shadow .18s ease;
+}
+.ui-field::placeholder { color: var(--ui-text-2); opacity: .7; }
+.ui-field:hover { border-color: var(--ui-text-2); }
+.ui-field:focus {
+  outline: none;
+  border-color: var(--ui-primary);
+  box-shadow: inset 0 0 0 1px var(--ui-primary);
+}
+.ui-field-label {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ui-text-2);
+  margin-bottom: 7px;
+}
+/* full-width stamp button (auth submit) */
+.ui-btn-block {
+  width: 100%;
+  background: var(--ui-primary);
+  color: var(--ui-primary-contrast);
+  border: none;
+  border-radius: 0;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 14px 20px;
+  cursor: pointer;
+  transition: background-color .18s ease, transform .12s ease;
+}
+.ui-btn-block:hover:not(:disabled) { background: var(--ui-primary-hover); }
+.ui-btn-block:active:not(:disabled) { transform: translateY(1px); }
+.ui-btn-block:disabled { opacity: .55; cursor: not-allowed; }
+/* flat square checkbox */
+.ui-check {
+  width: 18px; height: 18px;
+  border: 1px solid var(--ui-border-strong);
+  background: var(--ui-bg);
+  border-radius: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: background-color .15s ease, border-color .15s ease;
+}
+.peer:checked ~ .ui-check { background: var(--ui-primary); border-color: var(--ui-primary); }
+/* inline error notice */
+.ui-notice {
+  background: var(--ui-primary-soft);
+  border: 1px solid var(--ui-primary);
+  border-radius: 0;
+  color: var(--ui-primary);
+  font-size: 13px;
+  padding: 11px 14px;
+}
 
 /* Capability bento — dashed blueprint frame, corner registration squares */
 .ui-bento { margin-top: 52px; }

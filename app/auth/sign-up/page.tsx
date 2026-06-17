@@ -11,6 +11,24 @@ export async function generateMetadata() {
   return { title: "Sign Up" };
 }
 
+function Mark({ size = 26 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 26 26" fill="none" aria-hidden="true">
+      <rect x="1" y="1" width="24" height="24" stroke="var(--ui-text)" strokeWidth="1.5" />
+      <path d="M7 17 L13 7 L19 17" stroke="var(--ui-primary)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+      <line x1="9.5" y1="13" x2="16.5" y2="13" stroke="var(--ui-text)" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function Tick({ className = "" }: { className?: string }) {
+  return (
+    <span className={`absolute select-none ${className}`} style={{ fontSize: "13px", lineHeight: 1, color: "var(--ui-border-strong)" }} aria-hidden="true">
+      +
+    </span>
+  );
+}
+
 export default async function SignUpPage() {
   const session = await getServerSession();
   if (session?.user) redirect("/dashboard");
@@ -24,58 +42,74 @@ export default async function SignUpPage() {
   } catch {}
 
   return (
-    <div className="min-h-screen flex bg-[hsl(var(--background))]">
-      <div className="flex-1 flex items-center justify-center px-6">
-        <div className="w-full max-w-sm">
-          <div className="mb-8">
-            <Link href="/" className="inline-flex items-center gap-2 mb-8">
-              {siteLogo ? (
-                <img src={siteLogo} alt={siteName} className="w-8 h-8 object-contain" />
-              ) : (
-                <div className="w-8 h-8 rounded-lg bg-[hsl(var(--foreground))] flex items-center justify-center">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                    <rect x="3" y="3" width="7" height="7" rx="1.5" fill="hsl(var(--background))"/>
-                    <rect x="14" y="3" width="7" height="7" rx="1.5" fill="hsl(var(--background))"/>
-                    <rect x="3" y="14" width="7" height="7" rx="1.5" fill="hsl(var(--background))"/>
-                    <rect x="14" y="14" width="7" height="7" rx="1.5" fill="hsl(var(--background))"/>
-                  </svg>
-                </div>
-              )}
-              <span className="font-semibold text-sm text-[hsl(var(--foreground))]">{siteName}</span>
-            </Link>
-            <h1 className="text-2xl font-bold text-[hsl(var(--foreground))] tracking-tight">Create an account</h1>
-            <p className="text-sm text-[hsl(var(--muted-foreground))] mt-1.5">Start collaborating with your team today</p>
+    <div className="ui-root min-h-screen grid lg:grid-cols-2" style={{ background: "var(--ui-bg)", color: "var(--ui-text)" }}>
+      {/* form panel */}
+      <div className="relative flex items-center justify-center px-6 py-16" style={{ borderRight: "1px solid var(--ui-border)" }}>
+        <Tick className="left-3 top-3" />
+        <Tick className="right-3 top-3" />
+        <Tick className="left-3 bottom-3" />
+        <Tick className="right-3 bottom-3" />
+
+        <div className="w-full" style={{ maxWidth: "380px" }}>
+          <Link href="/" className="inline-flex items-center gap-2.5 mb-12">
+            {siteLogo ? (
+              <img src={siteLogo} alt={siteName} className="w-7 h-7 object-contain" />
+            ) : (
+              <Mark size={26} />
+            )}
+            <span className="ui-serif" style={{ fontSize: "16px", fontWeight: 600 }}>{siteName}</span>
+          </Link>
+
+          <div className="mb-9">
+            <span className="ui-mono uppercase block" style={{ fontSize: "11px", letterSpacing: "0.16em", color: "var(--ui-text-2)" }}>
+              New sheet
+            </span>
+            <h1 className="ui-serif" style={{ marginTop: "12px", fontSize: "clamp(28px, 4vw, 36px)", fontWeight: 500, lineHeight: 1.05, letterSpacing: "-0.025em" }}>
+              Create an account.
+            </h1>
+            <p style={{ marginTop: "12px", fontSize: "14.5px", lineHeight: 1.6, color: "var(--ui-text-2)" }}>
+              Start drawing with your team in under a minute.
+            </p>
           </div>
+
           {signupDisabled ? (
-            <div className="rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--muted)/0.5)] p-6 text-center">
-              <p className="text-sm font-medium text-[hsl(var(--foreground))]">Registration is currently closed</p>
-              <p className="text-sm text-[hsl(var(--muted-foreground))] mt-1">Contact an administrator to get access.</p>
+            <div className="ui-notice" style={{ padding: "20px", textAlign: "center", color: "var(--ui-text)", background: "var(--ui-surface)", borderColor: "var(--ui-border-strong)" }}>
+              <p style={{ fontSize: "14px", fontWeight: 600 }}>Registration is currently closed</p>
+              <p style={{ marginTop: "6px", fontSize: "13.5px", color: "var(--ui-text-2)" }}>Contact an administrator to get access.</p>
             </div>
           ) : <SignUpForm />}
-          <p className="text-sm text-[hsl(var(--muted-foreground))] mt-6">
+
+          <p style={{ marginTop: "28px", fontSize: "14px", color: "var(--ui-text-2)" }}>
             Already have an account?{" "}
-            <Link href="/auth/sign-in" className="text-[hsl(var(--foreground))] font-medium hover:underline">Sign in</Link>
+            <Link href="/auth/sign-in" className="ui-link" style={{ color: "var(--ui-text)" }}>Sign in</Link>
           </p>
         </div>
       </div>
-      <div className="hidden lg:flex flex-1 items-center justify-center border-l border-[hsl(var(--border))] bg-[hsl(var(--muted)/0.3)]">
-        <div className="text-center max-w-sm px-8">
-          <div className="w-20 h-20 rounded-2xl bg-[hsl(var(--muted))] flex items-center justify-center mx-auto mb-6">
-            {siteLogo ? (
-              <img src={siteLogo} alt={siteName} className="w-10 h-10 object-contain" />
-            ) : (
-              <svg width="36" height="36" viewBox="0 0 24 24" fill="none">
-                <rect x="3" y="3" width="7" height="7" rx="1.5" fill="hsl(var(--muted-foreground))"/>
-                <rect x="14" y="3" width="7" height="7" rx="1.5" fill="hsl(var(--muted-foreground))"/>
-                <rect x="3" y="14" width="7" height="7" rx="1.5" fill="hsl(var(--muted-foreground))"/>
-                <rect x="14" y="14" width="7" height="7" rx="1.5" fill="hsl(var(--muted-foreground))"/>
-              </svg>
-            )}
+
+      {/* editorial aside */}
+      <aside className="hidden lg:flex relative items-center justify-center px-12" style={{ background: "var(--ui-surface)" }}>
+        <div style={{ maxWidth: "420px" }}>
+          <span className="ui-mono uppercase block" style={{ fontSize: "11px", letterSpacing: "0.18em", color: "var(--ui-text-2)" }}>
+            ◦ Your ideas, together
+          </span>
+          <p className="ui-serif" style={{ marginTop: "20px", fontSize: "clamp(26px, 2.6vw, 34px)", fontWeight: 500, lineHeight: 1.22, letterSpacing: "-0.02em" }}>
+            Your team&apos;s next idea is{" "}
+            <span className="italic" style={{ color: "var(--ui-primary)" }}>probably a drawing</span>.
+          </p>
+          <p style={{ marginTop: "20px", fontSize: "14.5px", lineHeight: 1.65, color: "var(--ui-text-2)", maxWidth: "40ch" }}>
+            Spin up a workspace, invite the right people, and build visual artifacts together in real-time.
+          </p>
+
+          <div className="ui-mono uppercase flex flex-wrap gap-x-4 gap-y-2" style={{ marginTop: "32px", fontSize: "11px", letterSpacing: "0.1em", color: "var(--ui-text-2)" }}>
+            {["Free workspace", "No card", "50 versions back"].map((t, i) => (
+              <span key={t} className="inline-flex items-center gap-4">
+                {i > 0 && <span style={{ color: "var(--ui-border-strong)" }}>/</span>}
+                {t}
+              </span>
+            ))}
           </div>
-          <h2 className="text-lg font-semibold text-[hsl(var(--foreground))] mb-2">Your ideas, together</h2>
-          <p className="text-sm text-[hsl(var(--muted-foreground))] leading-relaxed">Create workspaces, invite your team, and start building visual artifacts in real-time.</p>
         </div>
-      </div>
+      </aside>
     </div>
   );
 }

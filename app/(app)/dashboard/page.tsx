@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { getServerSession } from "@/lib/session";
 
 export const metadata: Metadata = { title: "Dashboard" };
@@ -9,7 +10,7 @@ import Link from "next/link";
 import { Plus, Layers, FileText, Activity, ArrowRight, Lightbulb } from "lucide-react";
 import { RecentCanvases } from "@/components/dashboard/recent-canvases";
 
-export default async function DashboardPage() {
+async function DashboardContent() {
   const session = await getServerSession();
   if (!session?.user) return null;
   const userId = session.user.id;
@@ -127,5 +128,30 @@ export default async function DashboardPage() {
         <ArrowRight className="w-4 h-4 text-[hsl(var(--muted-foreground))] opacity-0 group-hover:opacity-100 transition-opacity" />
       </Link>
     </div>
+  );
+}
+
+function DashboardFallback() {
+  return (
+    <div className="p-4 sm:p-8 max-w-5xl mx-auto animate-fade-in">
+      <div className="mb-8 h-14 w-64 rounded-xl bg-[hsl(var(--muted))]" />
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+        {Array.from({ length: 3 }).map((_, index) => (
+          <div key={index} className="h-32 rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))]" />
+        ))}
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div className="h-72 rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))]" />
+        <div className="h-72 rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))]" />
+      </div>
+    </div>
+  );
+}
+
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={<DashboardFallback />}>
+      <DashboardContent />
+    </Suspense>
   );
 }
