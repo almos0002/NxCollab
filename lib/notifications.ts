@@ -14,7 +14,7 @@ interface CreateNotificationParams {
 }
 
 export async function createNotification({ userId, type, title, message, link, metadata }: CreateNotificationParams) {
-  await db.insert(notificationsTable).values({
+  const inserted = await db.insert(notificationsTable).values({
     id: generateId(),
     userId,
     type,
@@ -24,7 +24,9 @@ export async function createNotification({ userId, type, title, message, link, m
     metadata: metadata ? JSON.stringify(metadata) : null,
     isRead: false,
     createdAt: new Date(),
-  });
+  }).returning();
+
+  return inserted[0];
 }
 
 export async function notifyWorkspaceMembers(

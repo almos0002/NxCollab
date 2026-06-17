@@ -44,6 +44,7 @@ export default async function WorkspacePage({ params }: Props) {
   return (
     <WorkspaceDetailClient
       workspace={{ id: ws.id, name: ws.name, description: ws.description, ownerId: ws.ownerId }}
+      currentUser={{ id: session.user.id, name: session.user.name, email: session.user.email }}
       role={role}
       canvases={canvases.map(c => ({ id: c.id, name: c.name, description: c.description, updatedAt: c.updatedAt.toISOString() }))}
       trashedCanvases={trashedCanvases.map(c => ({ id: c.id, name: c.name, description: c.description, deletedAt: c.deletedAt?.toISOString() || "" }))}

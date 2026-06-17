@@ -7,6 +7,7 @@ import { formatDate } from "@/lib/utils";
 import { WorkspaceActions } from "@/components/workspace/workspace-actions";
 import { CanvasesList } from "@/components/workspace/canvases-list";
 import { MembersList } from "@/components/workspace/members-list";
+import { WorkspaceChat } from "@/components/workspace/workspace-chat";
 import { ResourceFormDialog } from "@/components/shared/resource-form-dialog";
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 
@@ -68,6 +69,7 @@ interface TrashedCanvas {
 
 interface WorkspaceDetailClientProps {
   workspace: { id: string; name: string; description: string | null; ownerId: string };
+  currentUser: { id: string; name: string; email?: string | null };
   role: string;
   canvases: CanvasItem[];
   trashedCanvases: TrashedCanvas[];
@@ -77,6 +79,7 @@ interface WorkspaceDetailClientProps {
 
 export function WorkspaceDetailClient({
   workspace,
+  currentUser,
   role,
   canvases: initialCanvases,
   trashedCanvases: initialTrashed,
@@ -286,6 +289,12 @@ export function WorkspaceDetailClient({
             workspaceId={workspace.id}
             currentUserRole={role}
             ownerId={workspace.ownerId}
+          />
+
+          <WorkspaceChat
+            workspaceId={workspace.id}
+            workspaceName={workspace.name}
+            currentUser={currentUser}
           />
 
           <ActivitySection recentActivity={recentActivity} />

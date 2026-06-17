@@ -7,7 +7,7 @@ import { useTheme } from "./theme-provider";
 import { signOut } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useCallback } from "react";
-import { LayoutDashboard, Layers, Clock, Settings, Shield, LogOut, Sun, Moon, Monitor, ChevronRight, PanelLeftClose, PanelLeft, Inbox, ChevronsUpDown, Menu, X, Lightbulb } from "lucide-react";
+import { LayoutDashboard, Layers, Clock, Settings, Shield, LogOut, Sun, Moon, Monitor, ChevronRight, PanelLeftClose, PanelLeft, Inbox, ChevronsUpDown, Menu, X, Lightbulb, MessageCircle } from "lucide-react";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
 
 interface SidebarProps {
@@ -21,6 +21,7 @@ const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/workspaces", label: "Workspaces", icon: Layers },
   { href: "/ideas", label: "Idea Bank", icon: Lightbulb },
+  { href: "/messages", label: "Messages", icon: MessageCircle },
   { href: "/inbox", label: "Inbox", icon: Inbox },
   { href: "/recent", label: "Recent", icon: Clock },
   { href: "/settings", label: "Settings", icon: Settings },
